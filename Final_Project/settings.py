@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -75,8 +76,12 @@ WSGI_APPLICATION = "Final_Project.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "finalYear_db",
+        "USER": "postgres",
+        "PASSWORD": "randy123",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -116,3 +121,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+
+
+ # redirect after login
+LOGOUT_REDIRECT_URL = 'login'        # redirect after logout
+AUTH_USER_MODEL = 'users.User'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static', 
+]
+
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_URL = 'login'
+# Media files (Uploaded by users)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

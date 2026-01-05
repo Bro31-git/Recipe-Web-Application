@@ -1,0 +1,464 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chef Roots</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ================= VARIABLES ================= */
+        :root {
+            --primary-green: #69d060;
+            --primary-orange: #ef8b17;
+            --header-height: 70px;
+            --sidebar-desktop-width: 260px;
+            --sidebar-mobile-width: 280px;
+            --text-white: #f4f4f4;
+            --bg-overlay: rgba(0, 0, 0, 0.6);
+        }
+
+        /* ================= RESET ================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url("https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80");
+            background-size: cover;
+            background-attachment: fixed;
+            padding-top: var(--header-height);
+            padding-left: var(--sidebar-desktop-width);
+            min-height: 100vh;
+            transition: padding-left 0.3s ease;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.5); }
+
+        /* ================= HEADER ================= */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
+            background: var(--primary-green);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding-left: 20px;
+        }
+
+        @media (min-width: 901px) {
+            header { padding-left: calc(var(--sidebar-desktop-width) + 20px); }
+        }
+
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .mobile-toggle { display: none; cursor: pointer; }
+        .mobile-toggle img { width: 28px; height: 28px; display: block; }
+        .logo-info { display: flex; align-items: center; gap: 10px; }
+        .logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: white; }
+        .logo-name { font-family: 'Lobster', cursive; font-size: 24px; color: var(--text-white); white-space: nowrap; }
+
+        .header-nav-list { display: flex; gap: 30px; margin-right: 10px; }
+        .header-nav-list li a { color: var(--text-white); font-size: 14px; font-weight: 500; }
+
+        /* ================= APP SIDEBAR ================= */
+        .app-sidebar {
+            position: fixed; top: 0; left: 0; bottom: 0;
+            background: var(--primary-orange);
+            z-index: 1100;
+            display: flex; flex-direction: column;
+            width: var(--sidebar-desktop-width);
+            padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-scroll-wrapper {
+            flex-grow: 1; overflow-y: auto; overflow-x: hidden;
+            display: flex; flex-direction: column; padding-bottom: 20px;
+        }
+
+        .sidebar-fixed-footer {
+            flex-shrink: 0; padding: 15px 0 20px 0;
+            background: var(--primary-orange);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            display: flex; align-items: center; padding: 0 20px 30px 20px;
+            color: white; font-family: 'Lobster', cursive; font-size: 22px; flex-shrink: 0;
+        }
+
+        .sidebar-section-title {
+            padding: 20px 25px 10px 25px;
+            font-size: 12px; font-weight: 600; text-transform: uppercase;
+            color: rgba(255,255,255,0.7); letter-spacing: 1px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .add-recipe-btn {
+            background: white; color: var(--primary-orange);
+            width: 20px; height: 20px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; cursor: pointer; font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .add-recipe-btn:hover { transform: scale(1.1); }
+
+        .sidebar-item {
+            display: flex; align-items: center; padding: 12px 25px;
+            cursor: pointer; color: white; white-space: nowrap; transition: 0.2s;
+        }
+        .sidebar-item:hover { background-color: rgba(255, 255, 255, 0.15); }
+        .sidebar-icon { width: 22px; margin-right: 15px; }
+        .sidebar-text { font-size: 14px; font-weight: 400; }
+
+        .recipe-list-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 20px 8px 45px;
+            color: white; font-size: 13px; position: relative;
+            transition: background 0.2s; cursor: pointer;
+        }
+        .recipe-list-item:hover { background: rgba(255,255,255,0.05); }
+
+        .action-dots { padding: 0 8px; font-weight: bold; opacity: 0.7; }
+        .action-dots:hover { opacity: 1; }
+
+        .action-popup {
+            position: absolute; right: 35px; top: 25px;
+            background: white; border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: none; z-index: 2005; min-width: 90px; overflow: hidden;
+        }
+        .recipe-list-item.active-menu .action-popup { display: flex; flex-direction: column; }
+
+        .action-option {
+            padding: 8px 12px; font-size: 11px; font-weight: 600; cursor: pointer;
+            color: #333; transition: background 0.1s;
+        }
+        .action-option:hover { background: #f0f0f0; }
+        .action-option.delete { color: #dc3545; }
+
+        /* ================= NAV SIDEBAR ================= */
+        .nav-sidebar {
+            position: fixed; top: 0; right: 0; bottom: 0; width: 260px;
+            background: white; z-index: 2000;
+            transform: translateX(100%); transition: transform 0.3s ease;
+            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; padding-top: 20px;
+            border-left: 5px solid var(--primary-green);
+        }
+        .nav-sidebar.active { transform: translateX(0); }
+
+        .nav-link {
+            display: flex; align-items: center; padding: 15px 25px;
+            color: #333; font-weight: 500; font-size: 15px;
+        }
+        .nav-link:hover { background: #f0f8ef; color: var(--primary-green); }
+
+        main { padding: 30px; max-width: 1400px; margin: 0 auto; }
+
+        /* ================= MOBILE ================= */
+        @media (max-width: 900px) {
+            body { padding-left: 0!important; }
+            header { padding-left: 20px !important; }
+            .header-nav-list { display: none; }
+            .mobile-toggle { display: block; }
+            .sidebar-brand { display: none; }
+            
+            .app-sidebar {
+                width: var(--sidebar-mobile-width);
+                transform: translateX(-100%); transition: transform 0.3s ease; top: 0;
+            }
+            .app-sidebar.active { transform: translateX(0); }
+            .mobile-close-btn { display: flex !important; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        }
+
+        @media (min-width: 901px) {
+            .mobile-close-btn { display: none !important; }
+            .nav-sidebar { display: none !important; }
+        }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-overlay); z-index: 1050; display: none; backdrop-filter: blur(2px);
+        }
+        .overlay.active { display: block; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <div class="overlay" onclick="closeAllSidebars()"></div>
+
+    <header>
+        <div class="header-left">
+            <div class="mobile-toggle" onclick="toggleAppSidebar()">
+                <img src="https://api.iconify.design/mynaui:sidebar.svg?color=white" alt="Sidebar">
+            </div>
+            <div class="logo-info" style="margin-left: 10px;">
+                <img class="logo" src="https://ui-avatars.com/api/?name=Chef+Roots&background=random&color=fff" alt="Logo">
+                <p class="logo-name"><a href="{% url 'dashboard' %}">Chef Roots</a></p>
+            </div>
+        </div>
+
+        <nav>
+            <ul class="header-nav-list">
+                <li><a href="{% url 'dashboard' %}">Home</a></li>
+                <li><a href="{% url 'recommendation' %}">Recommendations</a></li>
+                <li><a href="{% url 'about' %}">About us</a></li>
+            </ul>
+            <div class="mobile-toggle" onclick="toggleNavSidebar()">
+                <img src="https://api.iconify.design/heroicons-outline:menu.svg?color=white" alt="Menu">
+            </div>
+        </nav>
+    </header>
+
+    <aside class="app-sidebar">
+        <div class="sidebar-scroll-wrapper">
+            <div class="sidebar-brand">Chef Roots Panel</div>
+
+            <div class="sidebar-item mobile-close-btn" onclick="closeAllSidebars()">
+                <img class="sidebar-icon" src="https://api.iconify.design/heroicons-outline:x.svg?color=white" alt="Close">
+                <span class="sidebar-text">Close Menu</span>
+            </div>
+
+            <div class="sidebar-item">
+                <img class="sidebar-icon" src="https://api.iconify.design/mdi:user.svg?color=white" alt="User">
+                <div style="display:flex; flex-direction:column; line-height:1.2;">
+                    <span class="sidebar-text" style="font-weight:600;">
+                        {% if user.is_authenticated %}{{ user.username|title }}{% else %}Guest{% endif %}
+                    </span>
+                    <span class="sidebar-text" style="font-size:11px; opacity:0.8;">
+                        {% if user.is_authenticated %}{{ user.email }}{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="sidebar-section-title" style="margin-top: 15px;">Saved Recipes</div>
+            
+            <div id="saved-recipes-container">
+            {% if user.is_authenticated %}
+                {% for recipe in user.saved_recipes.all %}
+                    <div class="recipe-list-item" id="sidebar-saved-{{ recipe.pk }}">
+                        <a href="{% url 'recipe-detail' recipe.pk %}" style="text-decoration: none; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">
+                            {{ recipe.title }}
+                        </a>
+                        <span class="action-dots" onclick="toggleMenu(this)">⋯</span>
+                        
+                        <div class="action-popup">
+                            <a href="{% url 'recipe-detail' recipe.pk %}" class="action-option" style="display: block; text-decoration: none;">View</a>
+                            <div class="action-option delete" onclick="toggleRecipeSave(event, '{{ recipe.pk }}')">
+                                Remove
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div id="no-saved-msg" class="sidebar-item" style="opacity:0.6; font-size:12px; padding-left: 45px;">
+                        No favorites yet...
+                    </div>
+                {% endfor %}
+            {% else %}
+                 <div class="sidebar-item" style="opacity:0.6; font-size:12px; padding-left: 45px;">Login to see saved</div>
+            {% endif %}
+            </div>
+
+            {% if user.is_authenticated and user.is_chef %} 
+            <div class="sidebar-section-title" style="margin-top: 25px;">
+                <span>Made Recipes</span>
+                <a href="{% url 'recipe_create' %}" class="add-recipe-btn" style="text-decoration:none;">+</a>
+            </div>
+            
+            {% for recipe in user.recipe_set.all %}
+            <div class="recipe-list-item">
+                <a href="{% url 'recipe-detail' recipe.pk %}" style="text-decoration: none; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">
+                 {{ recipe.title }}
+                </a>
+                <span class="action-dots" onclick="toggleMenu(this)">⋯</span>
+                <div class="action-popup">
+                    <a href="{% url 'recipe-update' recipe.id %}" class="action-option" style="display: block; text-decoration: none;">Update</a>
+                    <form action="{% url 'recipe-delete' recipe.id %}" method="POST" style="margin:0;">
+                        {% csrf_token %}
+                        <button type="submit" class="action-option delete" 
+                                onclick="return confirm('Wait! Are you sure you want to delete {{ recipe.title }}?');"
+                                style="width: 100%; text-align: left; border: none; background: transparent; font-family: inherit; font-size: 11px; font-weight: 600; cursor: pointer;">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+             <div class="sidebar-item" style="opacity:0.6; font-size:12px; padding-left: 45px;">No recipes yet...</div>
+            {% endfor %}
+            {% endif %}
+            
+            <div style="height: 50px;"></div>
+        </div>
+
+        <div class="sidebar-fixed-footer">
+            <form action="{% url 'logout' %}" method="post" style="width: 100%;">
+            {% csrf_token %}
+                <button type="submit" class="sidebar-item" style="width: 100%; border: none; background: transparent; font-family: inherit; font-size: inherit; text-align: left; cursor: pointer;">
+                    <img class="sidebar-icon" src="https://api.iconify.design/material-symbols:logout-rounded.svg?color=white" alt="Logout">
+                    <span class="sidebar-text">Logout</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <nav class="nav-sidebar">
+        <div style="display:flex; justify-content:space-between; padding:0 20px 20px 20px; border-bottom:1px solid #eee;">
+            <span style="font-size:18px; font-weight:bold;">Menu</span>
+            <img src="https://api.iconify.design/heroicons-outline:x.svg?color=black" style="width:24px; cursor:pointer;" onclick="closeAllSidebars()">
+        </div>
+        <a href="{% url 'dashboard' %}" class="nav-link">Home</a>
+        <a href= "{% url 'recommendation' %}" class="nav-link">Recommendations</a>
+        <a href="{% url 'about' %}" class="nav-link">About Us</a>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        const appSidebar = document.querySelector('.app-sidebar');
+        const navSidebar = document.querySelector('.nav-sidebar');
+        const overlay = document.querySelector('.overlay');
+
+        function toggleAppSidebar() {
+            closeAllSidebars(false);
+            appSidebar.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function toggleNavSidebar() {
+            closeAllSidebars(false);
+            navSidebar.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function closeAllSidebars(removeOverlay = true) {
+            appSidebar.classList.remove('active');
+            navSidebar.classList.remove('active');
+            if (removeOverlay) overlay.classList.remove('active');
+            document.querySelectorAll('.recipe-list-item').forEach(el => el.classList.remove('active-menu'));
+        }
+
+        function toggleMenu(dotsElement) {
+            event.stopPropagation();
+            const parent = dotsElement.closest('.recipe-list-item');
+            document.querySelectorAll('.recipe-list-item').forEach(el => {
+                if (el !== parent) el.classList.remove('active-menu');
+            });
+            parent.classList.toggle('active-menu');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.recipe-list-item')) {
+                 document.querySelectorAll('.recipe-list-item').forEach(el => el.classList.remove('active-menu'));
+            }
+        });
+
+        // --- FIXED DYNAMIC SAVE/REMOVE FUNCTION ---
+        // Added 'event' as the first parameter to prevent crashing
+   function toggleRecipeSave(event, recipeId) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    // 1. ALERT: Check if the click works
+    // alert("Click detected for Recipe ID: " + recipeId); 
+
+    const url = `/recipe/${recipeId}/save/`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 2. ALERT: Check if server responded
+        // alert("Server says: Saved = " + data.saved + ", Title = " + data.recipe_title);
+
+        const container = document.getElementById('saved-recipes-container');
+        const noMsg = document.getElementById('no-saved-msg');
+        
+        // We look for the specific item in the list
+        const itemId = 'sidebar-saved-' + recipeId;
+        const existingItem = document.getElementById(itemId);
+
+        if (data.saved) {
+            // CASE: SAVING RECIPE
+            if (noMsg) noMsg.style.display = 'none';
+
+            if (!existingItem) {
+                // Create the new HTML block
+                const newItem = document.createElement('div');
+                newItem.className = 'recipe-list-item';
+                newItem.id = itemId;
+                
+                // IMPORTANT: We use data.recipe_title here. If view is wrong, this says "undefined"
+                newItem.innerHTML = `
+                    <a href="/recipe/${recipeId}/" style="text-decoration: none; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">
+                        ${data.recipe_title}
+                    </a>
+                    <span class="action-dots" onclick="toggleMenu(this)">⋯</span>
+                    <div class="action-popup">
+                        <a href="/recipe/${recipeId}/" class="action-option" style="display: block; text-decoration: none;">View</a>
+                        <div class="action-option delete" onclick="toggleRecipeSave(event, '${recipeId}')">Remove</div>
+                    </div>
+                `;
+                
+                if (container) {
+                    container.prepend(newItem);
+                } else {
+                    alert("ERROR: Could not find 'saved-recipes-container' div!");
+                }
+            }
+        } else {
+            // CASE: REMOVING RECIPE
+            if (existingItem) {
+                existingItem.remove();
+            } else {
+                // If we can't find it to remove it, maybe ID is mismatching?
+                console.log("Could not find item to remove: " + itemId);
+            }
+
+            // Check if list is empty
+            if (container && container.querySelectorAll('.recipe-list-item').length === 0) {
+                if (noMsg) noMsg.style.display = 'block';
+            }
+        }
+
+        // Update the Heart Button (if visible)
+        const saveBtn = document.getElementById('saveRecipeBtn');
+        if (saveBtn) {
+            if (data.saved) {
+                saveBtn.classList.add('active');
+                saveBtn.innerHTML = '<i class="fas fa-heart" id="saveIcon"></i> <span id="saveText">Saved</span>';
+            } else {
+                saveBtn.classList.remove('active');
+                saveBtn.innerHTML = '<i class="far fa-heart" id="saveIcon"></i> <span id="saveText">Save Recipe</span>';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Javascript Error: " + error);
+    });
+}
+        
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
