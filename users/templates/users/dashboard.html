@@ -33,7 +33,7 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.5); }
 
-        /* ================= HEADER ================= */
+        /* ================= HEADER STYLING ================= */
         header {
             position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
             background: var(--primary-green);
@@ -50,56 +50,125 @@
         .recipe-list-item.active-menu .action-popup { display: flex; flex-direction: column; }
 
 
-        /* ================= MAIN CONTENT & FILTER ================= */
-        main { padding: 30px; max-width: 1400px; margin: 0 auto; }
-
-        .search-row { display: flex; gap: 15px; margin-bottom: 30px; position: relative; }
+        /* ================= SEARCH & FILTER SECTION STYLING ================= */
+       
+        .search-row { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 30px; 
+            position: relative; 
+        }
 
         .search-box {
-            flex: 1; display: flex; align-items: center; background: white;
-            border: 2px solid var(--primary-green); border-radius: 50px; padding: 0 20px; height: 50px;
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            background: white;
+            border: 2px solid var(--primary-green); 
+            border-radius: 50px; 
+            padding: 0 20px; 
+            height: 50px;
         }
-        .search-box input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 16px; background: transparent; }
+        .search-box input { 
+            border: none; 
+            outline: none; 
+            width: 100%; 
+            margin-left: 10px; 
+            font-size: 16px; 
+            background: transparent; }
 
         /* FILTER BUTTON */
         .filter-btn {
-            display: flex; align-items: center; justify-content: center; background: white;
-            border: 2px solid var(--primary-green); border-radius: 50px; height: 50px;
-            padding: 0 25px; cursor: pointer; white-space: nowrap; font-weight: 500;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: white;
+            border: 2px solid var(--primary-green); 
+            border-radius: 50px; 
+            height: 50px;
+            padding: 0 25px; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            font-weight: 500;
             transition: background 0.2s, width 0.3s;
         }
-        .filter-btn:hover { background: #f0f8ef; }
-        .filter-icon { width: 20px; margin-right: 8px; }
+        .filter-btn:hover { 
+            background: #f0f8ef;
+         }
+        .filter-icon { 
+            width: 20px; 
+            margin-right: 8px; }
 
         /* EXPANDED FILTER MENU */
         .filter-popup-menu {
-            position: absolute; top: 60px; right: 0; background: white; padding: 0;
-            width: 300px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-            display: none; z-index: 1100;
-            max-height: 500px; overflow-y: auto;
+            position: absolute; 
+            top: 60px; 
+            right: 0; 
+            background: white; 
+            padding: 0;
+            width: 300px; 
+            border-radius: 12px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: none; 
+            z-index: 1100;
+            max-height: 500px; 
+            overflow-y: auto;
         }
-        .filter-popup-menu.active { display: block; }
+        .filter-popup-menu.active { 
+            display: block; 
+        }
 
-        .filter-section { padding: 15px 20px; border-bottom: 1px solid #eee; }
-        .filter-section h4 { margin-bottom: 10px; color: #333; font-size: 14px; }
+        .filter-section { 
+            padding: 15px 20px; 
+            border-bottom: 1px solid #eee; }
+        .filter-section h4 { 
+            margin-bottom: 10px; 
+            color: #333; 
+            font-size: 14px; }
         .filter-section label {
-            display: block; margin-bottom: 6px; font-size: 13px; color: #555; cursor: pointer;
+            display: block; 
+            margin-bottom: 6px; 
+            font-size: 13px; 
+            color: #555; cursor: pointer;
         }
-        .filter-section input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-green); }
+        .filter-section input[type="checkbox"] { 
+            margin-right: 8px; 
+            accent-color: var(--primary-green); }
 
-        .price-row { display: flex; gap: 10px; align-items: center; }
-        .price-input {
-            width: 100%; padding: 8px 10px; border: 1px solid #ddd;
-            border-radius: 6px; font-size: 13px; outline: none;
+        .price-row { 
+            display: flex; 
+            gap: 10px; 
+            align-items: center; 
         }
-        .price-input:focus { border-color: var(--primary-green); }
-        .price-separator { font-weight: bold; color: #888; }
+        .price-input {
+            width: 100%; 
+            padding: 8px 10px; 
+            border: 1px solid #ddd;
+            border-radius: 6px; 
+            font-size: 13px; 
+            outline: none;
+        }
+        .price-input:focus { 
+            border-color: var(--primary-green); 
+        }
+        .price-separator { 
+            font-weight: bold; 
+            color: #888; 
+        }
 
         .apply-btn {
-            width: 100%; padding: 15px; background: var(--primary-green); border: none;
-            color: white; font-weight: 600; cursor: pointer; font-size: 14px;
+            width: 100%; 
+            padding: 15px; 
+            background: var(--primary-green); 
+            border: none;
+            color: white; 
+            font-weight: 600; 
+            cursor: pointer; 
+            font-size: 14px;
         }
-        .apply-btn:hover { background: #5ab852; }
+        .apply-btn:hover { 
+            background: #5ab852; 
+        }
 
         /* ================= RESET BANNER STYLE ================= */
         .reset-banner {
@@ -131,7 +200,10 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        /* ================= FIXED GRID STYLING ================= */
+        /* =========END OF SEARCH AND FILTER STYLING =====*/
+
+
+        /* =========== RECIPE DISPLAY LIST STYLING  ============= */
         .grid-section {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -148,41 +220,108 @@
             text-decoration: none; 
             color: inherit;
         }
-        .recipe-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .recipe-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+        }
 
-        .recipe-img { width: 100%; height: 180px; object-fit: cover; }
-        .recipe-info { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+        .recipe-img { 
+            width: 100%; 
+            height: 180px; 
+            object-fit: cover; 
+        }
+        .recipe-info { 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            flex-grow: 1; 
+        }
 
-        .recipe-name { font-weight: 600; font-size: 18px; color: #222; margin: 0; }
+        .recipe-name { 
+            font-weight: 600; 
+            font-size: 18px; 
+            color: #222; 
+            margin: 0; 
+        }
 
         /* CHEF INFO & RATING STYLING */
         .recipe-meta-row {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 5px; margin-bottom: 8px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            margin-top: 5px; 
+            margin-bottom: 8px;
         }
 
-        .chef-profile { display: flex; align-items: center; gap: 8px; }
-        .chef-avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #eee; }
-        .chef-name { font-size: 12px; color: #666; font-weight: 500; }
+        .chef-profile { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .chef-avatar { 
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 1px solid #eee; 
+        }
+        .chef-name { 
+            font-size: 12px; 
+            color: #666; 
+            font-weight: 500; 
+        }
 
-        .rating-box { display: flex; align-items: center; gap: 4px; background: #fff8e1; padding: 2px 8px; border-radius: 12px; }
-        .rating-score { font-size: 12px; font-weight: 700; color: #ef8b17; }
+        .rating-box { 
+            display: flex; 
+            align-items: center; 
+            gap: 4px; 
+            background: #fff8e1; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+        }
+        .rating-score { 
+            font-size: 12px; 
+            font-weight: 700; 
+            color: #ef8b17; 
+        }
 
-        .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
-        .tag { background: #f0f0f0; padding: 4px 10px; border-radius: 20px; font-size: 11px; color: #555; }
+        .tags { 
+            display: flex; 
+            gap: 8px; 
+            flex-wrap: wrap; 
+            margin-top: auto; 
+        }
+        .tag { 
+            background: #f0f0f0; 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            color: #555; 
+        }
 
         /* --- SEARCH BAR RESPONSIVENESS --- */
         @media (max-width: 600px) {
-            .search-row { gap: 8px; }
+            .search-row { 
+                gap: 8px; 
+            }
             .filter-btn {
                 padding: 0;
                 width: 50px; 
                 border-radius: 50%; 
             }
-            .filter-btn span { display: none; } 
-            .filter-icon { margin-right: 0; }
+            .filter-btn span {
+              display: none; 
+            } 
+            .filter-icon { 
+                margin-right: 0; 
+            }
             
-            .reset-banner { flex-direction: column; gap: 10px; text-align: center; }
+            .reset-banner { 
+                flex-direction: column; 
+                gap: 10px; 
+                text-align: center; 
+            }
         }
     </style>
 {% endblock %}
@@ -264,8 +403,19 @@
 
                     <div class="recipe-meta-row">
                         <div class="chef-profile">
-                            <img class="chef-avatar" src="https://ui-avatars.com/api/?name={{ recipe.chef.username }}&background=random&color=fff" alt="Chef">
-                            <span class="chef-name">By {{ recipe.chef.username|title }}</span>
+                            {% if recipe.chef.first_name and recipe.chef.last_name %}
+                                <img src="https://ui-avatars.com/api/?name={{ recipe.chef.first_name }}+{{ recipe.chef.last_name }}&background=random&color=fff" 
+                                    alt="{{ recipe.chef.username }}" 
+                                    class="chef-avatar"
+                                    height="40" width="40">
+
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ recipe.chef.username }}&background=random&color=fff" 
+                                    alt="{{ recipe.chef.username }}" 
+                                    class="chef-avatar" 
+                                    height="40" width="40">
+                            {% endif %} 
+                            <span class="chef-name">{{ recipe.chef.username }}</span>
                         </div>
                         
                         <div class="rating-box">
@@ -316,17 +466,17 @@
 {% block extra_js %}
 
   <script>
-    // 1. SELECTING THE FILTER POPUP ELEMENT
+    //  SELECTING THE FILTER POPUP ELEMENT
     const filterMenu = document.querySelector('.filter-popup-menu');
 
-    // 2. TOGGLE FUNCTION TO ACTIVATE THE FILTER POPUP
+    // TOGGLE FUNCTION TO ACTIVATE THE FILTER POPUP
     function toggleFilterPopup() {
         if (filterMenu) {
             filterMenu.classList.toggle('active');
         }
     }
 
-    // 3. EVENT LISTENER CLOSE WHEN CLICKING OUTSIDE
+    // EVENT LISTENER CLOSE WHEN CLICKING OUTSIDE
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.recipe-list-item')) {
              document.querySelectorAll('.recipe-list-item').forEach(el => el.classList.remove('active-menu'));
