@@ -1,0 +1,343 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+      <style>
+        /* ================= VARIABLES ================= */
+        :root {
+            --primary-green: #69d060;
+            --primary-orange: #ef8b17;
+            --header-height: 70px;
+            --sidebar-desktop-width: 260px;
+            --sidebar-mobile-width: 280px;
+            --text-white: #f4f4f4;
+            --bg-overlay: rgba(0, 0, 0, 0.6);
+        }
+
+        /* ================= RESET ================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            padding-top: var(--header-height);
+            padding-left: var(--sidebar-desktop-width);
+            transition: padding-left 0.3s ease;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.5); }
+
+        /* ================= HEADER ================= */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
+            background: var(--primary-green);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding-left: 20px;
+        }
+
+        @media (min-width: 901px) {
+            header { padding-left: calc(var(--sidebar-desktop-width) + 20px); }
+        }
+
+        .recipe-list-item.active-menu .action-popup { display: flex; flex-direction: column; }
+
+
+        /* ================= MAIN CONTENT & FILTER ================= */
+        main { padding: 30px; max-width: 1400px; margin: 0 auto; }
+
+        .search-row { display: flex; gap: 15px; margin-bottom: 30px; position: relative; }
+
+        .search-box {
+            flex: 1; display: flex; align-items: center; background: white;
+            border: 2px solid var(--primary-green); border-radius: 50px; padding: 0 20px; height: 50px;
+        }
+        .search-box input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 16px; background: transparent; }
+
+        /* FILTER BUTTON */
+        .filter-btn {
+            display: flex; align-items: center; justify-content: center; background: white;
+            border: 2px solid var(--primary-green); border-radius: 50px; height: 50px;
+            padding: 0 25px; cursor: pointer; white-space: nowrap; font-weight: 500;
+            transition: background 0.2s, width 0.3s;
+        }
+        .filter-btn:hover { background: #f0f8ef; }
+        .filter-icon { width: 20px; margin-right: 8px; }
+
+        /* EXPANDED FILTER MENU */
+        .filter-popup-menu {
+            position: absolute; top: 60px; right: 0; background: white; padding: 0;
+            width: 300px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: none; z-index: 1100;
+            max-height: 500px; overflow-y: auto;
+        }
+        .filter-popup-menu.active { display: block; }
+
+        .filter-section { padding: 15px 20px; border-bottom: 1px solid #eee; }
+        .filter-section h4 { margin-bottom: 10px; color: #333; font-size: 14px; }
+        .filter-section label {
+            display: block; margin-bottom: 6px; font-size: 13px; color: #555; cursor: pointer;
+        }
+        .filter-section input[type="checkbox"] { margin-right: 8px; accent-color: var(--primary-green); }
+
+        .price-row { display: flex; gap: 10px; align-items: center; }
+        .price-input {
+            width: 100%; padding: 8px 10px; border: 1px solid #ddd;
+            border-radius: 6px; font-size: 13px; outline: none;
+        }
+        .price-input:focus { border-color: var(--primary-green); }
+        .price-separator { font-weight: bold; color: #888; }
+
+        .apply-btn {
+            width: 100%; padding: 15px; background: var(--primary-green); border: none;
+            color: white; font-weight: 600; cursor: pointer; font-size: 14px;
+        }
+        .apply-btn:hover { background: #5ab852; }
+
+        /* ================= RESET BANNER STYLE ================= */
+        .reset-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff8e1; 
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .reset-link-btn {
+            background-color: var(--primary-orange);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        
+        .reset-link-btn:hover {
+            background-color: #d97b0f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* ================= FIXED GRID STYLING ================= */
+        .grid-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+            display: flex; flex-direction: column;
+            text-decoration: none; 
+            color: inherit;
+        }
+        .recipe-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+        .recipe-img { width: 100%; height: 180px; object-fit: cover; }
+        .recipe-info { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+
+        .recipe-name { font-weight: 600; font-size: 18px; color: #222; margin: 0; }
+
+        /* CHEF INFO & RATING STYLING */
+        .recipe-meta-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 5px; margin-bottom: 8px;
+        }
+
+        .chef-profile { display: flex; align-items: center; gap: 8px; }
+        .chef-avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #eee; }
+        .chef-name { font-size: 12px; color: #666; font-weight: 500; }
+
+        .rating-box { display: flex; align-items: center; gap: 4px; background: #fff8e1; padding: 2px 8px; border-radius: 12px; }
+        .rating-score { font-size: 12px; font-weight: 700; color: #ef8b17; }
+
+        .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+        .tag { background: #f0f0f0; padding: 4px 10px; border-radius: 20px; font-size: 11px; color: #555; }
+
+        /* --- SEARCH BAR RESPONSIVENESS --- */
+        @media (max-width: 600px) {
+            .search-row { gap: 8px; }
+            .filter-btn {
+                padding: 0;
+                width: 50px; 
+                border-radius: 50%; 
+            }
+            .filter-btn span { display: none; } 
+            .filter-icon { margin-right: 0; }
+            
+            .reset-banner { flex-direction: column; gap: 10px; text-align: center; }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+        <div class="search-row">
+                <form action="{% url 'dashboard' %}" method="GET" class="search-box">
+                    
+                    <button type="submit" style="border: none; background: transparent; cursor: pointer;">
+                        <img src="https://api.iconify.design/tabler:search.svg?color=gray" width="20" alt="Search">
+                    </button>
+
+                    <input type="text" name="q" placeholder="Search for recipes..." value="{{ request.GET.q }}">
+                    
+                </form>
+
+            <div class="filter-btn" onclick="toggleFilterPopup()">
+                <img class="filter-icon" src="https://api.iconify.design/ion:filter.svg?color=gray" alt="Filter">
+                <span>Filter</span>
+            </div>
+
+            <div class="filter-popup-menu">
+                <form action="{% url 'dashboard' %}" method="GET">
+                    <input type="hidden" name="q" value="{{ request.GET.q }}">
+
+                    <div class="filter-section">
+                        <h4>Budget (XAF)</h4>
+                        <div class="price-row">
+                            <input type="number" name="min_price" placeholder="Min" class="price-input" value="{{ request.GET.min_price }}">
+                            <span class="price-separator">-</span>
+                            <input type="number" name="max_price" placeholder="Max" class="price-input" value="{{ request.GET.max_price }}">
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Meal Time</h4>
+                        <label><input type="checkbox" name="meal_time" value="Breakfast" {% if "Breakfast" in request.GET.getlist %}checked{% endif %}> Breakfast</label>
+                        <label><input type="checkbox" name="meal_time" value="Lunch" {% if "Lunch" in request.GET.getlist %}checked{% endif %}> Lunch</label>
+                        <label><input type="checkbox" name="meal_time" value="Dinner" {% if "Dinner" in request.GET.getlist %}checked{% endif %}> Dinner</label>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Meal Type</h4>
+                        <label><input type="checkbox" name="meal_type" value="Individual" {% if "Individual" in request.GET.getlist %}checked{% endif %}> Individual</label>
+                        <label><input type="checkbox" name="meal_type" value="Family" {% if "Family" in request.GET.getlist %}checked{% endif %}> Family</label>
+                    </div>
+
+                    <button type="submit" class="apply-btn">Apply Filters</button>
+                    <a href="{% url 'reset_filters' %}" style="display:block; text-align:center; padding:10px; font-size:12px; color:gray;">Reset All</a>
+                </form>
+            </div>
+        </div>
+
+        {% if is_filtered %}
+        <div class="reset-banner">
+            <div>
+                <strong>Recommendation Active:</strong> Showing recipes based on your health & dietary profile.
+            </div>
+            <a href="{% url 'reset_filters' %}" class="reset-link-btn">
+                Show All Recipes
+            </a>
+        </div>
+        {% endif %}
+
+        <section class="grid-section">
+            
+            {% for recipe in recipes %}
+            <a href="{% url 'recipe-detail' recipe.pk %}" class="recipe-card">
+                
+                {% if recipe.image %}
+                    <img class="recipe-img" src="{{ recipe.image.url }}" alt="{{ recipe.title }}">
+                {% else %}
+                    <img class="recipe-img" src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Default Food">
+                {% endif %}
+
+                <div class="recipe-info">
+                    <p class="recipe-name">{{ recipe.title }}</p>
+
+                    <div class="recipe-meta-row">
+                        <div class="chef-profile">
+                            <img class="chef-avatar" src="https://ui-avatars.com/api/?name={{ recipe.chef.username }}&background=random&color=fff" alt="Chef">
+                            <span class="chef-name">By {{ recipe.chef.username|title }}</span>
+                        </div>
+                        
+                        <div class="rating-box">
+                           {% if recipe.get_average_rating > 0 %}
+                                <img src="https://api.iconify.design/ic:round-star.svg?color=%23ef8b17" width="12">
+                                <span class="rating-score">{{ recipe.get_average_rating|floatformat:1 }}</span>
+                            
+                            {% else %}
+                                <span class="rating-score" style="color: #ef8b17; font-weight: 600;">New</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="tags">
+                        <span class="tag">{{ recipe.meal_type }}</span>
+                        <span class="tag">{{ recipe.meal_time }}</span>
+                    </div>
+                </div>
+            </a>
+
+            {% empty %}
+                    <div style="text-align: center; width: 100%; padding: 50px; grid-column: 1 / -1;">
+                    
+                    <h3 style="color: #666;">No recipes match your criteria.</h3>
+                    <p>Try adjusting your filters or clear them to see everything.</p>
+                    
+                    <br>
+
+                    <a href="{% url 'reset_filters' %}" 
+                    style="
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background-color: var(--primary-orange);
+                        color: white;
+                        border-radius: 5px;
+                        text-decoration: none;
+                        font-weight: bold;
+                    ">
+                      Reset & Show All Recipes
+                    </a>
+
+                </div>
+            {% endfor %}
+
+        </section>
+{% endblock %}
+
+{% block extra_js %}
+
+  <script>
+    // 1. SELECTING THE FILTER POPUP ELEMENT
+    const filterMenu = document.querySelector('.filter-popup-menu');
+
+    // 2. TOGGLE FUNCTION TO ACTIVATE THE FILTER POPUP
+    function toggleFilterPopup() {
+        if (filterMenu) {
+            filterMenu.classList.toggle('active');
+        }
+    }
+
+    // 3. EVENT LISTENER CLOSE WHEN CLICKING OUTSIDE
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.recipe-list-item')) {
+             document.querySelectorAll('.recipe-list-item').forEach(el => el.classList.remove('active-menu'));
+        }
+
+        if (filterMenu && filterMenu.classList.contains('active')) {
+            if (!e.target.closest('.filter-popup-menu') && !e.target.closest('.filter-btn')) {
+                filterMenu.classList.remove('active');
+            }
+        }
+    });
+</script>
+
+{% endblock %}
