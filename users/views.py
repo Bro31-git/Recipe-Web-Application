@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from recipes.models import Recipe
+from .models import Recipe
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q, TextField
 from django.db.models.functions import Cast
+from django.views.generic.edit import FormMixin
+from .forms import  RecipeForm, ReviewForm
+from django.urls import reverse_lazy, reverse
+import json
+from django.contrib import messages
 
 # Create your views here.
 def toggle_recipe_save(request, pk):
@@ -14,16 +19,16 @@ def toggle_recipe_save(request, pk):
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'Login required'}, status=401)
 
-    recipe = get_object_or_404(Recipe, pk=pk)
-    user = request.user
-    if user.saved_recipes.filter(pk=pk).exists():
+    recipe = get_object_or_404(Recipe, pk=pk)# get recipe object or return a 404 eror message
+    user = request.user# get the current login user
+    if user.saved_recipes.filter(pk=pk).exists():# check the status of the saved recipe button
         user.saved_recipes.remove(recipe)
         saved = False
     else:
         user.saved_recipes.add(recipe)
         saved = True
     # return JSON response indicating the new saved status
-    return JsonResponse({'saved': saved, 'recipe_title': recipe.title})
+    return JsonResponse({'saved': saved, 'recipe_title': recipe.title})# return the status to the js about the save button
 
 
 def recommendation(request):
@@ -33,6 +38,7 @@ def recommendation(request):
         diet = request.POST.get('dietary')      # Fixed: Matches name="dietary"
         allergies = request.POST.get('allergies') # Matches name="allergies"
 
+        #
         request.session['temp_filters'] = {
             'health_condition': h_cond,
             'dietary': diet,
@@ -130,4 +136,61 @@ class RecipeListView(LoginRequiredMixin, ListView):
         context['is_filtered'] = getattr(self, 'is_recommendation_active', False)
         return context
 
+class RecipeDetailView(FormMixin, DetailView):
+    model = Recipe
+    template_name = 'users/recipe_detail.html'
+    context_object_name = 'recipe'
+    form_class = ReviewForm 
 
+    def get_success_url(self):# redirect to the same recipe detail page after form submission
+        return reverse('recipe-detail', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):# add extra context data to the template for ingredients and instructions
+        context = super().get_context_data(**kwargs)# get the existing context data
+        context['form'] = self.get_form()# add the review form to the context
+        
+        raw_ing = self.object.ingredients# get the raw ingredients data
+        # 1. Ingredients
+        if isinstance(raw_ing, list):# if it's already a list, use it directly
+            context['ingredients_list'] = raw_ing# assign to context
+        elif isinstance(raw_ing, str):# if it's a string, try to parse it as JSON
+            try:
+                context['ingredients_list'] = json.loads(raw_ing)# parse JSON string to list
+            except (json.JSONDecodeError, TypeError):# handle parsing errors
+                context['ingredients_list'] = [{'name': raw_ing, 'qty': ''}] # Fallback
+
+        # 2. Instructions
+        raw_inst = self.object.instructions# get the raw instructions data
+        if isinstance(raw_inst, list):# if it's already a list, use it directly
+            context['instructions_list'] = raw_inst# assign to context
+        elif isinstance(raw_inst, str):# if it's a string, try to parse it as JSON
+            try:
+                context['instructions_list'] = json.loads(raw_inst)# parse JSON string to list
+            except (json.JSONDecodeError, TypeError):# handle parsing errors
+                context['instructions_list'] = [raw_inst] # Fallback
+
+        return context# return the final context data
+
+    # Handle POST request for submitting reviews
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+            
+        self.object = self.get_object()# get the current recipe object
+        form = self.get_form()# get the review form
+        
+        if form.is_valid():# if the form is valid
+            return self.form_valid(form)# process the valid form
+        else:
+            return self.form_invalid(form)
+    # process valid form submission
+    def form_valid(self, form):
+        review = form.save(commit=False)# create review instance without saving to database yet
+        review.recipe = self.object# link review to the current recipe
+        review.user = self.request.user# link review to the logged-in user
+        review.save()# save the review to the database
+        messages.success(self.request, "Review submitted!")
+        return super().form_valid(form)# continue with the default form valid processing
+
+
+    
