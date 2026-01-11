@@ -43,7 +43,7 @@ class RecipeForm(forms.ModelForm):
         choices=HEALTH_CHOICES, 
         required=False # This prevent the app from crashing on an empty selection
     )
-
+    # function use to convert the pyton list data(ingredients and instruction) to a json file for editing before displaying it to the user
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
