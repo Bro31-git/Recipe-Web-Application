@@ -44,6 +44,23 @@ class RecipeForm(forms.ModelForm):
         required=False # This prevent the app from crashing on an empty selection
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+         # Check if we are editing an existing recipe
+        if self.instance and self.instance.pk:
+            #converting the python list ingredient gotten from the db to a json file to be display for editing
+            if isinstance(self.instance.ingredients, list):
+                # using dumps() to add a double quotes to the list 
+                self.fields['ingredients'].initial = json.dumps(self.instance.ingredients)
+
+            #converting the python list instruction gotten from the db to a json file to be display for editing
+            if isinstance(self.instance.instructions, list):
+                # using dumps() to add a double quotes to the list 
+                self.fields['instructions'].initial = json.dumps(self.instance.instructions)
+            
+
+
     class Meta:
         model = Recipe
         fields = ['title', 'description', 'image', 'video_url', 'cooking_time', 'dietary', 'health_condition', 'ingredients', 'instructions', 'budget', 'meal_type', 'origin_country']
