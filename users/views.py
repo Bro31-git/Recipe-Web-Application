@@ -192,5 +192,68 @@ class RecipeDetailView(FormMixin, DetailView):
         messages.success(self.request, "Review submitted!")
         return super().form_valid(form)# continue with the default form valid processing
 
+class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Recipe
+    success_url = reverse_lazy('dashboard')
 
-    
+    def test_func(self):
+        recipe = self.get_object()# get the current recipe object
+        return self.request.user == recipe.chef# check if the logged-in user is the chef of the recipe
+
+
+class RecipeCreateView(LoginRequiredMixin, CreateView):
+    model = Recipe# table where data will be saved
+    form_class = RecipeForm# form to be used for creating a recipe
+    template_name = 'users/recipe_form.html'
+    success_url = reverse_lazy('dashboard')# redirect to dashboard after successful creation
+
+    # override form_valid to set the chef and handle JSON fields
+    def form_valid(self, form):
+        recipe = form.save(commit=False)# create recipe instance without saving to database yet
+       
+        if not recipe.pk: #assign the logged-in user as the chef for new recipes
+            recipe.chef = self.request.user
+        
+        ing_data = form.cleaned_data.get('ingredients')# get cleaned ingredients data
+        inst_data = form.cleaned_data.get('instructions')# get cleaned instructions data
+   
+        if ing_data:
+            if isinstance(ing_data, list):# if it's already a list, convert to JSON string
+                recipe.ingredients = json.dumps(ing_data)# convert list to JSON string
+            else:
+                try:
+                    # Clean/Format the JSON string
+                    parsed = json.loads(ing_data)# parse JSON string to list
+                    recipe.ingredients = json.dumps(parsed)# convert back to JSON string
+                except json.JSONDecodeError:
+                    recipe.ingredients = json.dumps([ing_data])# wrap in list and convert to JSON string
+        else:
+            recipe.ingredients = "[]"# empty JSON array if no data provided
+
+        # Handle Instructions
+        if inst_data:
+            if isinstance(inst_data, list):# check if the data is already a list
+                recipe.instructions = json.dumps(inst_data)# convert list to JSON string
+            else:
+                try:
+                    parsed = json.loads(inst_data)# parse JSON string to list
+                    recipe.instructions = json.dumps(parsed)# convert back to JSON string
+                except json.JSONDecodeError:
+                    recipe.instructions = json.dumps([inst_data])# wrap in list and convert to JSON string
+        else:
+            recipe.instructions = "[]"# empty JSON array if no data provided
+
+        
+        diet_val = form.cleaned_data.get('dietary')
+        if diet_val == 'None':
+            recipe.dietary = ''  # Save as empty string in DB
+        else:
+            recipe.dietary = diet_val
+
+        health_val = form.cleaned_data.get('health_condition')
+        if health_val == 'None':
+            recipe.health_condition = ''
+        else:
+            recipe.health_condition = health_val 
+        recipe.save()# save the recipe to the database
+        return redirect(self.success_url)# redirect to the success URL
