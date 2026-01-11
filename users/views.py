@@ -207,10 +207,10 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     template_name = 'users/recipe_form.html'
     success_url = reverse_lazy('dashboard')# redirect to dashboard after successful creation
 
-    # override form_valid to set the chef and handle JSON fields
+    # verify if the info pass it is valid then we override it with our custom rules
     def form_valid(self, form):
         recipe = form.save(commit=False)# create recipe instance without saving to database yet
-       
+        #check if whether the recipe does not yet exist in the database
         if not recipe.pk: #assign the logged-in user as the chef for new recipes
             recipe.chef = self.request.user
         
@@ -246,14 +246,65 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         
         diet_val = form.cleaned_data.get('dietary')
         if diet_val == 'None':
-            recipe.dietary = ''  # Save as empty string in DB
+            recipe.dietary = ''  # Save as empty string in DB so as to revent it from saving none
         else:
             recipe.dietary = diet_val
 
         health_val = form.cleaned_data.get('health_condition')
         if health_val == 'None':
-            recipe.health_condition = ''
+            recipe.health_condition = '' # Save as empty string in DB so as to revent it from saving none
         else:
             recipe.health_condition = health_val 
         recipe.save()# save the recipe to the database
+        return redirect(self.success_url)# redirect to the success URL
+    
+class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Recipe
+    form_class = RecipeForm
+    template_name = 'users/recipe_form.html'
+    success_url = reverse_lazy('dashboard')
+
+
+    def test_func(self):# check if the logged-in user is the chef of the recipe
+        recipe = self.get_object()
+        return self.request.user == recipe.chef# if true, allow access otherwise deny
+    
+    
+    def form_valid(self, form):
+        recipe = form.save(commit=False)# create recipe instance without saving to database yet
+        # Only set chef if it's the CreateView
+        if not recipe.pk: #assign the logged-in user as the chef for new recipes
+            recipe.chef = self.request.user
+        
+        ing_data = form.cleaned_data.get('ingredients')# get cleaned ingredients data currently added by the chef
+        inst_data = form.cleaned_data.get('instructions')# get cleaned instructions data currently added by the chef
+
+        # saving ingredient data as a json file in the db
+        if ing_data:
+            if isinstance(ing_data, list):# if it's already a list, convert to JSON string
+                recipe.ingredients = json.dumps(ing_data)#  convert list to JSON string
+            else:
+                try:
+                    #if it is in string 
+                    parsed = json.loads(ing_data)# parse JSON string to list
+                    recipe.ingredients = json.dumps(parsed)# convert back to JSON string
+                except json.JSONDecodeError:
+                    recipe.ingredients = json.dumps([ing_data])# wrap in list and convert to JSON string
+        else:
+            recipe.ingredients = "[]"
+        # saving instruction data as a json file in the db
+        if inst_data:
+            if isinstance(inst_data, list):# if it's already a list, convert to JSON string
+                recipe.instructions = json.dumps(inst_data)#  convert list to JSON string
+            else:
+                try:
+                    #if it is in string 
+                    parsed = json.loads(inst_data)# parse JSON string to list
+                    recipe.instructions = json.dumps(parsed)# convert back to JSON string
+                except json.JSONDecodeError:
+                    recipe.instructions = json.dumps([inst_data])# wrap in list and convert to JSON string
+        else:
+            recipe.instructions = "[]"# saving an empty set to the db
+
+        recipe.save()# save the data to the db after adding custom logic to it for validation
         return redirect(self.success_url)# redirect to the success URL
