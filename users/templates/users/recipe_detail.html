@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef Roots - Recipe View</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Lobster&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================= THEME VARIABLES ================= */
+        :root {
+            --primary-green: #69d060;
+            --primary-orange:  #ef8b17;
+            --sidebar-width: 240px;
+            --header-height: 60px;
+            --bg-color: #f8f9fa;
+            --text-dark: #333;
+            --card-radius: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            font-size: 13.5px;
+            padding-left: var(--sidebar-width);
+            padding-top: var(--header-height);
+        }
+
+        /* ================= CONTAINER ================= */
+        .container { max-width: 1000px; margin: 0 auto; padding: 30px; }
+
+        .card {
+            background: white; border-radius: var(--card-radius);
+            padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.04); margin-bottom: 25px;
+            border: 1px solid #eee;
+        }
+
+        /* ================= HERO SECTION ================= */
+        .hero { display: flex; gap: 30px; align-items: flex-start; }
+
+        .hero-img-box {
+            flex-shrink: 0; width: 35%; height: 260px; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .hero-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .hero-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+        .recipe-title { font-size: 28px; font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
+
+        /* Country of Origin Tag */
+        .origin-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; color: #555; font-weight: 500;
+            background: #f1f2f6; padding: 4px 10px; border-radius: 6px;
+            width: fit-content; margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .origin-tag i { color: var(--primary-orange); }
+
+        .recipe-desc { color: #666; line-height: 1.6; margin-bottom: 15px; font-size: 13.5px; }
+
+        /* Resource Button */
+        .resource-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background-color: #4a5568; color: white;
+            padding: 8px 18px; border-radius: 50px;
+            text-decoration: none; font-weight: 500; font-size: 12px;
+            width: fit-content; margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(74, 85, 104, 0.2);
+            transition: all 0.2s;
+        }
+        .resource-btn:hover { background-color: #2d3748; transform: translateY(-2px); }
+
+        /* Stats Badges */
+        .stats-row { display: flex; flex-wrap: wrap; gap: 8px; }
+        .stat-pill {
+            padding: 6px 14px; border-radius: 50px; font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .pill-price { background: #e8f5e9; color: #2e7d32; }
+        .pill-health { background: #ffebee; color: #c62828; }
+        .pill-diet { background: #fff3e0; color: #ef6c00; }
+
+        /* ================= GRID CONTENT ================= */
+        .content-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 25px; }
+
+        h3.section-header {
+            font-size: 17px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;
+            padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;
+        }
+        h3.section-header i { color: var(--primary-green); font-size: 16px; }
+
+        /* Ingredients */
+        .ing-list { list-style: none; }
+        .ing-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 12px; border-radius: 8px; margin-bottom: 6px;
+            background: #fafafa; cursor: pointer; transition: 0.2s; font-size: 13px;
+        }
+        .ing-item:hover { background: #f0f0f0; }
+        .check-box {
+            width: 16px; height: 16px; border: 2px solid #ddd; border-radius: 4px;
+            margin-right: 10px; display: flex; align-items: center; justify-content: center;
+        }
+        .ing-item.checked { opacity: 0.5; text-decoration: line-through; }
+        .ing-item.checked .check-box { background: var(--primary-green); border-color: var(--primary-green); }
+        .ing-item.checked .check-box::after { content: '✔'; color: white; font-size: 9px; }
+        .qty-badge { background: white; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--primary-orange); box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+
+        /* Steps */
+        .step-row { display: flex; gap: 12px; margin-bottom: 15px; }
+        .step-num {
+            flex-shrink: 0; width: 24px; height: 24px; background: var(--primary-orange);
+            color: white; border-radius: 50%; text-align: center; line-height: 24px; font-weight: bold; font-size: 12px;
+        }
+        .step-text { line-height: 1.6; color: #444; font-size: 13.5px; margin-top: 2px; }
+
+        /* ================= REVIEWS ================= */
+        .review-wrapper { display: flex; flex-direction: column; gap: 20px; }
+
+        .review-form {
+            background: #f0fdf4; border: 1px solid #dcfce7;
+            padding: 20px; border-radius: 12px;
+        }
+        .review-form h4 { font-size: 14px; margin-bottom: 8px; }
+
+        .star-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
+        .star-input-group i { font-size: 22px; color: #cbd5e0; cursor: pointer; }
+        .star-input-group i.active { color: #ffb400; }
+
+        input, textarea {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+            font-family: inherit; font-size: 13px; background: white; margin-bottom: 12px;
+        }
+
+        /* NEW: Fixed Size Textarea */
+        textarea {
+            resize: none; /* User cannot drag to resize */
+            height: 140px; /* Fixed height */
+        }
+
+        button.btn-post {
+            background: var(--primary-green); color: white; border: none; padding: 10px 24px;
+            border-radius: 30px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 13px;
+        }
+
+
+        .reviewer-name { font-weight: 600; font-size: 13px; color: #333; }
+        .static-stars { color: #ffb400; font-size: 10px; }
+        .review-comment { color: #666; font-size: 13px; line-height: 1.5; margin-top: 4px; }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            body { padding-left: 0; }
+            header { padding-left: 20px; justify-content: space-between; }
+            .sidebar { display: none; }
+            .hero { flex-direction: column; }
+            .hero-img-box { width: 100%; height: 200px; }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="layout"></div>
+    <div class="container">
+
+        <div class="card hero">
+            <div class="hero-img-box">
+                <img id="mainImage" src="" alt="Delicious Food">
+            </div>
+            <div class="hero-content">
+                <h1 class="recipe-title" id="title">Loading Title...</h1>
+
+                <div class="origin-tag" id="originContainer" style="display:none;">
+                    <i class="fas fa-globe-africa"></i> <span id="originText">Origin</span>
+                </div>
+
+                <p class="recipe-desc" id="desc">Loading description...</p>
+
+                <a id="externalResourceBtn" href="#" target="_blank" class="resource-btn" style="display: none;">
+                    <i class="fas fa-external-link-alt"></i> View Full Tutorial
+                </a>
+
+                <div class="stats-row">
+                    <div class="stat-pill pill-price"><i class="fas fa-tag"></i> <span id="priceDisplay">---</span></div>
+                    <div class="stat-pill pill-health"><i class="fas fa-heartbeat"></i> <span id="healthDisplay">---</span></div>
+                    <div class="stat-pill pill-diet"><i class="fas fa-leaf"></i> <span id="dietDisplay">---</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+
+            <div class="card">
+                <h3 class="section-header"><i class="fas fa-carrot"></i> Ingredients</h3>
+                <p style="font-size:11px; color:#999; margin-bottom:12px;">Tap to check off items</p>
+                <ul class="ing-list" id="ingredientList">
+                    </ul>
+            </div>
+
+            <div class="card">
+                <h3 class="section-header"><i class="fas fa-fire-alt"></i> Directions</h3>
+                <div id="stepsContainer">
+                    </div>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <h3 class="section-header"><i class="fas fa-comment-alt"></i> Reviews</h3>
+
+            <div class="review-wrapper">
+
+                <div class="review-form">
+                    <h4>Rate this recipe</h4>
+                    <div class="star-input-group" id="starInput">
+                        <i class="fas fa-star" data-val="1"></i>
+                        <i class="fas fa-star" data-val="2"></i>
+                        <i class="fas fa-star" data-val="3"></i>
+                        <i class="fas fa-star" data-val="4"></i>
+                        <i class="fas fa-star" data-val="5"></i>
+                    </div>
+
+                    <input type="text" id="reviewerName" placeholder="Your Name">
+
+                    <textarea id="reviewText" placeholder="Share your experience..."></textarea>
+
+                    <button class="btn-post" onclick="submitReview()">Post Review</button>
+                </div>
+
+                <div class="review-feed" id="reviewsContainer"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+         fetch("use.html")
+            .then(res => res.text())
+            .then(html => {
+              const container = document.getElementById("layout");
+              container.innerHTML = html;
+
+              // Execute embedded scripts
+              const scripts = container.querySelectorAll("script");
+              scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+                newScript.text = oldScript.text;
+                document.body.appendChild(newScript);
+              });
+            });
+
+        // --- 1. DATA HANDLING ---
+        let data = JSON.parse(sessionStorage.getItem("recipeData"));
+
+        if (!data) {
+            // Demo Data
+            data = {
+                name: "Poulet DG",
+                origin: "Cameroon",
+                description: "Poulet DG is a classic Cameroonian chicken stew made with plantains and vegetables. DG stands for 'Directeur Général', implying it's a meal for the boss!",
+                photoDataUrl: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+                resourceLink: "https://example.com/poulet-dg-recipe",
+                ingredients: [
+                    {name: "Chicken Thighs", qty: "1kg"},
+                    {name: "Plantains (Ripe)", qty: "4"},
+                    {name: "Carrots", qty: "3 diced"},
+                    {name: "Green Beans", qty: "200g"},
+                    {name: "Tomatoes", qty: "4 blended"}
+                ],
+                steps: [
+                    "Fry plantain slices until golden.",
+                    "Sauté chicken until browned.",
+                    "Cook tomatoes, onions, garlic and ginger into a sauce.",
+                    "Add vegetables and chicken back to pot.",
+                    "Simmer for 20 mins, then mix in plantains."
+                ],
+                amount: "6000",
+                healthCondition: "High Calorie",
+                dietary: "Gluten Free"
+            };
+        }
+
+        // Fill Hero
+        document.getElementById('title').innerText = data.name;
+        document.getElementById('desc').innerText = data.description || "";
+        document.getElementById('mainImage').src = data.photoDataUrl || "";
+
+        // --- ORIGIN LOGIC ---
+        const originBox = document.getElementById('originContainer');
+        if (data.origin) {
+            document.getElementById('originText').innerText = data.origin;
+            originBox.style.display = 'inline-flex';
+        }
+
+        // --- RESOURCE LINK LOGIC ---
+        const resourceBtn = document.getElementById('externalResourceBtn');
+        const link = data.resourceLink || data.youtubeUrl;
+        if (link && link.length > 0) {
+            resourceBtn.style.display = 'inline-flex';
+            resourceBtn.href = link;
+        } else {
+            resourceBtn.style.display = 'none';
+        }
+
+        // Price Interval
+        let price = parseInt(data.amount || 2000);
+        document.getElementById('priceDisplay').innerText = `${price} - ${price + 500} FCFA`;
+        document.getElementById('healthDisplay').innerText = data.healthCondition || "Healthy";
+        document.getElementById('dietDisplay').innerText = data.dietary || "Standard";
+
+        // Fill Ingredients
+        const list = document.getElementById('ingredientList');
+        if(data.ingredients) {
+            data.ingredients.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'ing-item';
+                li.onclick = function() { this.classList.toggle('checked'); };
+                li.innerHTML = `
+                    <div style="display:flex; align-items:center;">
+                        <div class="check-box"></div>
+                        <span>${item.name || item}</span>
+                    </div>
+                    <span class="qty-badge">${item.qty || ''}</span>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        // Fill Steps
+        const stepsBox = document.getElementById('stepsContainer');
+        if(data.steps) {
+            stepsBox.innerHTML = data.steps.map((step, i) => `
+                <div class="step-row">
+                    <div class="step-num">${i+1}</div>
+                    <div class="step-text">${step}</div>
+                </div>
+            `).join('');
+        }
+
+        // --- REVIEW LOGIC ---
+        let currentRating = 0;
+        const stars = document.querySelectorAll('#starInput i');
+
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                currentRating = this.dataset.val;
+                stars.forEach(s => {
+                    s.classList.toggle('active', s.dataset.val <= currentRating);
+                });
+            });
+        });
+
+        const reviewsDiv = document.getElementById('reviewsContainer');
+        let reviewDB = [
+            {name: "Jean-Pierre", text: "Authentic taste! Reminds me of home.", rating: 5},
+        ];
+
+        function renderReviews() {
+            reviewsDiv.innerHTML = "";
+            reviewDB.forEach(r => {
+                let starHtml = "";
+                for(let i=1; i<=5; i++) {
+                    starHtml += i <= r.rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+                }
+                const div = document.createElement('div');
+                div.className = 'review-item';
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                        <span class="reviewer-name">${r.name}</span>
+                        <div class="static-stars">${starHtml}</div>
+                    </div>
+                    <div class="review-comment">${r.text}</div>
+                `;
+                reviewsDiv.appendChild(div);
+            });
+        }
+
+        function submitReview() {
+            const name = document.getElementById('reviewerName').value;
+            const text = document.getElementById('reviewText').value;
+
+            if(name && text && currentRating > 0) {
+                reviewDB.unshift({name, text, rating: currentRating});
+                renderReviews();
+                document.getElementById('reviewerName').value = '';
+                document.getElementById('reviewText').value = '';
+                currentRating = 0;
+                stars.forEach(s => s.classList.remove('active'));
+            } else {
+                alert("Please complete the review form.");
+            }
+        }
+
+        renderReviews();
+
+    </script>
+</body>
+</html>
