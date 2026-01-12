@@ -1,0 +1,292 @@
+{% load static %}
+<!--ENABLES US TO LOAD STATIC FILES THIS IS WHERE ALL OUR IMAGES ARE FOUND AND WHICH WE CAN CALLED IN OUR DJANGO HTML -->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Chef Roots – Signup</title>
+
+  <!--THIS ROOT WILL E#_öKM 
+  IM;Q!NABLES US TO USED  THIS COULOURS TO OTHER PART OF OUR HTML CODE THIS ARE JUST LIKE VARIABLES -->
+  
+  <style>
+    :root {
+      --orange: #f6a079;
+      --light: #fff;
+      --muted: #f7e2d8;
+      --accent: #d88474;
+    }
+
+    /*margin refers to space from the right of the page*/
+    * {
+      margin: 0;
+      /*pading space inside a box*/
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      min-height: 100vh;
+      /*font family refers to text of the html if popins doesn't work the sansirif will take place*/
+      font-family: "Poppins", sans-serif;
+    }
+
+    /* as you see bellow this body is a css style the change will occur in the body  */
+    body {
+      /*back ground refers refer to  as the colors */
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+        /*this is a static file this is where an image from the static file is run or called the it will be loaded here */
+        url('{% static "users/icons/pexels-farhad.jpg" %}')
+        /*this enables that then image should not repaet it self when iit is loaded */
+        center/cover no-repeat;
+      /*this refers to as the space between the image */
+      padding: 40px 20px;
+      /*this refers to the color of the body */
+      color: #fff;
+    }
+
+    /*this one refers to as the heading,particular changes  will occur at heading one and heading 3*/
+    h1, h3 {
+      /*permit the ading to be center*/
+      text-align: center;
+      /*that heading will be invisible since it is equal to 0*/
+      opacity: 0;
+      animation: fadeUp 1.2s ease forwards;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      animation-delay: 0.2s;
+    }
+
+    h3 {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 400;
+      margin-top: 12px;
+      animation-delay: 0.6s;
+    }
+
+    /*this one help to create an animation called fadeup*/
+    @keyframes fadeUp {
+      /*so in general the keyframes which has the name fade up enable us when we load the page at first it will be inviible  then it will appear a coulour dending on which coulours you have chossen */
+      /*refers to how the element start */
+      from {
+        /*this transform help to move from the y axis but from the positive from 5 */
+        transform: translateY(5px);
+        /*enable to move to the left*/
+        opacity: 0;
+      }
+      /*this refers to how the element ends*/
+      to {
+        /*help to put it in a normal position from the y axis but at 0  */
+        transform: translateY(0);
+        /*opacity helps to make it visible */
+        opacity: 1;
+      }
+    }
+
+    /*this is a container it was initialised in our html this container help us to do many operation inside */
+    .container {
+      /*refers to the space between the top of the web page to the boxes */
+      margin-top: 70px;
+      display: flex;
+      /*this refers to as the gap between boxes */
+      gap: 300em;
+      /*help the boxes to be in the center */
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /*this refers to as the boxes how will they appear on the page */
+    .box {
+      width: 260px;
+      /*the hight refers to as the hight of the box */
+      height: 340px;
+      /*the border raduis refers to as how big the box bill be */
+      border-radius: 10px;
+      overflow: hidden;
+      /*the back ground coulours take the coulours from the root when we are calling it from the root we used var(-- */
+      background: var(--light);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      position: relative;
+    }
+
+    .us:hover {
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
+       url('{% static "users/icons/pexels-farhad.jpg" %}') center/cover no-repeat;
+    }
+
+    .ch:hover {
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
+        /*here the urls will be loaded from the static folder */
+        url('{% static "users/icons/pexels-kamp.jpg" %}') center/cover no-repeat;
+    }
+
+    .box a {
+      text-decoration: none;
+      height: 100%;
+      display: block;
+      position: relative;
+    }
+
+    .box:hover {
+      transform: translateY(-12px) scale(1.05);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.45);
+    }
+
+    /* ===== IMAGE AREA ===== */
+    .bg_img {
+      height: 70%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .img {
+      width: 130px;
+    }
+
+    /* ===== TEXT AREA ===== */
+    .text {
+      height: 30%;
+      background-color: var(--muted);
+      color: #262424d4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: all 0.4s ease;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .feature {
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 25px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 0.45s ease;
+    }
+
+    /* ===== HOVER EFFECT ===== */
+    .box:hover .bg_img {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    .box:hover .text {
+      transform: translateY(-240%);
+    }
+
+    .box:hover .feature {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 480px) {
+      .container {
+        gap: 30px;
+      }
+      .box {
+      width: 200px;
+      height: 280px;
+      }
+      .img {
+      width: 90px;
+      }
+      h1 {
+      font-size: clamp(0.5rem, 5vw, 4rem);
+      }
+      .text {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>WELCOME TO CHEF ROOTS</h1>
+  <h3>Whether you are here to enjoy great meals or share your culinary skills, get started below.</h3>
+
+  <main class="container">
+
+    <!--INDIVIDUAL SIGNUP CARD -->
+<div class="box us">
+  <!--This link wraps the whole card so you can click anywhere-->
+  <a href="{% url 'user-signup' %}">
+    
+    <!-- Background image container-->
+    <div class="bg_img">
+      <!--Picture for the individual user-->
+      <img src="{% static 'users/icons/employees.png' %}" alt="Individual" class="img">
+    </div>
+    <div class="text">Start as an Individual</div>
+
+    <!--Description text-->
+    <div class="feature">
+      Discover local chefs, order fresh meals, and enjoy
+      homemade dishes prepared just for you.
+    </div>
+
+  </a>
+</div>
+
+
+<!--CHEF SIGNUP CARD-->
+<div class="box ch">
+  <!--Link for the chef signup card-->
+  <a href="{% url 'chef-signup' %}">
+    
+    <!--Background image container-->
+    <div class="bg_img">
+      <!--Picture for the chef-->
+      <img src="{% static 'users/icons/chef.png' %}" alt="Chef" class="img">
+    </div>
+
+    <!--Title text-->
+    <div class="text">Start as a Chef</div>
+
+    <!--Description text-->
+    <div class="feature">
+      Showcase your talent, reach new customers, and turn
+      your passion into a profitable business.
+    </div>
+
+  </a>
+</div>
+
+</main>
+
+<!--Small text below the cards for existing users-->
+<p style="margin-top: 20px; font-size: 18px; text-align: center;">
+  Already have an account? 
+  <a href="{% url 'login' %}" style="color: var(--orange); font-weight: bold;">
+    Login
+  </a>
+</p>
+
+</body>
+</html>
