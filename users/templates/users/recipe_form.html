@@ -1,0 +1,793 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Lobster&display=swap" rel="stylesheet">
+
+<style>
+    /* ROOT THEME VARIABLES */
+    :root {
+      --card: #e9e9e9; 
+      --card-actual: rgba(248, 237, 230, 0.911); 
+      --accent: #ef8b17;
+      --btn-login: rgba(239, 139, 23, 0.9);
+      --orange: rgba(239, 139, 23, 0.94);
+      --text: #333;
+      --muted: #625e5e;
+      --light: #ffffff;
+    }
+
+    /* PAGE LAYOUT */
+    /* Main page wrapper - centered flex container with full viewport height */
+    .recipe-page-wrapper {
+        font-family: Poppins, -apple-system, Segoe UI, Roboto, sans-serif;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        padding: 24px 12px;
+        min-height: 100vh;
+    }
+
+    .parallax-bg {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: transparent; 
+      z-index: -1;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 720px;
+      background: transparent;
+    }
+
+    .form-card {
+      background: var(--card-actual);
+      border-radius: 14px;
+      padding: 18px 28px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .hint {
+      font-size: 10px;
+      color: var(--light);
+      margin-top: 4px;
+    }
+
+    /* INPUT FIELD STYLES */
+    /* Unified styling for all form input types */
+    input[type="text"], 
+    input[type="number"], 
+    textarea, 
+    select,
+    input[type="url"] {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 3px;
+      border: 2px solid var(--light);
+      background: #f5f5f5;
+      outline: none;
+      cursor: pointer;
+      font-family: "Inter", sans-serif; 
+      font-size: 14px;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      transition: ease 0.5s; 
+      box-sizing: border-box; 
+    }
+
+    input:hover, textarea:hover, select:hover,
+    input:focus, textarea:focus, select:focus {
+      background: var(--light);
+      border-color: var(--orange);
+      box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* DESCRIPTION & IMAGE UPLOAD SECTION */
+    /* Two-column layout: description textarea + image upload box */
+    .desc-row { 
+      display: flex; 
+      gap: 12px; 
+      align-items: stretch; 
+    }
+    
+    .desc-row textarea { 
+      flex: 3; 
+      min-height: 140px !important;  
+      max-height: 140px !important; 
+      resize: none !important; 
+    }
+
+    .upload-area { 
+      flex: 1; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 8px;
+      border: 2px solid #c9c9c9;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      background: linear-gradient(to bottom, rgba(250, 248, 248, 0.7), rgba(0,0,0,0.6)), #555; 
+      background-size: cover;
+      transition: ease 0.3s;
+      justify-content: center;
+      height: 140px; 
+      box-sizing: border-box;
+    }
+    
+    .upload-area:hover {
+      box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
+    }
+
+    .upload-label-text {
+      font-size: 14px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .file-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #f4aacde3;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4'%3E%3C/path%3E%3Cpolyline points='16 17 21 12 16 7'%3E%3C/polyline%3E%3Cline x1='21' y1='12' x2='9' y2='12'%3E%3C/line%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 18px;
+      transform: rotate(-90deg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    /* DYNAMIC ROWS (Ingredients & Steps) */
+    /* Wrapper for dynamically added rows */
+    .dynamic-row-wrapper {
+        margin-bottom: 10px;
+    }
+
+    /* Flexbox layout for ingredient and step input rows */
+    .ingredient-row, .step-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .ingredient-row input:first-child { flex: 2; }
+    .ingredient-row input.qty { flex: 1; }
+    .step-row input { flex: 1; }
+
+    /* ACTION BUTTONS (Add/Remove Rows)*/
+    /* Circular button for adding/removing ingredients and steps */
+    .action-btn {
+      border: solid 2px var(--btn-login);
+      background: var(--light);
+      color: var(--btn-login);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: ease 0.5s;
+      flex-shrink: 0;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(180deg,var(--btn-login), #c9655a);
+      border-color: var(--orange);
+      box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
+      color: #fff;
+    }
+
+    /* LAYOUT UTILITIES */
+    /* Two-column grid layout for side-by-side fields */
+    .grid-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .margin-top-12 {
+      margin-top: 12px;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    /* WORD COUNTER */
+    /* Live word counter display for description field */
+    .word-counter {
+        float: right;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 400;
+        transition: color 0.3s;
+    }
+    .word-counter.limit-reached {
+        color: #d32f2f;
+    }
+
+    /* BUDGET AMOUNT SECTION */
+    /* Flex container for budget amount and currency selector */
+    .amount-container {
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+      margin-top: 6px;  
+    }
+    
+    .amount-input { flex: 3; }
+    .currency-select-wrapper { flex: 1; min-width: 100px; }
+    
+    .amount-info {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 8px;
+      min-height: 16px;
+    }
+
+    /* SUBMIT BUTTON */
+    /* Full-width form submission button */
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(180deg,var(--btn-login), #c9655a);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      cursor: pointer;
+      transition: background 0.5s ease, transform 160ms ease, box-shadow 240ms ease;
+    }
+    .submit-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    /* CUSTOM SELECT DROPDOWN */
+    .custom-select {
+      position: relative;
+      width: 100%;
+    }
+    .custom-select-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: 6px;
+      background: #f5f5f5;
+      border: 2px solid var(--light);
+      cursor: pointer;
+      font-size: 14px;
+      min-height: 44px;
+      transition: ease 0.3s;
+      box-sizing: border-box;
+    }
+    .custom-select-trigger:hover {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
+      background: var(--light);
+    }
+    .custom-options {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 4px);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+      max-height: 0;
+      opacity: 0;
+      overflow-y: auto;
+      transition: all .28s ease;
+      z-index: 100;
+    }
+    .custom-select.open .custom-options {
+      max-height: 220px;
+      opacity: 1;
+    }
+    .custom-option {
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      border-bottom: 1px solid #f1f1f1;
+      color: #333;
+    }
+    .custom-option:hover {
+      background: rgba(246,160,121,0.1);
+    }
+    .custom-hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 720px) {
+      .desc-row { flex-direction: column; }
+      .grid-row { grid-template-columns: 1fr; }
+      .ingredient-row { display: grid; grid-template-columns: 1fr 0.3fr auto; }
+      .form-card { padding: 14px; }
+    }
+
+    /* VIDEO URL INPUT WITH ICON */
+    .video-input-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    /* The SVG Icon */
+    .yt-svg-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        fill: #d32f2f; /* YouTube Red */
+        pointer-events: none; /* Let clicks pass to input */
+        z-index: 10;
+    }
+
+    /* The Input Field */
+    .video-input {
+        width: 100%;
+        /* Extra padding on left (45px) so text starts after the icon */
+        padding: 10px 14px 10px 45px !important; 
+        border-radius: 3px;
+        border: 2px solid var(--light);
+        background: #f5f5f5;
+        outline: none;
+        transition: ease 0.5s;
+        box-sizing: border-box;
+    }
+
+    .video-input:focus {
+        background: var(--light);
+        border-color: var(--orange);
+        box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
+    }
+
+  input[type="file"]:invalid + .hint {
+    color: red;
+    font-weight: bold;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Main page container -->
+<div class="recipe-page-wrapper">
+    <!-- Background decoration element -->
+    <div class="parallax-bg" aria-hidden="true"></div>
+
+    <!-- Recipe submission form - multipart for file uploads -->
+    <form class="form-container" id="recipeForm" method="post" enctype="multipart/form-data">
+        <!-- Security token for form submission -->
+        {% csrf_token %}
+        <!-- Hidden fields to store JSON arrays of ingredients and instructions -->
+        <input type="hidden" name="ingredients" id="id_ingredients" value="{{ form.ingredients.value|default:'[]'|force_escape }}">
+        <input type="hidden" name="instructions" id="id_instructions" value="{{ form.instructions.value|default:'[]' |force_escape}}">
+
+        {% if form.errors %}
+            <div class="form-card" style="border: 1px solid red;">
+                <p style="color: red; font-size: 14px;">Please correct the errors below:</p>
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <!-- BASIC RECIPE INFO CARD -->
+        <div class="form-card">
+            <!-- Recipe Title Input -->
+            <label for="recipeName">Recipe Name</label>
+            <input type="text" name="title" id="recipeName" placeholder="Tomato, pepper, onion" value="{{ form.title.value|default:'' }}" required>
+
+            <!-- Recipe Origin Country Dropdown -->
+            <label class="margin-top-12" for="country">Recipe Origins</label>
+            <select name="origin_country" id="country">
+                <option value="">Select country</option>
+                <option value="CM" {% if form.origin_country.value == 'CM' %}selected{% endif %}>Cameroon</option>
+                <option value="NG" {% if form.origin_country.value == 'NG' %}selected{% endif %}>Nigeria</option>
+                <option value="US" {% if form.origin_country.value == 'US' %}selected{% endif %}>United States</option>
+                <option value="FR" {% if form.origin_country.value == 'FR' %}selected{% endif %}>France</option>
+                <option value="GH" {% if form.origin_country.value == 'GH' %}selected{% endif %}>Ghana</option>
+                <option value="IN" {% if form.origin_country.value == 'IN' %}selected{% endif %}>India</option>
+                <option value="CN" {% if form.origin_country.value == 'CN' %}selected{% endif %}>China</option>
+            </select>
+
+            <label class="margin-top-12" for="description">
+                Description
+                <span id="desc-word-count" class="word-counter">0/25 words</span>
+            </label>
+            <div class="desc-row">
+                <textarea name="description" id="description" placeholder="Enter a brief description (max 25 words)">{{ form.description.value|default:'' }}</textarea>
+                
+                <div class="upload-area">
+                    <span class="upload-label-text">
+                        {% if form.instance.image %}Change Image{% else %}Upload meal here{% endif %}
+                    </span>
+
+                    <label for="photoUpload" class="file-icon-btn" title="Upload meal photo">
+                        <span style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);">Upload</span>
+                    </label>
+                    <input type="file" id="photoUpload" name="image" accept="image/*" onchange="previewFile(this)" style="opacity: 0;" {% if not form.instance.image %}required{% endif %}>
+                    <div class="hint" id="fileMsg" style="color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">
+                        {% if form.instance.image %}
+                            <span style="font-weight: 500;">✓ Current image saved</span>
+                        {% else %}
+                            Size (max 10MB)
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INGREDIENTS SECTION -->
+        <!-- Dynamically populated list of ingredients -->
+        <div class="form-card">
+            <h2>Ingredients</h2>
+            <div id="ingredients-container"></div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                <button type="button" class="action-btn" onclick="addIngredientRow()">+</button>
+            </div>
+        </div>
+
+        <!-- COOKING STEPS SECTION -->
+        <!-- Dynamically populated list of cooking instructions -->
+        <div class="form-card">
+            <h2>Cooking Steps</h2>
+            <div id="steps-container"></div>
+             <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                <button type="button" class="action-btn" onclick="addStepRow()">+</button>
+            </div>
+        </div>
+
+        <!-- RECIPE METADATA CARD -->
+        <!-- Nutritional, dietary, and cooking info -->
+        <div class="form-card">
+            <!-- Two-column: Health condition + Dietary preferences -->
+            <div class="grid-row">
+                <!-- Health condition dropdown -->
+                <div>
+                    <label for="healthCondition">Health Condition</label>
+                    <select name="health_condition" id="healthCondition" >
+                      <option value="">Select Condition</option>
+                      
+                      <option value="None" {% if form.health_condition.value == 'None' %}selected{% endif %}>None</option>
+
+                      <option value="Diabetes" {% if form.health_condition.value == 'Diabetes' %}selected{% endif %}>Diabetes (Low Sugar/Carb)</option>
+                      <option value="Hypertension" {% if form.health_condition.value == 'Hypertension' %}selected{% endif %}>Hypertension (Low Sodium)</option>
+                      <option value="Heart Disease" {% if form.health_condition.value == 'Heart Disease' %}selected{% endif %}>Heart Disease (Low Cholesterol)</option>
+                      <option value="Obesity" {% if form.health_condition.value == 'Obesity' %}selected{% endif %}>Obesity / Weight Loss</option>
+
+                      <option value="Celiac" {% if form.health_condition.value == 'Celiac' %}selected{% endif %}>Celiac Disease (Strict Gluten-Free)</option>
+                      <option value="GERD" {% if form.health_condition.value == 'GERD' %}selected{% endif %}>GERD / Acid Reflux</option>
+                      <option value="IBS" {% if form.health_condition.value == 'IBS' %}selected{% endif %}>IBS (Low FODMAP)</option>
+
+                      <option value="Kidney Disease" {% if form.health_condition.value == 'Kidney Disease' %}selected{% endif %}>Kidney Disease</option>
+                      <option value="Gout" {% if form.health_condition.value == 'Gout' %}selected{% endif %}>Gout (Low Purine)</option>
+                      <option value="Anemia" {% if form.health_condition.value == 'Anemia' %}selected{% endif %}>Anemia (High Iron)</option>
+                  </select>
+                </div>
+                <div>
+                    <label for="dietary">Dietary</label>
+                    <select name="dietary" id="dietary" >
+                      <option value="">Select Preference</option>
+                      
+                      <option value="None" {% if form.dietary.value == 'None' %}selected{% endif %}>None</option>
+
+                      <option value="Vegetarian" {% if form.dietary.value == 'Vegetarian' %}selected{% endif %}>Vegetarian (No Meat)</option>
+                      <option value="Vegan" {% if form.dietary.value == 'Vegan' %}selected{% endif %}>Vegan (No Animal Products)</option>
+                      <option value="Pescatarian" {% if form.dietary.value == 'Pescatarian' %}selected{% endif %}>Pescatarian (Fish Allowed)</option>
+                      <option value="Keto" {% if form.dietary.value == 'Keto' %}selected{% endif %}>Keto / Low Carb</option>
+
+                      <option value="Halal" {% if form.dietary.value == 'Halal' %}selected{% endif %}>Halal</option>
+                      <option value="Kosher" {% if form.dietary.value == 'Kosher' %}selected{% endif %}>Kosher</option>
+
+                      <option value="Gluten-Free" {% if form.dietary.value == 'Gluten-Free' %}selected{% endif %}>Gluten-Free</option>
+                      <option value="Dairy-Free" {% if form.dietary.value == 'Dairy-Free' %}selected{% endif %}>Dairy-Free</option>
+                      <option value="Nut-Free" {% if form.dietary.value == 'Nut-Free' %}selected{% endif %}>Nut-Free</option>
+                      <option value="Shellfish-Free" {% if form.dietary.value == 'Shellfish-Free' %}selected{% endif %}>Shellfish-Free</option>
+                  </select>
+                </div>
+            </div>
+
+            <label class="margin-top-12" for="mealType">Meal Type</label>
+            <select name="meal_type" id="mealType">
+                <option value="Family" {% if form.meal_type.value == 'Family' %}selected{% endif %}>Family</option>
+                <option value="Individual" {% if form.meal_type.value == 'Individual' %}selected{% endif %}>Individual</option>
+            </select>
+
+            <label class="margin-top-12" for="mealTime">Meal Time</label>
+            <select name="meal_time" id="mealTime">
+                <option value="Breakfast" {% if form.meal_time.value == 'BreakFast' %}selected{% endif %}>Brunch</option>
+                <option value="Lunch" {% if form.meal_time.value == 'Lunch' %}selected{% endif %}>Lunch</option>
+                <option value="Dinner" {% if form.meal_time.value == 'Dinner' %}selected{% endif %}>Dinner</option>
+            </select>
+
+            <div class="form-group margin-top-12">
+              <label for="cooking_time">Cooking Time (minutes)</label>
+              <input type="number" name="cooking_time" id="cooking_time" class="form-control" 
+                     value="{{ form.cooking_time.value|default:30 }}" required>
+              
+              {% if form.cooking_time.errors %}
+                  <div class="text-danger">{{ form.cooking_time.errors }}</div>
+              {% endif %}
+            </div>
+
+            <label class="margin-top-12" for="amount">Amount</label>
+            <div class="amount-container">
+                <input type="number" name="budget" id="amount" class="amount-input" placeholder="Enter budget" value="{{ form.budget.value|default:'' }}">
+                <div class="currency-select-wrapper">
+                    <select name="currency" id="currency">
+                        <option value="XAF" {% if form.currency.value == 'XAF' %}selected{% endif %}>XFA</option>
+                        <option value="USD" {% if form.currency.value == 'USD' %}selected{% endif %}>USD</option>
+                        <option value="EUR" {% if form.currency.value == 'EUR' %}selected{% endif %}>EUR</option>
+                    </select>
+                </div>
+            </div>
+
+            <label class="margin-top-12" for="id_video_url">
+                Video Tutorial 
+                <span style="font-weight: 400; font-size: 12px; color: var(--muted);">(Optional)</span>
+            </label>
+            
+            <div class="video-input-wrapper">
+                <svg class="yt-svg-icon" viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/>
+                </svg>
+                
+                <input type="url" 
+                       name="video_url" 
+                       id="id_video_url" 
+                       class="video-input"
+                       placeholder="https://www.youtube.com/watch?v=..." 
+                       value="{{ form.video_url.value|default:'' }}">
+            </div>
+            
+            {% if form.video_url.errors %}
+                <div style="color: #d32f2f; font-size: 12px; margin-top: 4px; font-weight: 500;">
+                     {{ form.video_url.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <!-- Changes text based on create vs update -->
+        <button type="submit" class="submit-btn">
+            {% if form.instance.pk %}Update Recipe{% else %}Submit Recipe{% endif %}
+        </button>
+
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    /* INITIALIZATION ON PAGE LOAD */
+    /* Set up event listeners and load persisted data */
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        /* 1. Load saved ingredients and instructions from hidden fields */
+        loadIngredients();
+        loadInstructions();
+
+        /* 2. Initialize word counter for description field */
+        const descField = document.getElementById('description');
+        const counterDisplay = document.getElementById('desc-word-count');
+        const MAX_WORDS = 25;
+
+        if (descField && counterDisplay) {
+            /* Update word count display and enforce maximum limit */
+            function updateWordCount() {
+                let val = descField.value;
+                let words = val.trim().split(/\s+/);
+                if (val.trim() === '') words = [];
+
+                if (words.length > MAX_WORDS) {
+                    const croppedWords = words.slice(0, MAX_WORDS);
+                    descField.value = croppedWords.join(" ");
+                    words = croppedWords;
+                    counterDisplay.classList.add('limit-reached');
+                } else {
+                    counterDisplay.classList.remove('limit-reached');
+                }
+                counterDisplay.innerText = `${words.length}/${MAX_WORDS} words`;
+            }
+            descField.addEventListener('input', updateWordCount);
+            updateWordCount();
+        }
+
+        /* 3. Initialize custom dropdown styling for select elements */
+        initCustomSelects();
+    });
+
+    /* HELPER FUNCTIONS */
+    
+    /* Load ingredients from hidden JSON field and populate form rows */
+    function loadIngredients() {
+        const input = document.getElementById('id_ingredients');
+        const container = document.getElementById('ingredients-container');
+
+        // 1. Clear the container to prevent duplicates
+        container.innerHTML = ''; 
+
+        let data = [];
+        try {
+            if (input.value) {
+                let parsed = JSON.parse(input.value);
+                if (typeof parsed === 'string') parsed = JSON.parse(parsed);
+                data = parsed;
+            }
+        } catch (e) { console.error("Ing parse error", e); }
+
+        if (Array.isArray(data) && data.length > 0) {
+            data.forEach(item => addIngredientRow(item.name, item.qty));
+        } else {
+            addIngredientRow(); // Add one blank row for new forms
+        }
+    }
+
+    /* Load instructions from hidden JSON field and populate form rows */
+    function loadInstructions() {
+        const input = document.getElementById('id_instructions');
+        const container = document.getElementById('steps-container');
+
+        //  Clear the container to prevent duplicates
+        container.innerHTML = '';
+
+        let data = [];
+        try {
+            if (input.value) {
+                let parsed = JSON.parse(input.value);
+                if (typeof parsed === 'string') parsed = JSON.parse(parsed);
+                data = parsed;
+            }
+        } catch (e) { console.error("Step parse error", e); }
+
+        if (Array.isArray(data) && data.length > 0) {
+            data.forEach(step => addStepRow(step));
+        } else {
+            addStepRow(); // Add one blank row for new forms
+        }
+    }
+
+    /* DYNAMIC ROW MANAGEMENT */
+    /* Create new ingredient input row */
+    const ingContainer = document.getElementById('ingredients-container');
+    function addIngredientRow(name='', qty='') {
+        const div = document.createElement('div');
+        div.className = 'ingredient-row';
+        div.innerHTML = `
+            <input type="text" class="ing-name" placeholder="Ingredient name" value="${name}" required>
+            <input type="text" class="ing-qty qty" placeholder="Quantity" value="${qty}" required>
+            <button type="button" class="action-btn" onclick="this.parentElement.remove()">-</button>
+        `;
+        ingContainer.appendChild(div);
+    }
+
+    /* Create new cooking step input row */
+    const stepContainer = document.getElementById('steps-container');
+    function addStepRow(text='') {
+        const div = document.createElement('div');
+        div.className = 'step-row';
+        // Handle quotes safely
+        const safeText = text.replace(/"/g, '&quot;'); 
+        div.innerHTML = `
+            <input type="text" class="step-text" placeholder="Write instruction here" value="${safeText}" required>
+            <button type="button" class="action-btn" onclick="this.parentElement.remove()">-</button>
+        `;
+        stepContainer.appendChild(div);
+    }
+
+    /* FORM SUBMISSION HANDLER */
+    /* Prepare data and submit form */
+    document.getElementById('recipeForm').addEventListener('submit', function(e) {
+        // Prepare Ingredients JSON
+        const ings = [];
+        document.querySelectorAll('.ingredient-row').forEach(row => {
+            const name = row.querySelector('.ing-name').value;
+            const qty = row.querySelector('.ing-qty').value;
+            if(name) ings.push({name, qty});
+        });
+        document.getElementById('id_ingredients').value = JSON.stringify(ings);
+
+        // Prepare Instructions JSON
+        const steps = [];
+        document.querySelectorAll('.step-text').forEach(inp => {
+            if(inp.value) steps.push(inp.value);
+        });
+        document.getElementById('id_instructions').value = JSON.stringify(steps);
+    });
+
+    // FILE PREVIEW
+    function previewFile(input) {
+        const msg = document.getElementById('fileMsg');
+        if(input.files && input.files[0]) msg.textContent = input.files[0].name;
+    }
+
+    // CUSTOM SELECTS
+    function initCustomSelects() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(sel => {
+            if (sel.classList.contains('custom-hidden')) return;
+
+            sel.classList.add('custom-hidden');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'custom-select';
+
+            const trigger = document.createElement('div');
+            trigger.className = 'custom-select-trigger';
+            const initialText = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : 'Select';
+            trigger.innerHTML = `<span>${initialText}</span><span>&#x25BE;</span>`;
+
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'custom-options';
+
+            Array.from(sel.options).forEach((opt) => {
+                const item = document.createElement('div');
+                item.className = 'custom-option';
+                item.textContent = opt.text;
+                item.onclick = () => {
+                    sel.value = opt.value;
+                    trigger.firstElementChild.textContent = opt.text;
+                    wrapper.classList.remove('open');
+                    sel.dispatchEvent(new Event('change')); 
+                };
+                optionsContainer.appendChild(item);
+            });
+
+            trigger.onclick = () => {
+                document.querySelectorAll('.custom-select').forEach(s => s !== wrapper && s.classList.remove('open'));
+                wrapper.classList.toggle('open');
+            };
+
+            wrapper.appendChild(trigger);
+            wrapper.appendChild(optionsContainer);
+            sel.parentNode.insertBefore(wrapper, sel.nextSibling);
+
+            sel.addEventListener('change', () => {
+                if(sel.options[sel.selectedIndex]) {
+                    trigger.firstElementChild.textContent = sel.options[sel.selectedIndex].text;
+                }
+            });
+        });
+    }
+
+    window.onclick = (e) => {
+        if (!e.target.closest('.custom-select')) {
+            document.querySelectorAll('.custom-select').forEach(s => s.classList.remove('open'));
+        }
+    };
+</script>
+{% endblock %}
