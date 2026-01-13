@@ -5,7 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Lobster&display=swap" rel="stylesheet">
 
 <style>
-    /* --- USER PROVIDED STYLES --- */
+    /* ROOT THEME VARIABLES */
     :root {
       --card: #e9e9e9; 
       --card-actual: rgba(248, 237, 230, 0.911); 
@@ -17,7 +17,8 @@
       --light: #ffffff;
     }
 
-    /* Override body within this page context */
+    /* PAGE LAYOUT */
+    /* Main page wrapper - centered flex container with full viewport height */
     .recipe-page-wrapper {
         font-family: Poppins, -apple-system, Segoe UI, Roboto, sans-serif;
         position: relative;
@@ -72,12 +73,13 @@
       margin-top: 4px;
     }
 
-    /* Input Styling */
+    /* INPUT FIELD STYLES */
+    /* Unified styling for all form input types */
     input[type="text"], 
     input[type="number"], 
     textarea, 
     select,
-    input[type="url"] { /* Added URL type here specifically */
+    input[type="url"] {
       width: 100%;
       padding: 10px 14px;
       border-radius: 3px;
@@ -104,7 +106,8 @@
       display: none;
     }
 
-    /* Description + Upload Layout */
+    /* DESCRIPTION & IMAGE UPLOAD SECTION */
+    /* Two-column layout: description textarea + image upload box */
     .desc-row { 
       display: flex; 
       gap: 12px; 
@@ -164,10 +167,13 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     }
 
+    /* DYNAMIC ROWS (Ingredients & Steps) */
+    /* Wrapper for dynamically added rows */
     .dynamic-row-wrapper {
         margin-bottom: 10px;
     }
 
+    /* Flexbox layout for ingredient and step input rows */
     .ingredient-row, .step-row {
       display: flex;
       gap: 10px;
@@ -179,6 +185,8 @@
     .ingredient-row input.qty { flex: 1; }
     .step-row input { flex: 1; }
 
+    /* ACTION BUTTONS (Add/Remove Rows)*/
+    /* Circular button for adding/removing ingredients and steps */
     .action-btn {
       border: solid 2px var(--btn-login);
       background: var(--light);
@@ -204,6 +212,8 @@
       color: #fff;
     }
 
+    /* LAYOUT UTILITIES */
+    /* Two-column grid layout for side-by-side fields */
     .grid-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -216,7 +226,8 @@
       font-size: 15px;
     }
 
-    /* Word Counter Style */
+    /* WORD COUNTER */
+    /* Live word counter display for description field */
     .word-counter {
         float: right;
         font-size: 12px;
@@ -228,6 +239,8 @@
         color: #d32f2f;
     }
 
+    /* BUDGET AMOUNT SECTION */
+    /* Flex container for budget amount and currency selector */
     .amount-container {
       display: flex;
       gap: 12px;
@@ -245,6 +258,8 @@
       min-height: 16px;
     }
 
+    /* SUBMIT BUTTON */
+    /* Full-width form submission button */
     .submit-btn {
       width: 100%;
       padding: 14px;
@@ -262,7 +277,7 @@
         transform: translateY(-2px);
     }
 
-    /* --- CUSTOM SELECT CSS --- */
+    /* CUSTOM SELECT DROPDOWN */
     .custom-select {
       position: relative;
       width: 100%;
@@ -325,7 +340,7 @@
       .form-card { padding: 14px; }
     }
 
-  /* --- VIDEO INPUT STYLES (SVG METHOD) --- */
+    /* VIDEO URL INPUT WITH ICON */
     .video-input-wrapper {
         position: relative;
         width: 100%;
@@ -371,11 +386,16 @@
 {% endblock %}
 
 {% block content %}
+<!-- Main page container -->
 <div class="recipe-page-wrapper">
+    <!-- Background decoration element -->
     <div class="parallax-bg" aria-hidden="true"></div>
 
+    <!-- Recipe submission form - multipart for file uploads -->
     <form class="form-container" id="recipeForm" method="post" enctype="multipart/form-data">
+        <!-- Security token for form submission -->
         {% csrf_token %}
+        <!-- Hidden fields to store JSON arrays of ingredients and instructions -->
         <input type="hidden" name="ingredients" id="id_ingredients" value="{{ form.ingredients.value|default:'[]'|force_escape }}">
         <input type="hidden" name="instructions" id="id_instructions" value="{{ form.instructions.value|default:'[]' |force_escape}}">
 
@@ -386,10 +406,13 @@
             </div>
         {% endif %}
 
+        <!-- BASIC RECIPE INFO CARD -->
         <div class="form-card">
+            <!-- Recipe Title Input -->
             <label for="recipeName">Recipe Name</label>
             <input type="text" name="title" id="recipeName" placeholder="Tomato, pepper, onion" value="{{ form.title.value|default:'' }}" required>
 
+            <!-- Recipe Origin Country Dropdown -->
             <label class="margin-top-12" for="country">Recipe Origins</label>
             <select name="origin_country" id="country">
                 <option value="">Select country</option>
@@ -429,6 +452,8 @@
             </div>
         </div>
 
+        <!-- INGREDIENTS SECTION -->
+        <!-- Dynamically populated list of ingredients -->
         <div class="form-card">
             <h2>Ingredients</h2>
             <div id="ingredients-container"></div>
@@ -437,6 +462,8 @@
             </div>
         </div>
 
+        <!-- COOKING STEPS SECTION -->
+        <!-- Dynamically populated list of cooking instructions -->
         <div class="form-card">
             <h2>Cooking Steps</h2>
             <div id="steps-container"></div>
@@ -445,8 +472,12 @@
             </div>
         </div>
 
+        <!-- RECIPE METADATA CARD -->
+        <!-- Nutritional, dietary, and cooking info -->
         <div class="form-card">
+            <!-- Two-column: Health condition + Dietary preferences -->
             <div class="grid-row">
+                <!-- Health condition dropdown -->
                 <div>
                     <label for="healthCondition">Health Condition</label>
                     <select name="health_condition" id="healthCondition" >
@@ -551,6 +582,8 @@
             {% endif %}
         </div>
 
+        <!-- SUBMIT BUTTON -->
+        <!-- Changes text based on create vs update -->
         <button type="submit" class="submit-btn">
             {% if form.instance.pk %}Update Recipe{% else %}Submit Recipe{% endif %}
         </button>
@@ -561,18 +594,21 @@
 
 {% block extra_js %}
 <script>
+    /* INITIALIZATION ON PAGE LOAD */
+    /* Set up event listeners and load persisted data */
     document.addEventListener('DOMContentLoaded', () => {
         
-        // 1. ROBUST DATA LOADING (Prevents Duplicates)
+        /* 1. Load saved ingredients and instructions from hidden fields */
         loadIngredients();
         loadInstructions();
 
-        // 2. WORD LIMIT LOGIC
+        /* 2. Initialize word counter for description field */
         const descField = document.getElementById('description');
         const counterDisplay = document.getElementById('desc-word-count');
         const MAX_WORDS = 25;
 
         if (descField && counterDisplay) {
+            /* Update word count display and enforce maximum limit */
             function updateWordCount() {
                 let val = descField.value;
                 let words = val.trim().split(/\s+/);
@@ -592,12 +628,13 @@
             updateWordCount();
         }
 
-        // 3. INIT CUSTOM SELECTS
+        /* 3. Initialize custom dropdown styling for select elements */
         initCustomSelects();
     });
 
-    // HELPER FUNCTIONS
-    // --- FUNCTION TO LOAD INGREDIENTS ---
+    /* HELPER FUNCTIONS */
+    
+    /* Load ingredients from hidden JSON field and populate form rows */
     function loadIngredients() {
         const input = document.getElementById('id_ingredients');
         const container = document.getElementById('ingredients-container');
@@ -621,7 +658,7 @@
         }
     }
 
-    // --- FUNCTION TO LOAD INSTRUCTIONS ---
+    /* Load instructions from hidden JSON field and populate form rows */
     function loadInstructions() {
         const input = document.getElementById('id_instructions');
         const container = document.getElementById('steps-container');
@@ -645,7 +682,8 @@
         }
     }
 
-    // --- ADD ROW FUNCTIONS ---
+    /* DYNAMIC ROW MANAGEMENT */
+    /* Create new ingredient input row */
     const ingContainer = document.getElementById('ingredients-container');
     function addIngredientRow(name='', qty='') {
         const div = document.createElement('div');
@@ -658,6 +696,7 @@
         ingContainer.appendChild(div);
     }
 
+    /* Create new cooking step input row */
     const stepContainer = document.getElementById('steps-container');
     function addStepRow(text='') {
         const div = document.createElement('div');
@@ -671,7 +710,8 @@
         stepContainer.appendChild(div);
     }
 
-    // --- FORM SUBMISSION ---
+    /* FORM SUBMISSION HANDLER */
+    /* Prepare data and submit form */
     document.getElementById('recipeForm').addEventListener('submit', function(e) {
         // Prepare Ingredients JSON
         const ings = [];
@@ -690,13 +730,13 @@
         document.getElementById('id_instructions').value = JSON.stringify(steps);
     });
 
-    // --- FILE PREVIEW ---
+    // FILE PREVIEW
     function previewFile(input) {
         const msg = document.getElementById('fileMsg');
         if(input.files && input.files[0]) msg.textContent = input.files[0].name;
     }
 
-    // --- CUSTOM SELECTS ---
+    // CUSTOM SELECTS
     function initCustomSelects() {
         const selects = document.querySelectorAll('select');
         selects.forEach(sel => {
