@@ -328,11 +328,11 @@
 
 {% block content %}
 
-        <div class="search-row">
+         <div class="search-row">
                 <form action="{% url 'dashboard' %}" method="GET" class="search-box">
                     
                     <button type="submit" style="border: none; background: transparent; cursor: pointer;">
-                        <img src="https://api.iconify.design/tabler:search.svg?color=gray" width="20" alt="Search">
+                        <img src="{% static 'users/icons/tabler_search.svg' %}" width="20" alt="Search">
                     </button>
 
                     <input type="text" name="q" placeholder="Search for recipes..." value="{{ request.GET.q }}">
@@ -340,7 +340,7 @@
                 </form>
 
             <div class="filter-btn" onclick="toggleFilterPopup()">
-                <img class="filter-icon" src="https://api.iconify.design/ion:filter.svg?color=gray" alt="Filter">
+                <img class="filter-icon" src="{% static 'users/icons/ion_filter.svg' %}" alt="Filter">
                 <span>Filter</span>
             </div>
 
@@ -369,6 +369,7 @@
                         <label><input type="checkbox" name="meal_type" value="Individual" {% if "Individual" in request.GET.getlist %}checked{% endif %}> Individual</label>
                         <label><input type="checkbox" name="meal_type" value="Family" {% if "Family" in request.GET.getlist %}checked{% endif %}> Family</label>
                     </div>
+                    
 
                     <button type="submit" class="apply-btn">Apply Filters</button>
                     <a href="{% url 'reset_filters' %}" style="display:block; text-align:center; padding:10px; font-size:12px; color:gray;">Reset All</a>
@@ -395,7 +396,7 @@
                 {% if recipe.image %}
                     <img class="recipe-img" src="{{ recipe.image.url }}" alt="{{ recipe.title }}">
                 {% else %}
-                    <img class="recipe-img" src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Default Food">
+                    <img class="recipe-img" src="{% static 'users/icons/default-image.avif' %}"   alt="Default Food">
                 {% endif %}
 
                 <div class="recipe-info">
@@ -403,24 +404,22 @@
 
                     <div class="recipe-meta-row">
                         <div class="chef-profile">
-                            {% if recipe.chef.first_name and recipe.chef.last_name %}
-                                <img src="https://ui-avatars.com/api/?name={{ recipe.chef.first_name }}+{{ recipe.chef.last_name }}&background=random&color=fff" 
-                                    alt="{{ recipe.chef.username }}" 
-                                    class="chef-avatar"
-                                    height="40" width="40">
+                          {% if recipe.chef.first_name and recipe.chef.last_name %}
+                            <div class="custom-avatar chef-avatar" title="{{ recipe.chef.first_name }} {{ recipe.chef.last_name }}">
+                                {{ recipe.chef.first_name|first }}{{ recipe.chef.last_name|first }}
+                            </div>
 
-                            {% else %}
-                                <img src="https://ui-avatars.com/api/?name={{ recipe.chef.username }}&background=random&color=fff" 
-                                    alt="{{ recipe.chef.username }}" 
-                                    class="chef-avatar" 
-                                    height="40" width="40">
-                            {% endif %} 
-                            <span class="chef-name">{{ recipe.chef.username }}</span>
+                        {% else %}
+                            <div class="custom-avatar chef-avatar" title="{{ recipe.chef.username }}">
+                                {{ recipe.chef.username|slice:":2" }}
+                            </div>
+                        {% endif %}
+                            <span class="chef-name">By {{ recipe.chef.username|title }}</span>
                         </div>
                         
                         <div class="rating-box">
                            {% if recipe.get_average_rating > 0 %}
-                                <img src="https://api.iconify.design/ic:round-star.svg?color=%23ef8b17" width="12">
+                                <img src="{% static 'users/icons/ic_round-star.svg' %}" width="12">
                                 <span class="rating-score">{{ recipe.get_average_rating|floatformat:1 }}</span>
                             
                             {% else %}
