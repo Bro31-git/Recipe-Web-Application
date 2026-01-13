@@ -23,6 +23,26 @@
         /* ================= RESET ================= */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+         /*=========== Custom CSS Avatar ===========*/
+        .custom-avatar {
+            width: 50px;               
+            height: 50px;
+            border-radius: 50%;       
+            background: var( --primary-green);   
+            color: var(--text-white);       
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            
+            font-family: "Poppins", sans-serif;
+            font-weight: 600;
+            font-size: 16px;             
+            text-transform: uppercase; 
+            user-select: none;          
+            letter-spacing: 0.5px;
+            
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-image: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url("https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80");
@@ -198,7 +218,7 @@
             margin-right: 15px; 
             border-radius: 50%;
             object-fit: cover;
-            
+            height: 24px;
         }
         .sidebar-text { 
             font-size: 14px; 
@@ -230,16 +250,26 @@
         }
 
         .action-popup {
-            position: absolute; right: 35px; top: 25px;
-            background: white; border-radius: 6px;
+            position: absolute; 
+            right: 35px; 
+            top: 25px;
+            background: white; 
+            border-radius: 6px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            display: none; z-index: 2005; min-width: 90px; overflow: hidden;
+            display: none; 
+            z-index: 2005; 
+            min-width: 90px; 
+            overflow: hidden;
         }
         .recipe-list-item.active-menu .action-popup { display: flex; flex-direction: column; }
 
         .action-option {
-            padding: 8px 12px; font-size: 11px; font-weight: 600; cursor: pointer;
-            color: #333; transition: background 0.1s;
+            padding: 8px 12px; 
+            font-size: 11px; 
+            font-weight: 600; 
+            cursor: pointer;
+            color: #333; 
+            transition: background 0.1s;
         }
         .action-option:hover { 
             background: #f0f0f0; 
@@ -344,7 +374,7 @@
     <header>
         <div class="header-left">
             <div class="mobile-toggle" onclick="toggleAppSidebar()">
-                <img src="https://api.iconify.design/mynaui:sidebar.svg?color=white" alt="Sidebar">
+                <img src="{% static 'users/icons/mynaui_sidebar.svg' %}" alt="Sidebar">
             </div>
             <div class="logo-info" style="margin-left: 10px;">
                 <img class="logo" src="https://ui-avatars.com/api/?name=Chef+Roots&background=random&color=fff" alt="Logo">
@@ -359,7 +389,7 @@
                 <li><a href="{% url 'about' %}">About us</a></li>
             </ul>
             <div class="mobile-toggle" onclick="toggleNavSidebar()">
-                <img src="https://api.iconify.design/heroicons-outline:menu.svg?color=white" alt="Menu">
+                <img src="{% static 'users/icons/heroicons-outline_menu.svg' %}" alt="Menu">
             </div>
         </nav>
     </header>
@@ -369,12 +399,21 @@
             <div class="sidebar-brand">Chef Roots Panel</div>
 
             <div class="sidebar-item mobile-close-btn" onclick="closeAllSidebars()">
-                <img class="sidebar-icon" src="https://api.iconify.design/heroicons-outline:x.svg?color=white" alt="Close">
+                <img class="sidebar-icon" src="{% static 'users/icons/heroicons-outline_x.svg' %}" alt="Close">
                 <span class="sidebar-text">Close Menu</span>
             </div>
 
             <div class="sidebar-item">
-                <img class="sidebar-icon" src="https://api.iconify.design/mdi:user.svg?color=white" alt="User">
+                {% if user.first_name and user.last_name %}
+                    <div class="custom-avatar sidebar-icon" title="{{ user.first_name }} {{ user.last_name }}">
+                        {{ user.first_name|first }}{{ user.last_name|first }}
+                    </div>
+
+                {% else %}
+                    <div class="custom-avatar sidebar-icon" title="{{ user.username }}">
+                        {{ user.username|slice:":2" }}
+                    </div>
+                {% endif %}
                 <div style="display:flex; flex-direction:column; line-height:1.2;">
                     <span class="sidebar-text" style="font-weight:600;">
                         {% if user.is_authenticated %}{{ user.username|title }}{% else %}Guest{% endif %}
@@ -449,7 +488,7 @@
             <form action="{% url 'logout' %}" method="post" style="width: 100%;">
             {% csrf_token %}
                 <button type="submit" class="sidebar-item" style="width: 100%; border: none; background: transparent; font-family: inherit; font-size: inherit; text-align: left; cursor: pointer;">
-                    <img class="sidebar-icon" src="https://api.iconify.design/material-symbols:logout-rounded.svg?color=white" alt="Logout">
+                    <img class="sidebar-icon" src="{% static 'users/icons/material-symbols_logout-rounded.svg' %}" alt="Logout">
                     <span class="sidebar-text">Logout</span>
                 </button>
             </form>
@@ -459,7 +498,7 @@
     <nav class="nav-sidebar">
         <div style="display:flex; justify-content:space-between; padding:0 20px 20px 20px; border-bottom:1px solid #eee;">
             <span style="font-size:18px; font-weight:bold;">Menu</span>
-            <img src="https://api.iconify.design/heroicons-outline:x.svg?color=black" style="width:24px; cursor:pointer;" onclick="closeAllSidebars()">
+            <img src="{% static 'users/icons/outline.svg' %}" style="width:24px; cursor:pointer;" onclick="closeAllSidebars()">
         </div>
         <a href="{% url 'dashboard' %}" class="nav-link">Home</a>
         <a href= "{% url 'recommendation' %}" class="nav-link">Recommendations</a>
