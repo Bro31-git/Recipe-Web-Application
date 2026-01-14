@@ -1,0 +1,653 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Lobster&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #7a7a7a;
+      --card: rgba(248, 237, 230, 0.96);
+      --accent: #f6a079;
+      --btn-login: #d88474;
+      --light-orange: #fff4e6;
+      --orange: #f6a079;
+      --text: #333;
+      --muted: #625e5e;
+      --light: #ffffff;
+      --sidebar-desktop-width: 260px;
+      --header-height: 70px;
+    }
+
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+
+    /* 1. BODY LOCK: Keeps the background static */
+    body {
+      margin: 0; padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden; /* No global scroll */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    @media (min-width: 901px) {
+            body { padding-left: var(--sidebar-desktop-width); }
+        }
+
+    .bg {
+      position: fixed; left: 0; right: 0; top: 0;
+      height: 100vh; z-index: -1;
+      background-image: linear-gradient(rgba(255,255,255,0.65), rgba(255,255,255,0.75)), url("https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80");
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+    .action-popup {
+            position: absolute; 
+            right: 35px; 
+            top: 25px;
+            background: transparent; 
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            -webkit-backdrop-filter: blur(6px) saturate(120%);
+            backdrop-filter: blur(6px) saturate(120%);
+            display: none; 
+            z-index: 2005; 
+            min-width: 140px; 
+            overflow: hidden;
+        }
+        .action-popup::before{
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 6px;
+            background: rgba(200, 200, 200, 0.222);
+            z-index: 2005; 
+        }
+        .recipe-list-item.active-menu .action-popup { 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .action-option {
+            background: transparent;
+            padding: 12px 16px; 
+            font-size: 12px; 
+            font-weight: 600; 
+            cursor: pointer;
+            color: #ffffff; 
+            transition: ease 0.2s;
+        }
+        .action-option:hover/*, .action-option.delete:hover */{ 
+            background: #299d63e8; 
+        }
+        .action-option.delete { 
+            color: rgb(245, 36, 36); 
+            background: #fff8f83c;
+        }
+        button .action-option.delete { 
+            color: rgb(245, 36, 36); 
+            background: #fff8f83c;
+        }
+    /* 2. FORM SECTION: Centered Flexbox */
+    #formSection {
+      position: absolute;
+      width: 100%;
+      max-width: 760px;
+      padding: 20px;
+      z-index: 10;
+      transition: all 0.5s ease-in-out;
+      display: flex; 
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+    }
+
+    #formSection.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .flex-option {
+      justify-content: space-between;
+      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* 3. RECOM SECTION: Independent Scrollable Layer */
+    #recomSection {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100vh;
+      overflow-y: auto; /* Internal scrolling enabled */
+      padding: 60px 12px;
+      z-index: 20;
+      display: none;
+      background: rgba(0,0,0,0.4); /* Overlay effect */
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+    }
+
+    #recomSection.active {
+      display: block;
+    }
+
+    .progress-container {
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 6px; 
+      background: transparent; 
+      z-index: 1001;
+    }
+    .progress-bar { 
+      height: 100%; 
+      background: var(--orange); 
+      width: 0%; 
+    }
+
+    .card {
+      background: linear-gradient(135deg, #ffffff 0%, var(--light-orange) 100%);
+      border-radius: 14px;
+      padding: 35px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* UI Components */
+    h1, h2, h3 { 
+      font-family: 'Playfair Display', serif; 
+      font-weight: 800; 
+      line-height: 2.2;
+      color: var(--btn-login); 
+      margin-top: 0; 
+    }
+    h2 { 
+      border-bottom: 2px solid var(--accent); 
+      padding-bottom: 8px; 
+      font-size: 25px; 
+    }
+    p { 
+      color: #444; 
+      font-size: 15px; 
+      line-height: 1.6; 
+      text-align: justify; 
+    }
+    label { 
+      font-family: 'Poppins', sans-serif; 
+      font-weight: 600; 
+      color: #555;
+      display: block; 
+      margin: 15px 0 6px;  
+      font-size: 14px; 
+    }
+
+    textarea {
+      width: 100%; 
+      height: 100px; 
+      padding: 12px; 
+      border-radius: 8px; 
+      border: 2px solid #ddd;
+      background: #fff; 
+      font-size: 14px; 
+      resize: none; 
+      transition: 0.3s;
+    }
+    textarea:focus { 
+      border-color: var(--orange); 
+      outline: none; 
+      box-shadow: 0 0 0 4px rgba(246, 160, 121, 0.2); 
+    }
+
+    .submit-btn {
+      width: 100%; 
+      padding: 12px; 
+      border-radius: 8px; 
+      border: none;
+      background: linear-gradient(180deg, var(--btn-login), #c9655a);
+      color: white; 
+      font-weight: bold; 
+      cursor: pointer; 
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+      transition: 0.3s;
+    }
+    .submit-btn:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3); 
+    }
+
+    /* Custom Select */
+    .custom-hidden { display: none; }
+    .custom-select { 
+      position: relative; 
+      margin-bottom: 15px; 
+     
+    }
+    .custom-select-trigger { 
+      background: white; 
+      padding: 10px 14px !important; 
+      overflow: hidden;
+      border: 2px solid var(--accent); 
+      border-radius: 8px; 
+      cursor: pointer; 
+      display: flex; 
+      justify-content: space-between;
+    }
+    .custom-options {
+      position: absolute; 
+      top: 100%; left: 0; 
+      right: 0; 
+      background: white;
+      border-radius: 8px; 
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      z-index: 100; 
+      max-height: 0; 
+      overflow: hidden; 
+      transition: 0.3s;
+    }
+    .custom-select.open .custom-options { 
+      max-height: 200px; 
+      overflow-y: auto; 
+      padding: 10px 0; 
+      border: 1px solid #ddd; 
+    }
+    .custom-option { 
+      padding: 10px 15px; 
+      cursor: pointer; 
+      font-size: 14px;
+    }
+    .custom-option:hover { 
+      background: #fff1eb; 
+    }
+
+    /* Floating Button */
+    .fab-wrapper { 
+      position: fixed; 
+      bottom: 40px; 
+      right: 45px; 
+      display: flex; 
+      align-items: 
+      center; z-index: 1000; 
+    }
+    .btn-tooltip { 
+      background: #333; 
+      color: white; 
+      padding: 8px 15px; 
+      border-radius: 20px;
+      font-size: 13px; 
+      margin-right: 15px; 
+      opacity: 0; 
+      transition: 0.4s; 
+      pointer-events: none;
+    }
+    .btn-tooltip.show { 
+      opacity: 1; 
+    }
+    .floating-btn {
+      width: 70px; 
+      height: 70px; 
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), var(--btn-login));
+      border: 4px solid white; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+      animation: pulse-orange 2s infinite;
+    }
+
+    @keyframes pulse-orange {
+      0% { box-shadow: 0 0 0 0 rgba(246, 160, 121, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(246, 160, 121, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(246, 160, 121, 0); }
+    }
+
+    .recom-page { 
+      margin-bottom: 30px; 
+      padding-bottom: 20px; 
+      border-bottom: 1px solid #ddd; 
+    }
+    .source-str {
+      border-radius: 20px 2px 2px 20px; 
+    }
+    .source-tag {
+      border-radius: 3px;
+    }
+    .source-end {
+      border-radius: 2px 20px 20px 2px;
+    }
+    .source-tag,  .source-str,  .source-end { 
+      font-family: 'Poppins', sans-serif; font-weight: 800; line-height: 1.2;
+      display: inline-block; 
+      background: var(--orange); 
+      color: var(--light);
+      padding: 4px 10px;  
+      font-size: 11px; 
+      margin: 4px; 
+    }
+
+
+    .return-btn { 
+      background: #555; 
+      margin-top: 20px; 
+    }
+    .image-placeholder { 
+      height: 400px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      border: 2px dashed #ccc; 
+      margin-bottom: 30px; 
+    }
+
+    .form-button-wrapper { margin-top: 25px; }
+
+    .header-section { 
+      text-align: center; 
+      margin-bottom: 40px; 
+    }
+
+    .floating-btn img {
+      width: 30px;
+      filter: invert(1);
+    }
+
+    @media (max-width: 600px) {
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .card {
+        margin: 0;
+      }
+      .flex-option {
+        display: inline;
+      }
+      .fab-wrapper { 
+        bottom: 20px; 
+        right: 20px; 
+      }
+      .floating-btn { 
+        width: 60px; 
+        height: 60px; 
+      }
+      .source-str, .source-tag, .source-end {
+        font-size: 9px; 
+      }
+    }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="bg"></div>
+
+  <div class="progress-container"><div class="progress-bar" id="myBar"></div></div>
+
+  <div id="formSection" class="active">
+    <div class="card">
+      <h2>Health & Dietary Profile</h2>
+      <p>Complete your profile to unlock evidence-based public health recommendations.</p>
+      
+      <form id="profileForm" method="POST" action="{% url 'recommendation' %}">
+        {% csrf_token %}
+        <label>List Allergic Ingredients</label>
+        <textarea id="allergies" placeholder="Peanuts, Shellfish, etc." required></textarea>
+
+        <div class="flex-option">
+          <div>
+            <label for="healthCondition">Health Condition</label>
+            <select id="healthCondition" aria-label="Health Condition">
+              <option value="">Select</option>
+              <option>Anemia</option>
+              <option>Diabetes</option>
+              <option>Digestive Problems</option>
+              <option>Gout</option>
+              <option>Heart Disease</option>
+              <option>Hypertension</option>
+              <option>Kidney Disease</option>
+              <option>Overweight</option>
+            </select>
+          </div>
+          <div>
+            <label for="dietary">Dietary Preference</label>
+            <select id="dietary" aria-label="Dietary Preference">
+              <option value="">Select</option>
+                <option>Balance Diet</option>
+                <option>Gluten-Fat</option>
+                <option>Halal</option>
+                <option>High-Protein</option>
+                <option>Lactose-Free</option>
+                <option>Low-carbohydrate</option>
+                <option>Low-Fat</option>
+                <option>Low-Salt (Low-Sodium)</option>
+                <option>Vegan</option>
+                <option>Vegetarian</option>
+            </select>
+          </div> 
+        
+
+        </div>
+        <div class="form-button-wrapper">
+          <button type="submit" class="submit-btn">Unlock My Health Guide</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="recomSection">
+    <div class="card">
+      <div class="header-section">
+        <h1>Public Health Guide</h1>
+        <span class="source-str">EVIDENCE-BASED</span><span class="source-tag">WHO</span><span class="source-tag">FAO</span><span class="source-tag">HARVARD HEAILTH</span><span class="source-end">PUBLIC HEALTH</span>
+      </div>
+
+      <div class="recom-page">
+        <h3>1. Healthy Eating as a Public Health Priority</h3>
+        <p>Healthy eating is a major pillar of public health. Poor nutrition is one of the leading risk factors for non-communicable diseases such as diabetes, heart disease, stroke, obesity, and some cancers. Public health nutrition focuses on improving population-wide eating patterns to reduce disease burden, improve life expectancy, and enhance quality of life. Promoting healthy diets helps reduce healthcare costs and supports social and economic development.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>2. Nutrition, Prevention, and Disease Control</h3>
+        <p>Many diseases can be prevented through proper nutrition. Diets high in salt, sugar, and unhealthy fats increase the risk of hypertension, diabetes, and cardiovascular disease. Conversely, diets rich in fruits, vegetables, whole grains, and healthy fats strengthen immunity and lower disease risk. Public health strategies emphasize prevention rather than treatment.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>3. Understanding Food Groups for Population Health</h3>
+        <p>A healthy population diet includes diverse food groups: fruits, vegetables, whole grains, proteins, and healthy fats. Each group provides essential nutrients required for growth, energy, immunity, and development. Encouraging dietary diversity helps prevent malnutrition, micronutrient deficiencies, and chronic illness.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>4. Carbohydrates and Energy Balance</h3>
+        <p>Carbohydrates are essential for energy, especially for children, adolescents, and active individuals. Public health guidelines recommend prioritizing complex carbohydrates such as whole grains, roots, tubers, legumes, fruits, and vegetables. Excess intake of refined carbohydrates and sugary drinks contributes to obesity and type 2 diabetes.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>5. Protein Intake and Community Nutrition</h3>
+        <p>Proteins support growth, tissue repair, immune defense, and enzyme production. In public health, ensuring adequate protein intake is crucial to prevent stunting and muscle wasting. Affordable protein sources such as beans, lentils, eggs, fish, and nuts play a key role in community nutrition programs.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>6. Fats, Heart Health, and Chronic Disease</h3>
+        <p>Healthy fats are essential for brain development and hormone regulation. Public health recommendations encourage replacing saturated and trans fats with unsaturated fats found in fish, nuts, seeds, and vegetable oils. Reducing unhealthy fat intake lowers rates of heart disease and stroke at the population level.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>7. Micronutrient Deficiencies and Public Health Impact</h3>
+        <p>Deficiencies in iron, iodine, vitamin A, and zinc remain major public health concerns, especially in low- and middle-income countries. These deficiencies can cause anemia, impaired immunity, vision problems, and delayed development. Fortified foods and dietary diversification are effective public health interventions.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>8. Fruits and Vegetables for Disease Prevention</h3>
+        <p>Regular consumption of fruits and vegetables reduces the risk of chronic diseases and improves digestive health. Public health campaigns often promote a minimum daily intake to ensure adequate fiber, vitamins, and antioxidants. Increasing access and affordability is a key public health goal.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>9. Salt Reduction and Blood Pressure Control</h3>
+        <p>High salt intake is a major contributor to hypertension and cardiovascular disease. Public health authorities recommend limiting salt consumption by reducing processed foods and avoiding excessive seasoning. Community education and food labeling policies help reduce population salt intake.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>10. Sugar Reduction and Metabolic Health</h3>
+        <p>Excessive sugar intake, particularly from sugary beverages, is linked to obesity, diabetes, and dental problems. Public health strategies include promoting water consumption, limiting sweetened drinks, and educating communities on reading food labels.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>11. Processed Foods and Health Risks</h3>
+        <p>Highly processed foods are often energy-dense and nutrient-poor. Regular consumption increases the risk of obesity and metabolic disorders. Public health messaging encourages fresh, minimally processed foods prepared at home using local ingredients.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>12. Food Safety, Hygiene, and Disease Prevention</h3>
+        <p>Foodborne illnesses are a significant public health issue. Proper handwashing, clean water use, adequate cooking, and safe food storage prevent infections. Public education on food hygiene reduces outbreaks and protects vulnerable populations.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>13. Nutrition Across the Life Course</h3>
+        <p>Public health nutrition addresses the needs of all age groups. Children require nutrients for growth, adults need balanced diets for productivity, and older adults benefit from nutrient-dense foods to prevent chronic disease and frailty. Tailored nutrition policies improve outcomes at each life stage.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>14. Maternal and Child Nutrition</h3>
+        <p>Maternal nutrition affects pregnancy outcomes and child development. Adequate intake of iron, folate, calcium, and protein reduces maternal mortality and low birth weight. Breastfeeding promotion is a key public health strategy for infant health.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>15. Adolescents, Schools, and Healthy Diets</h3>
+        <p>Adolescence is a critical period for establishing lifelong habits. School feeding programs and nutrition education help prevent malnutrition and obesity. Healthy school environments support learning, concentration, and physical development.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>16. Nutrition, Physical Activity, and Lifestyle</h3>
+        <p>Healthy eating works best when combined with regular physical activity. Public health guidelines recommend daily movement alongside balanced diets to prevent obesity and improve mental health. Community spaces and active transport support healthier lifestyles.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>17. Cultural, Local, and Sustainable Diets</h3>
+        <p>Public health nutrition respects cultural food practices while promoting balance and moderation. Local and traditional foods often provide excellent nutrition when prepared healthily. Sustainable diets support environmental protection and long-term food security.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>18. Addressing Malnutrition in All Its Forms</h3>
+        <p>Malnutrition includes undernutrition, micronutrient deficiencies, overweight, and obesity. Public health interventions must address all forms simultaneously through education, food access, and policy regulation.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>19. Community Education and Policy Interventions</h3>
+        <p>Public health awareness relies on education campaigns, food labeling, taxation of unhealthy products, and support for local agriculture. Policies that promote healthy food environments lead to better population health outcomes.</p>
+      </div>
+
+      <div class="recom-page">
+        <h3>20. Conclusion: Building Healthier Populations Through Nutrition</h3>
+        <p>Healthy eating is a shared responsibility involving individuals, communities, governments, and health systems. Public health nutrition focuses on prevention, equity, and sustainability. By improving diets at the population level, societies can reduce disease, improve productivity, and enhance overall well-being.</p>
+      </div>
+
+
+      <button class="submit-btn return-btn" onclick="toggleView()">Return to Profile</button>
+    </div>
+  </div>
+
+  <div class="fab-wrapper">
+    <div class="btn-tooltip" id="guideTooltip">Quick Access Guide</div>
+    <div class="floating-btn" onclick="toggleView()">
+      <img src="{% static 'users/icons/recommend.png' %}" alt="Icon">
+    </div>
+  </div>
+  
+  {% endblock %}
+  
+  {% block extra_js %}
+
+  <script>
+    // Toggle Logic
+    function toggleView() {
+      const form = document.getElementById('formSection');
+      const recom = document.getElementById('recomSection');
+      const tooltip = document.getElementById('guideTooltip');
+      
+      tooltip.classList.remove('show');
+
+      if (form.classList.contains('active')) {
+        form.classList.remove('active');
+        recom.classList.add('active');
+        recom.scrollTop = 0; // Always start at top
+      } else {
+        recom.classList.remove('active');
+        form.classList.add('active');
+      }
+    }
+
+    // Scroll Progress Indicator Logic
+    document.getElementById('recomSection').onscroll = function() {
+      const winScroll = document.getElementById('recomSection').scrollTop;
+      const height = document.getElementById('recomSection').scrollHeight - document.getElementById('recomSection').clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById("myBar").style.width = scrolled + "%";
+    };
+
+    // Custom Select Initializer
+    function initCustomSelects() {
+      document.querySelectorAll('select').forEach(sel => {
+        sel.classList.add('custom-hidden');
+        const wrap = document.createElement('div');
+        wrap.className = 'custom-select';
+        const trig = document.createElement('div');
+        trig.className = 'custom-select-trigger';
+        trig.innerHTML = `<span>${sel.options[sel.selectedIndex].text}</span><span>&#x25BE;</span>`;
+        const opts = document.createElement('div');
+        opts.className = 'custom-options';
+
+        Array.from(sel.options).forEach(opt => {
+          const item = document.createElement('div');
+          item.className = 'custom-option';
+          item.textContent = opt.text;
+          item.onclick = () => {
+            sel.value = opt.value;
+            trig.firstElementChild.textContent = opt.text;
+            wrap.classList.remove('open');
+            sel.dispatchEvent(new Event('change'));
+          };
+          opts.appendChild(item);
+        });
+
+        trig.onclick = (e) => {
+          e.stopPropagation();
+          document.querySelectorAll('.custom-select').forEach(s => s !== wrap && s.classList.remove('open'));
+          wrap.classList.toggle('open');
+        };
+
+        wrap.appendChild(trig);
+        wrap.appendChild(opts);
+        sel.parentNode.insertBefore(wrap, sel.nextSibling);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initCustomSelects();
+      setTimeout(() => document.getElementById('guideTooltip').classList.add('show'), 3000);
+    });
+
+    window.onclick = () => document.querySelectorAll('.custom-select').forEach(s => s.classList.remove('open'));
+
+    document.getElementById('profileForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      toggleView();
+    });
+  </script>
+{% endblock %}
