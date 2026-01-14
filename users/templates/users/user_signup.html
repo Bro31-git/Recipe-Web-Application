@@ -31,11 +31,9 @@
     }
     
     body {
-      /* NEW/FIXED CODE: */
-
       min-height: 100vh; /* Allows growing if content is tall */
       width: 100%;
-      overflow-y: auto;  /* Forces vertical scrollbar if needed */
+      overflow-y: auto;
       margin: 0;
       font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
       display: flex;
@@ -112,7 +110,6 @@
     }
     
     .section-greeting-img {
-      /* larger visual section on the left with transparent background so container image shows */
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -137,7 +134,7 @@
       color: #fff;
     }
     
-    /* make greeting area wider than the form */
+    
     .section-greeting-img{
       flex: 1.4;
     }
@@ -154,10 +151,9 @@
       z-index: 1;
     }
     
-    /* ===== Card Container ===== */
     .box {
       padding: 30px 35px;
-      position: relative; /* sit above overlay */
+      position: relative; 
       z-index: 1;
     }
     
@@ -515,7 +511,7 @@
   border-color: var(--orange) !important;
 }    
 
-  @media (max-height: 890px) {
+  @media (max-height: 900px) {
   html, 
   body {
     min-height: 100vh;
@@ -532,8 +528,8 @@
 
   /* Resize container */
   .container { 
-    max-width: 880px;/* smaller width */
-    min-height: 450px; /* reduce height */
+    max-width: 880px;
+    min-height: 450px; 
   }
 
   /* Greeting section */
@@ -800,7 +796,7 @@
       </div>
       <div class="field checkbox-field">
         <input id="agree" name="agree" type="checkbox" />
-        <label for="agree">I agree to the <a href="{% url 'terms' %}" target="_blank" class="notice">Terms of Service</a> and <a href="{% url 'terms' %}" target="_blank" class="notice">Privacy Police</a></label>
+        <label for="agree">I agree to the <a href="{% url 'terms_user' %}" target="_blank" class="notice">Terms of Service</a> and <a href="{% url 'terms_user' %}" target="_blank" class="notice">Privacy Police</a></label>
       </div>
 
       <button id="createBtn" type="submit" disabled>Create account</button>
@@ -813,7 +809,7 @@
     </div>
   </main>
 
-  <script>// ===== DOM ELEMENTS =====
+  <script>
     const form = document.getElementById('signupForm');
     const firstName = document.getElementById('firstName');
     const lastName = document.getElementById('lastName');
@@ -849,9 +845,17 @@
     }
     
     // ===== VALIDATION HELPERS =====
-    const setValid = (el) => { el.classList.add('input-valid'); el.classList.remove('input-invalid'); };
-    const setInvalid = (el) => { el.classList.add('input-invalid'); el.classList.remove('input-valid'); };
-    const setNeutral = (el) => { el.classList.remove('input-invalid', 'input-valid'); };
+    const setValid = (el) => { 
+        el.classList.add('input-valid'); 
+        el.classList.remove('input-invalid'); 
+    };
+    const setInvalid = (el) => { 
+        el.classList.add('input-invalid'); 
+        el.classList.remove('input-valid'); 
+    };
+    const setNeutral = (el) => { 
+        el.classList.remove('input-invalid', 'input-valid'); 
+    };
     
     function validateEmail() {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

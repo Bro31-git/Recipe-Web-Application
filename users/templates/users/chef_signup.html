@@ -5,13 +5,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Chef Sign-Up</title>
-  <style>/* ===== CSS Variables ===== */
+  <style>
     :root {
       --bg: linear-gradient(0deg, #e5fdf3, #e7edfe, #ffecf8);
       --card-bg: rgba(255, 255, 255, 0.55);
-      --input-bg: rgba(255, 255, 255, 0.4); /* 40% opacity */
+      --input-bg: rgba(255, 255, 255, 0.4); 
       --muted: #777;
-      --accent: #a9f2c9c1; /* green for success */
+      --accent: #a9f2c9c1; 
       --notice: #49ab73;
       --btn-login: #d88474;
       --orange: #f6a079;
@@ -19,8 +19,6 @@
       --danger: #ad2f2bd8;
       --light: #ffffff;
     }
-    
-    /* ===== Global Styles ===== */
     * {
       box-sizing: border-box;
     }
@@ -31,9 +29,9 @@
     }
     
     body {
-      min-height: 100vh; /* Allows growing if content is tall */
+      min-height: 100vh; 
       width: 100%;
-      overflow-y: auto;  /* Forces vertical scrollbar if needed */
+      overflow-y: auto;  
       margin: 0;
       font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
       display: flex;
@@ -45,14 +43,12 @@
     }
     body::before {
       content: "";
-      position: fixed; /* This makes it stay in place */
+      position: fixed; 
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1; /* Puts it behind your content */
-
-      /* Your Image Settings */
+      z-index: -1;
       background-image: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url("{% static 'users/icons/pexels-farhad.jpg' %}");
       background-size: cover;
       background-position: center;
@@ -513,7 +509,6 @@
         background: rgba(0,0,0,0.18); 
       }
     
-      /* move the welcome message up slightly and keep it visible */
       .section-greeting-img h1 { 
         transform: translateY(-8px); 
         font-size: 28px; 
@@ -672,7 +667,7 @@
 
       <div class="field checkbox-field">
         <input id="agree" name="agree" type="checkbox" />
-        <label for="agree">I agree to the <a href="{% url 'terms' %}" target="_blank" class="notice">Terms of Service</a> and <a href="{% url 'terms' %}" target="_blank" class="notice">Privacy Police</a></label>
+        <label for="agree">I agree to the <a href="{% url 'terms_chef' %}" target="_blank" class="notice">Terms of Service</a> and <a href="{% url 'terms_chef' %}" target="_blank" class="notice">Privacy Police</a></label>
       </div>
 
       <button id="createBtn" type="submit" disabled>Create account</button>
