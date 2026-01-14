@@ -9,49 +9,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ================= VARIABLES ================= */
         :root {
             --primary-green: #69d060;
             --primary-orange: #ef8b17;
-            --header-height: 70px;
+            --header: #d8cece92;
+            --header-height: 60px;
             --sidebar-desktop-width: 260px;
             --sidebar-mobile-width: 280px;
             --text-white: #f4f4f4;
             --bg-overlay: rgba(0, 0, 0, 0.6);
         }
 
-        /* ================= RESET ================= */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-         /*=========== Custom CSS Avatar ===========*/
-        .custom-avatar {
-            width: 50px;               
-            height: 50px;
-            border-radius: 50%;       
-            background: var( --primary-green);   
-            color: var(--text-white);       
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            
-            font-family: "Poppins", sans-serif;
-            font-weight: 600;
-            font-size: 16px;             
-            text-transform: uppercase; 
-            user-select: none;          
-            letter-spacing: 0.5px;
-            
+        * { 
+            box-sizing: border-box; 
+            margin: 0; padding: 0; 
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url("https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80");
+            background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url("https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80");
             background-size: cover;
             background-attachment: fixed;
             padding-top: var(--header-height);
             padding-left: var(--sidebar-desktop-width);
             min-height: 100vh;
             transition: padding-left 0.3s ease;
+            cursor: default;
         }
 
         a { text-decoration: none; color: inherit; }
@@ -65,7 +48,8 @@
         background: transparent; 
         }
         ::-webkit-scrollbar-thumb { 
-        background: rgba(255,255,255,0.3); border-radius: 10px; 
+        background: rgba(255,255,255,0.3); 
+        border-radius: 10px; 
         }
         ::-webkit-scrollbar-thumb:hover { 
         background: rgba(255,255,255,0.5); 
@@ -75,9 +59,15 @@
 
         /* ================= HEADER ================= */
         header {
-            position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: var(--header-height);
             background: var(--primary-green);
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
             padding: 0 20px; z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding-left: 20px;
@@ -125,19 +115,30 @@
         .header-nav-list { 
             display: flex; 
             gap: 30px; 
-            margin-right: 10px; 
+            margin-right: 30px; 
+
         }
         .header-nav-list li a { 
-            color: var(--text-white); 
-            font-size: 14px; 
-            font-weight: 500; 
+            color: #fff; 
+            font-size: 15px; 
+            font-weight: 500;
+            font-family: "Poppins", sans-serif;
+            transition: ease-in-out 0.2s;
+            padding-bottom: 5px;
+            cursor: pointer;
+            border-bottom: 2px transparent;
         }
-
-        /* ================= END OF HEADER STYLING ================= */
+        .header-nav-list li a:hover {
+            text-shadow: 0 0 15px rgb(243, 155, 131);
+            border-bottom: 3px solid #ffffffc9;
+        }
 
         /* ================= APP SIDEBAR ================= */
         .app-sidebar {
-            position: fixed; top: 0; left: 0; bottom: 0;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            bottom: 0;
             background: var(--primary-orange);
             z-index: 1100;
             display: flex; flex-direction: column;
@@ -153,7 +154,7 @@
             overflow-x: hidden;
             display: flex; 
             flex-direction: column; 
-            padding-bottom: 20px;
+            padding-bottom: 40px;
         }
 
         /* ================= SIDEBAR FIXED FOOTER ================= */
@@ -182,6 +183,7 @@
             font-size: 12px; 
             font-weight: 600; 
             text-transform: uppercase;
+            font-family: "Poppins", sans-serif;
             color: rgba(255,255,255,0.7); 
             letter-spacing: 1px;
             display: flex; 
@@ -198,17 +200,27 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            line-height: 0;
+            flex-shrink: 0;
             font-weight: bold; 
-            cursor: pointer; font-size: 14px;
-            transition: transform 0.2s;
+            cursor: pointer; 
+            font-size: 14px;
+            transition: transform ease 0.2s;
         }
         .add-recipe-btn:hover { 
             transform: scale(1.1); 
         }
 
         .sidebar-item {
-            display: flex; align-items: center; padding: 12px 25px;
-            cursor: pointer; color: white; white-space: nowrap; transition: 0.2s;
+            display: flex; 
+            align-items: center; 
+            padding: 12px 25px;
+            cursor: pointer; 
+            color: white; 
+            white-space: nowrap; 
+            transition: 0.2s;
         }
         .sidebar-item:hover { 
             background-color: rgba(255, 255, 255, 0.15); 
@@ -218,7 +230,7 @@
             margin-right: 15px; 
             border-radius: 50%;
             object-fit: cover;
-            height: 24px;
+            
         }
         .sidebar-text { 
             font-size: 14px; 
@@ -233,7 +245,8 @@
             color: white; 
             font-size: 13px; 
             position: relative;
-            transition: background 0.2s; cursor: pointer;
+            transition: background 0.2s; 
+            cursor: pointer;
         }
         .recipe-list-item:hover { 
             background: rgba(255,255,255,0.05); 
@@ -242,49 +255,84 @@
         /* ================= RECIPE ITEM ACTION MENU WHEN 3 DOTS ARE CLICKED ================= */
         .action-dots { 
             padding: 0 8px; 
-            font-weight: bold; 
+            font-weight: 900;
+            font-size: 15px; 
             opacity: 0.7; 
         }
         .action-dots:hover { 
             opacity: 1; 
+        }
+        
+        .top {
+            display: block; 
+            text-decoration: none;
+            border-bottom: 2.5px solid #ffffff22;
         }
 
         .action-popup {
             position: absolute; 
             right: 35px; 
             top: 25px;
-            background: white; 
-            border-radius: 6px;
+            background: rgba(250, 211, 153, 0.641); border-radius: 6px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             display: none; 
             z-index: 2005; 
-            min-width: 90px; 
+            min-width: 140px; 
             overflow: hidden;
         }
-        .recipe-list-item.active-menu .action-popup { display: flex; flex-direction: column; }
+        .recipe-list-item.active-menu .action-popup { 
+            display: flex; 
+            flex-direction: column; 
+        }
 
         .action-option {
-            padding: 8px 12px; 
-            font-size: 11px; 
+            padding: 12px 20px; 
+            font-size: 13px; 
             font-weight: 600; 
             cursor: pointer;
-            color: #333; 
-            transition: background 0.1s;
+            color: #ffffff;  
+            transition: background 0.3s;
         }
         .action-option:hover { 
-            background: #f0f0f0; 
+            background: #fff8f82b;  
         }
         .action-option.delete { 
-            color: #dc3545; 
+            color: #dc3545;
+            background: #fff8f82b;
         }
+        button.delete_btn {
+            background: #fff8f82b;
+            padding: 12px 0 12px 20px; 
+            width: 100%;
+            text-align: left;
+            border: none;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #dc3545;
+            transition: background 0.3s;
+        }
+        button.delete_btn:hover, .action-option.delete:hover { 
+            background: transparent; 
+        }
+        
 
         /* ================= NAV SIDEBAR ================= */
         .nav-sidebar {
-            position: fixed; top: 0; right: 0; bottom: 0; width: 260px;
-            background: white; z-index: 2000;
-            transform: translateX(100%); transition: transform 0.3s ease;
+            position: fixed; 
+            top: 0; 
+            right: 0; 
+            bottom: 0; 
+            width: 260px;
+            background: white; 
+            z-index: 2000;
+            transform: translateX(100%); 
+            transition: transform 0.3s ease;
             box-shadow: -4px 0 15px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column; padding-top: 20px;
+            display: flex; 
+            flex-direction: column; 
+            padding-top: 20px;
             border-left: 5px solid var(--primary-green);
         }
         .nav-sidebar.active { 
@@ -340,30 +388,34 @@
             .mobile-close-btn { 
                 display: flex !important; 
                 margin-bottom: 10px; 
-                border-bottom: 1px solid rgba(255,255,255,0.2); }
+                border-bottom: 1px solid rgba(255,255,255,0.2); 
+            }
         }
 
         @media (min-width: 901px) {
-            .mobile-close-btn { display: none !important; }
-            .nav-sidebar { display: none !important; }
+            .mobile-close-btn { 
+                display: none !important; 
+            }
+            .nav-sidebar { 
+                display: none !important; 
+            }
         }
-
-
-        /* ================= OVERLAY ================= */
 
         .overlay {
             position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
             background: var(--bg-overlay); 
             z-index: 1050; 
             display: none; 
+            -webkit-backdrop-filter: blur(2px);
             backdrop-filter: blur(2px);
         }
         .overlay.active { 
             display: block; 
         }
-
-        /* ================= end of overlay design ================= */
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -374,7 +426,7 @@
     <header>
         <div class="header-left">
             <div class="mobile-toggle" onclick="toggleAppSidebar()">
-                <img src="{% static 'users/icons/mynaui_sidebar.svg' %}" alt="Sidebar">
+                <img src="https://api.iconify.design/mynaui:sidebar.svg?color=white" alt="Sidebar">
             </div>
             <div class="logo-info" style="margin-left: 10px;">
                 <img class="logo" src="https://ui-avatars.com/api/?name=Chef+Roots&background=random&color=fff" alt="Logo">
@@ -389,7 +441,7 @@
                 <li><a href="{% url 'about' %}">About us</a></li>
             </ul>
             <div class="mobile-toggle" onclick="toggleNavSidebar()">
-                <img src="{% static 'users/icons/heroicons-outline_menu.svg' %}" alt="Menu">
+                <img src="https://api.iconify.design/heroicons-outline:menu.svg?color=white" alt="Menu">
             </div>
         </nav>
     </header>
@@ -399,21 +451,12 @@
             <div class="sidebar-brand">Chef Roots Panel</div>
 
             <div class="sidebar-item mobile-close-btn" onclick="closeAllSidebars()">
-                <img class="sidebar-icon" src="{% static 'users/icons/heroicons-outline_x.svg' %}" alt="Close">
+                <img class="sidebar-icon" src="https://api.iconify.design/heroicons-outline:x.svg?color=white" alt="Close">
                 <span class="sidebar-text">Close Menu</span>
             </div>
 
             <div class="sidebar-item">
-                {% if user.first_name and user.last_name %}
-                    <div class="custom-avatar sidebar-icon" title="{{ user.first_name }} {{ user.last_name }}">
-                        {{ user.first_name|first }}{{ user.last_name|first }}
-                    </div>
-
-                {% else %}
-                    <div class="custom-avatar sidebar-icon" title="{{ user.username }}">
-                        {{ user.username|slice:":2" }}
-                    </div>
-                {% endif %}
+                <img class="sidebar-icon" src="https://api.iconify.design/mdi:user.svg?color=white" alt="User">
                 <div style="display:flex; flex-direction:column; line-height:1.2;">
                     <span class="sidebar-text" style="font-weight:600;">
                         {% if user.is_authenticated %}{{ user.username|title }}{% else %}Guest{% endif %}
@@ -436,7 +479,7 @@
                         <span class="action-dots" onclick="toggleMenu(this)">⋯</span>
                         
                         <div class="action-popup">
-                            <a href="{% url 'recipe-detail' recipe.pk %}" class="action-option" style="display: block; text-decoration: none;">View</a>
+                            <a href="{% url 'recipe-detail' recipe.pk %}" class="action-option top">View</a>
                             <div class="action-option delete" onclick="toggleRecipeSave(event, '{{ recipe.pk }}')">
                                 Remove
                             </div>
@@ -465,12 +508,10 @@
                 </a>
                 <span class="action-dots" onclick="toggleMenu(this)">⋯</span>
                 <div class="action-popup">
-                    <a href="{% url 'recipe-update' recipe.id %}" class="action-option" style="display: block; text-decoration: none;">Update</a>
+                    <a href="{% url 'recipe-update' recipe.id %}" class="action-option top" style="display: block; text-decoration: none;">Update</a>
                     <form action="{% url 'recipe-delete' recipe.id %}" method="POST" style="margin:0;">
                         {% csrf_token %}
-                        <button type="submit" class="action-option delete" 
-                                onclick="return confirm('Wait! Are you sure you want to delete {{ recipe.title }}?');"
-                                style="width: 100%; text-align: left; border: none; background: transparent; font-family: inherit; font-size: 11px; font-weight: 600; cursor: pointer;">
+                        <button type="submit" class="delete_btn" onclick="return confirm('Wait! Are you sure you want to delete {{ recipe.title }}?');">
                             Delete
                         </button>
                     </form>
@@ -488,7 +529,7 @@
             <form action="{% url 'logout' %}" method="post" style="width: 100%;">
             {% csrf_token %}
                 <button type="submit" class="sidebar-item" style="width: 100%; border: none; background: transparent; font-family: inherit; font-size: inherit; text-align: left; cursor: pointer;">
-                    <img class="sidebar-icon" src="{% static 'users/icons/material-symbols_logout-rounded.svg' %}" alt="Logout">
+                    <img class="sidebar-icon" src="https://api.iconify.design/material-symbols:logout-rounded.svg?color=white" alt="Logout">
                     <span class="sidebar-text">Logout</span>
                 </button>
             </form>
@@ -498,7 +539,7 @@
     <nav class="nav-sidebar">
         <div style="display:flex; justify-content:space-between; padding:0 20px 20px 20px; border-bottom:1px solid #eee;">
             <span style="font-size:18px; font-weight:bold;">Menu</span>
-            <img src="{% static 'users/icons/outline.svg' %}" style="width:24px; cursor:pointer;" onclick="closeAllSidebars()">
+            <img src="https://api.iconify.design/heroicons-outline:x.svg?color=black" style="width:24px; cursor:pointer;" onclick="closeAllSidebars()">
         </div>
         <a href="{% url 'dashboard' %}" class="nav-link">Home</a>
         <a href= "{% url 'recommendation' %}" class="nav-link">Recommendations</a>
