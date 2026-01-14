@@ -1,7 +1,10 @@
+from django.core.exceptions import ValidationError 
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import User, ChefProfile
 from .models import Recipe
 from .models import Review
-from django import forms
-from django.core.exceptions import ValidationError 
+import json
 
 DIET_CHOICES = [
     ('', 'Select Preference'),
@@ -32,6 +35,66 @@ HEALTH_CHOICES = [
     ('Anemia', 'Anemia (High Iron)'),
     ('None', 'None'),
 ]
+
+class ChefSignUpForm(UserCreationForm):
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    email = forms.EmailField(required=True)
+    # This field stays here as a form input, but we remove it from Meta below
+    years = forms.IntegerField(required=True, min_value=0)
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+    def save(self, commit=True):
+        # 1. Save the User
+        user = super().save(commit=False)
+        user.is_chef = True
+        
+        if commit:
+            user.save()
+            # 2. Manually create the ChefProfile with the extra data
+            ChefProfile.objects.create(
+                user=user,
+                years=self.cleaned_data['years']
+            )
+        return user
+
+#class to handle user signup form inheriting from UserCreationForm 
+class UserSignUpForm(UserCreationForm):
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    email = forms.EmailField()
+    country = forms.CharField(required=False)
+    # Meta class to specify model and fields
+    class Meta(UserCreationForm.Meta):
+        model = User
+        #fields to be included in the form for user signup
+        fields = ['username', 'first_name', 'last_name', 'email', 'country']
+    #override save method to set is_customer to True
+    def save(self, commit=True):
+        #call the parent save method to create User instance
+        user = super().save(commit=False)
+        #set is_customer attribute to True
+        user.is_customer = True
+        #save the user instance to the database
+        if commit:
+            user.save()
+        return user
+
+# Form for user login    
+class LoginForm(AuthenticationForm):
+    # This class inherits everything needed for username/password login
+    # You can add custom styling here if needed
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'input-wrap',
+        'placeholder': 'Username or Email'
+    }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'input-wrap',
+        'placeholder': 'Password'
+    }))
 
 class RecipeForm(forms.ModelForm):
    

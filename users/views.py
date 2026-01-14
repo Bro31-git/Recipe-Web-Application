@@ -1,17 +1,17 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+import json# convert between JSON strings and Python lists
+from django.shortcuts import render, redirect, get_object_or_404# returns , redirect and get object or 404 error
+from django.contrib import messages# message framework for user feedback
+from django.contrib.auth import authenticate, login, logout# login and removes a user session
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin# blocks access to views based on authentication and user permissions
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView# display lists, details, create, update, delete views
+from django.views.generic.edit import FormMixin# mixin to add form handling to detail views used to submit reviews
+from django.urls import reverse_lazy, reverse# for URL resolution (lazy and immediate )
+from django.http import JsonResponse# for returning JSON responses used in saving recipes
+from django.db.models import Q, TextField# complex queries with OR conditions used for search functionality
+from django.db.models.functions import Cast# cast fields to different types for querying
 from .models import Recipe
-from django.shortcuts import redirect
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.db.models import Q, TextField
-from django.db.models.functions import Cast
-from django.views.generic.edit import FormMixin
-from .forms import  RecipeForm, ReviewForm
-from django.urls import reverse_lazy, reverse
-import json
-from django.contrib import messages
+from django.contrib.auth.models import User
+from .forms import ChefSignUpForm, UserSignUpForm, LoginForm, RecipeForm, ReviewForm
 
 # Create your views here.
 def toggle_recipe_save(request, pk):
@@ -30,6 +30,109 @@ def toggle_recipe_save(request, pk):
     # return JSON response indicating the new saved status
     return JsonResponse({'saved': saved, 'recipe_title': recipe.title})# return the status to the js about the save button
 
+def terms_chef(request):
+    return render(request, 'users/terms_chef.html')
+
+def terms_user(request):
+    return render(request, 'users/terms_user.html')
+# --- AUTH VIEWS ---
+def signup_selection(request):
+    return render(request, 'users/signup_selection.html')
+
+def chef_signup(request):
+    if request.method == 'POST':
+        form = ChefSignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Chef Account created for {username}! Please Login.')
+            return redirect('login')
+    else:
+        form = ChefSignUpForm()
+    return render(request, 'users/chef_signup.html', {'form': form})
+
+def customer_signup(request):
+    if request.method == 'POST':
+        form = UserSignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}!')
+            return redirect('login')
+    else:
+        form = UserSignUpForm()
+    return render(request, 'users/user_signup.html', {'form': form})
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+
+    if request.method == "POST":
+        # Check if the request is AJAX (JSON body)
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+            login_val = data.get('username') # This could be username or email
+            password = data.get('password')
+            
+            # Step 1: Find the user by username OR email
+            user_obj = User.objects.filter(Q(username=login_val) | Q(email=login_val)).first()
+            
+            if user_obj:
+                user = authenticate(request, username=user_obj.username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return JsonResponse({"message": "Success", "redirect_url": "/dashboard/"}, status=200)
+            
+            return JsonResponse({"message": "Invalid username/email or password"}, status=401)
+
+        else:
+            # Standard Django Form Fallback
+             # Ensure you have this in forms.py
+            form = LoginForm(request, data=request.POST)
+            if form.is_valid():
+                user = form.get_user()
+                login(request, user)
+                return redirect('dashboard')
+            else:
+                messages.error(request, "Invalid credentials.")
+                return render(request, "users/login.html", {'form': form})
+
+    return render(request, "users/login.html")
+
+def check_account_ajax(request):
+    #"""Checks if account exists via Username or Email"""
+    if request.method == "POST":
+        data = json.loads(request.body)
+        identifier = data.get('identifier', '').strip() # Enter email or username
+        
+        user_exists = User.objects.filter(Q(username__iexact=identifier) | Q(email__iexact=identifier)).exists()
+        
+        if user_exists:
+            # We return the email so the JS can use it as a primary key for the next step
+            user = User.objects.get(Q(username__iexact=identifier) | Q(email__iexact=identifier))
+            return JsonResponse({"exists": True, "email": user.email}, status=200)
+            
+        return JsonResponse({"exists": False, "message": "Account not found."}, status=404)
+
+def reset_password_ajax(request):
+   #"""Final password update"""
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get('email')
+        new_password = data.get('password')
+        
+        try:
+            user = User.objects.get(email=email)
+            user.set_password(new_password)
+            user.save()
+            return JsonResponse({"message": "Password updated successfully"}, status=200)
+        except User.DoesNotExist:
+            return JsonResponse({"message": "An error occurred"}, status=400)
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, "You have been logged out.")
+    return redirect('login')
 
 def recommendation(request):
     if request.method == 'POST':
