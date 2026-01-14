@@ -1,292 +1,489 @@
 {% load static %}
-<!--ENABLES US TO LOAD STATIC FILES THIS IS WHERE ALL OUR IMAGES ARE FOUND AND WHICH WE CAN CALLED IN OUR DJANGO HTML -->
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"> 
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Chef Roots – Signup</title>
+  <title>Chef Roots | Welcome</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!--THIS ROOT WILL E#_öKM 
-  IM;Q!NABLES US TO USED  THIS COULOURS TO OTHER PART OF OUR HTML CODE THIS ARE JUST LIKE VARIABLES -->
-  
   <style>
     :root {
       --orange: #f6a079;
-      --light: #fff;
+      --light: #ffffff;
       --muted: #f7e2d8;
       --accent: #d88474;
+      --pink: #fedce7;
+      --dark: #2c2b2b;
+      --bg-soft: #e0e5ec;
+      --transition-main: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /*margin refers to space from the right of the page*/
-    * {
-      margin: 0;
-      /*pading space inside a box*/
-      padding: 0;
-      box-sizing: border-box;
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
     }
-
-    html, body {
-      min-height: 100vh;
-      /*font family refers to text of the html if popins doesn't work the sansirif will take place*/
-      font-family: "Poppins", sans-serif;
-    }
-
-    /* as you see bellow this body is a css style the change will occur in the body  */
-    body {
-      /*back ground refers refer to  as the colors */
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
-        /*this is a static file this is where an image from the static file is run or called the it will be loaded here */
-        url('{% static "users/icons/pexels-farhad.jpg" %}')
-        /*this enables that then image should not repaet it self when iit is loaded */
-        center/cover no-repeat;
-      /*this refers to as the space between the image */
-      padding: 40px 20px;
-      /*this refers to the color of the body */
-      color: #fff;
-    }
-
-    /*this one refers to as the heading,particular changes  will occur at heading one and heading 3*/
-    h1, h3 {
-      /*permit the ading to be center*/
-      text-align: center;
-      /*that heading will be invisible since it is equal to 0*/
-      opacity: 0;
-      animation: fadeUp 1.2s ease forwards;
-    }
-
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      animation-delay: 0.2s;
-    }
-
-    h3 {
-      font-size: clamp(1rem, 2.5vw, 1.4rem);
-      font-weight: 400;
-      margin-top: 12px;
-      animation-delay: 0.6s;
-    }
-
-    /*this one help to create an animation called fadeup*/
-    @keyframes fadeUp {
-      /*so in general the keyframes which has the name fade up enable us when we load the page at first it will be inviible  then it will appear a coulour dending on which coulours you have chossen */
-      /*refers to how the element start */
-      from {
-        /*this transform help to move from the y axis but from the positive from 5 */
-        transform: translateY(5px);
-        /*enable to move to the left*/
-        opacity: 0;
-      }
-      /*this refers to how the element ends*/
-      to {
-        /*help to put it in a normal position from the y axis but at 0  */
-        transform: translateY(0);
-        /*opacity helps to make it visible */
-        opacity: 1;
-      }
-    }
-
-    /*this is a container it was initialised in our html this container help us to do many operation inside */
-    .container {
-      /*refers to the space between the top of the web page to the boxes */
-      margin-top: 70px;
-      display: flex;
-      /*this refers to as the gap between boxes */
-      gap: 300em;
-      /*help the boxes to be in the center */
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    /*this refers to as the boxes how will they appear on the page */
-    .box {
-      width: 260px;
-      /*the hight refers to as the hight of the box */
-      height: 340px;
-      /*the border raduis refers to as how big the box bill be */
-      border-radius: 10px;
-      overflow: hidden;
-      /*the back ground coulours take the coulours from the root when we are calling it from the root we used var(-- */
-      background: var(--light);
-      transition: transform 0.35s ease, box-shadow 0.35s ease;
-      position: relative;
-    }
-
-    .us:hover {
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
-       url('{% static "users/icons/pexels-farhad.jpg" %}') center/cover no-repeat;
-    }
-
-    .ch:hover {
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
-        /*here the urls will be loaded from the static folder */
-        url('{% static "users/icons/pexels-kamp.jpg" %}') center/cover no-repeat;
-    }
-
-    .box a {
-      text-decoration: none;
-      height: 100%;
-      display: block;
-      position: relative;
-    }
-
-    .box:hover {
-      transform: translateY(-12px) scale(1.05);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.45);
-    }
-
-    /* ===== IMAGE AREA ===== */
-    .bg_img {
-      height: 70%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    .img {
-      width: 130px;
-    }
-
-    /* ===== TEXT AREA ===== */
-    .text {
-      height: 30%;
-      background-color: var(--muted);
-      color: #262424d4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      transition: all 0.4s ease;
-      position: absolute;
-      bottom: 0;
+    
+    html, body { 
+      height: 100%; 
       width: 100%;
+      overflow-x: hidden;
+      background: var(--bg-soft);
+      font-family: 'Poppins', sans-serif;
     }
 
-    .feature {
-      position: absolute;
-      inset: 0;
-      background: var(--accent);
-      color: #fff;
+    body {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* ===== BACKGROUND DECORATIONS ===== */
+    .bubble-container {
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      z-index: 0; 
+      pointer-events: none;
+    }
+    .bubble { 
+      position: absolute; 
+      bottom: -150px; 
+      border-radius: 50%; 
+      opacity: 0; 
+      animation: floatUp 25s infinite ease-in-out; }
+    @keyframes floatUp {
+      0% { 
+        transform: translateY(20) scale(0.5); opacity: 0; 
+      }
+      20% { 
+        opacity: 0.3; 
+      }
+      100% { 
+        transform: translateY(-100vh) scale(1.2); 
+        opacity: 0; 
+      }
+    }
+    /* Customizing individual bubbles for size, color, and timing */
+
+    .b1 { width: 80px; height: 80px; left: 5%; background: var(--orange); animation-duration: 25s; }
+    .b2 { width: 40px; height: 40px; left: 15%; background: var(--accent); animation-duration: 18s; }
+    .b3 { width: 110px; height: 110px; left: 25%; background: var(--pink); animation-duration: 30s; animation-delay: 3s; }
+    .b4 { width: 60px; height: 60px; left: 40%; background: var(--muted); animation-duration: 22s; }
+    .b5 { width: 90px; height: 90px; left: 55%; background: var(--orange); animation-duration: 28s; animation-delay: 5s; }
+    .b6 { width: 30px; height: 30px; left: 65%; background: var(--accent); animation-duration: 15s; animation-delay: 2s; }
+    .b7 { width: 120px; height: 120px; left: 75%; background: var(--pink); animation-duration: 35s; animation-delay: 5s; }
+    .b8 { width: 50px; height: 50px; left: 85%; background: var(--muted); animation-duration: 20s; animation-delay: 1s; }
+    .b9 { width: 70px; height: 70px; left: 92%; background: var(--orange); animation-duration: 26s; animation-delay: 6s; }
+    .b10 { width: 45px; height: 45px; left: 33%; background: var(--accent); animation-duration: 24s; animation-delay: 3s; }
+
+    header, footer { 
+      text-align: center; 
+      margin-bottom: 20px; 
+      z-index: 10; 
+      padding: 0 20px; 
+    }
+    h1 { 
+      font-family: 'Montserrat', sans-serif; 
+      color: var(--dark); 
+      font-size: clamp(2rem, 5vw, 3.5rem); 
+      font-weight: 800;
+    }
+    h3 { 
+      color: #667; 
+      font-weight: 400; 
+      font-size: 0.9rem; 
+      margin-top: 5px; 
+      text-transform: uppercase; 
+      letter-spacing: 2px;
+    }
+    h6 {
+      display: none;
+      color: #4b4848;
+      font-weight: 500;
+      font-size: 0.5rem;
+      margin-top: 8px;
+      z-index: 10;
+    }
+
+    h5 {
+      color: #5b5757;
+      font-weight: 500;
+      font-size: 0.8rem;
+      margin-top: 8px;
+      z-index: 10;
+      display: flex;
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    .main-container { 
+      width: 100%; 
+      z-index: 10; 
+      display: flex; 
+      align-items: center;
+      justify-content: center; 
+      padding: 20px; 
+    }
+    .circle-wrapper { 
+      display: flex; 
+      flex-direction: row; 
+      gap: 15px; 
+    }
+
+    .box {
+      width: 320px; 
+      height: 480px;
+      position: relative; 
+      overflow: hidden;
+      background-color: var(--bg-soft);
+      box-shadow: 10px 10px 20px #bebebe, -10px -10px 20px #ffffff;
+      transition: var(--transition-main);
+      cursor: pointer;
+    }
+
+    /* Shape Logic */
+    .us {
+       border-radius: 240px 20px 20px 240px; 
+      }
+    .ch { 
+      border-radius: 20px 240px 240px 20px; 
+    }
+    .inner-content {
+      position: absolute; 
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+      justify-content: center;
+      transition: var(--transition-main);
+      z-index: 5;
+    }
+    .inner-content img { 
+      width: 100px;
+      height: auto;
+      margin-bottom: 15px; 
+    }
+    .inner-content span { 
+      font-family: 'Poppins', sans-serif; 
+      font-weight: 700; 
+      color: var(--dark); 
+      font-size: 1rem; 
+      text-transform: uppercase; 
+    }
+
+    /* Sliding Reveal Content */
+    .feature-reveal {
+      position: absolute; 
+      inset: 0;
+      display: flex; 
+      flex-direction: column;
       text-align: center;
-      padding: 25px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      opacity: 0;
-      transform: translateY(100%);
-      transition: all 0.45s ease;
+      align-items: center; 
+      justify-content: center;
+      opacity: 0; z-index: 6;
+      transition: var(--transition-main);
+      color: white;
+      gap: 25px;
+      background-size: cover; 
+      background-position: center;
+      padding: 35px 45px;
     }
 
-    /* ===== HOVER EFFECT ===== */
-    .box:hover .bg_img {
-      opacity: 0;
-      transform: scale(0.9);
+    .us .feature-reveal { 
+      transform: translateX(50%); 
+    }
+    .ch .feature-reveal { 
+      transform: translateX(-50%); 
     }
 
-    .box:hover .text {
-      transform: translateY(-240%);
+    .slide-content {
+      display: flex; 
+      flex-direction: column;
+      align-items: center; 
+      justify-content: center;
+      text-align: center; 
+      padding: 30px;
+    }
+    
+    .box:hover .slide-content { 
+      opacity: 1; 
+      transform: translateX(0); 
     }
 
-    .box:hover .feature {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
-      opacity: 1;
-      transform: translateY(0);
+    /* Hover Actions */
+    .box:hover .feature-reveal { 
+      opacity: 1; 
+      transform: translateX(0); 
+    }
+    .box:hover .inner-content { 
+      opacity: 0; 
+      transform: scale(0.9); 
     }
 
-    /* ===== RESPONSIVE ===== */
+    .slide-content p { 
+      font-size: 0.9rem; 
+      margin: 15px 0 20px; 
+      line-height: 1.4; 
+    }
+
+    /* BUTTONS */
+    .btn-container { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      width: 150px; 
+    }
+    .action-btn {
+      padding: 10px; 
+      border: 2px solid #fff; 
+      color: #fff; 
+      text-decoration: none; 
+      font-size: 0.8rem; 
+      font-weight: 600; 
+      border-radius: 6px; 
+      text-align: center; 
+      transition: 0.3s;
+    }
+    .action-btn:hover { 
+      background: #fff; 
+      color: var(--orange); 
+    }
+    @media (min-width: 1025px) {
+      body {
+        overflow: hidden;
+      }
+      .us:hover { 
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "users/icons/dish.jpg" %}') center/cover no-repeat; 
+      }
+      .ch:hover { 
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "users/icons/pexels-farhad.jpg" %}') center/cover no-repeat; 
+      }
+      .box:hover .inner-content { 
+        opacity: 0; 
+        transform: scale(0.8); 
+      }
+      .box:hover { 
+        transform: translateY(-5px); 
+      }
+    }
+    /* ===== TABLET ADJUSTMENTS ===== */
+    @media (min-width: 481px) and (max-width: 1024px) {
+      .circle-wrapper { 
+        gap: 30px; 
+      }
+      .box { 
+        width: 280px; 
+        height: 400px; 
+        border-radius: 20px !important; 
+      }
+      
+      /* Static view for tablet to ensure functionality */
+      .inner-content { 
+        display: none; 
+      }
+      .feature-reveal { 
+        position: relative; 
+        opacity: 1; 
+        transform: none !important; 
+        background: none !important; 
+        color: var(--dark); 
+      }
+    
+      .mobile-img { 
+        display: block !important; 
+        width: 85px; 
+        margin: 0 auto 10px; 
+      }
+      .action-btn { 
+        border-color: var(--accent); 
+        color: var(--accent); 
+      }
+      .action-btn:hover { 
+        background: var(--accent); 
+        color: white; 
+      }
+      .btn-container { 
+        margin-top: 20px; 
+      }
+      h6 {
+        display: none;
+      }
+    }
+
+    /* ===== MOBILE ADJUSTMENTS ===== */
     @media (max-width: 480px) {
-      .container {
-        gap: 30px;
+      body {
+        padding: 30px 0;
+        overflow-y: scroll;
       }
-      .box {
-      width: 200px;
-      height: 280px;
+      .bubble-container { 
+        display: none; 
       }
-      .img {
-      width: 90px;
+      .circle-wrapper { 
+        flex-direction: column; 
+        gap: 20px; 
       }
-      h1 {
-      font-size: clamp(0.5rem, 5vw, 4rem);
+      .box { 
+        width: 75vw; 
+        height: auto; 
+        padding: 20px 0; 
+        border-radius: 25px !important; 
       }
-      .text {
-        font-size: 14px;
+      .inner-content { 
+        display: none; 
       }
+      .feature-reveal { 
+        position: relative; 
+        opacity: 1; 
+        transform: none !important; 
+        background: none !important; 
+        color: var(--dark); 
+      }
+      .mobile-img { 
+        display: block !important; 
+        width: 60px;
+        margin: 0 auto 15px; 
+      }
+      .btn-container { 
+        flex-direction: row; 
+        width: 90%; 
+        gap: 10px; 
+      }
+      .action-btn { 
+        flex: 1; 
+        border-color: var(--accent); 
+        color: var(--accent); 
+      }
+      h5 {
+        display: none;
+      }
+      h6 {
+        display: contents;
+      }
+    }
+
+    .mobile-img { 
+      display: none; 
+    }
+
+    /* ===== WAVES ===== */
+    .waves-bottom { 
+      position: fixed; 
+      bottom:0; 
+      left: 0; 
+      width: 100%; 
+      height: 15vh; 
+      z-index: 1; 
+      pointer-events: none; 
+    }
+    .wave-svg { 
+      width: 100%; 
+      height: 100%; 
+    }
+    .parallax > use { 
+      animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; 
+    }
+    .parallax > use:nth-child(1) { 
+      animation-delay: -2s; 
+      animation-duration: 8s; 
+    }
+    .parallax > use:nth-child(2) { 
+      animation-delay: -3s; 
+      animation-duration: 12s; 
+    }
+    .parallax > use:nth-child(3) { 
+      animation-delay: -4s; 
+      animation-duration: 18s; 
+    }
+    @keyframes move-forever { 
+      0% { 
+        transform: translate3d(-90px, 0, 0); 
+      } 
+      100% { 
+        transform: translate3d(85px, 0, 0); 
+      } 
     }
   </style>
 </head>
 
 <body>
 
-  <h1>WELCOME TO CHEF ROOTS</h1>
-  <h3>Whether you are here to enjoy great meals or share your culinary skills, get started below.</h3>
+    <div class="bubble-container">
+      <div class="bubble b1"></div>
+      <div class="bubble b2"></div>
+      <div class="bubble b3"></div>
+      <div class="bubble b4"></div>
+      <div class="bubble b5"></div>
+      <div class="bubble b6"></div>
+      <div class="bubble b7"></div>
+      <div class="bubble b8"></div>
+      <div class="bubble b9"></div>
+      <div class="bubble b10"></div>
+      <div class="bubble b1"></div>
+      <div class="bubble b2"></div>
+      <div class="bubble b3"></div>
+    </div>  
+  
+  <header>
+    <h1>CHEF ROOTS</h1>
+    <h3>Elevated Homemade Dining</h3>
+    <h6>Welcome To Chef Roots, Where Culinary Art Meets Community</h6>
+  </header>
 
-  <main class="container">
+  <main class="main-container">
+    <div class="circle-wrapper">
+      
+      <div class="box us">
+        <div class="inner-content">
+          <img src="{% static 'users/icons/employees.png' %}" alt="Individual">
+          <span>Individual</span>
+        </div>
+        <div class="feature-reveal">
+            <img src="{% static 'users/icons/employees.png' %}" class="mobile-img" alt="Individual">
+            <p>Discover local chefs and fresh homemade dishes.</p>
+            <div class="btn-container">
+              <a href="{% url 'user_signup' %}" class="action-btn">Sign Up</a>
+              <a href="{% url 'login' %}" class="action-btn">Login</a>
+            </div>
+        </div>
+      </div>
 
-    <!--INDIVIDUAL SIGNUP CARD -->
-<div class="box us">
-  <!--This link wraps the whole card so you can click anywhere-->
-  <a href="{% url 'user-signup' %}">
-    
-    <!-- Background image container-->
-    <div class="bg_img">
-      <!--Picture for the individual user-->
-      <img src="{% static 'users/icons/employees.png' %}" alt="Individual" class="img">
+      <div class="box ch">
+        <div class="inner-content">
+          <img src="{% static 'users/icons/chef.png' %}" alt="Chef">
+          <span>Chef</span>
+        </div>
+        <div class="feature-reveal">
+            <img src="{% static 'users/icons/chef.png' %}" class="mobile-img" alt="Chef">
+            <p>Showcase your talent and turn passion into profit.</p>
+            <div class="btn-container">
+              <a href="{% url 'chef_signup' %}" class="action-btn">Join Us</a>
+              <a href="{% url 'login' %}" class="action-btn">Login</a>
+            </div>
+        </div>
+      </div>
+
     </div>
-    <div class="text">Start as an Individual</div>
-
-    <!--Description text-->
-    <div class="feature">
-      Discover local chefs, order fresh meals, and enjoy
-      homemade dishes prepared just for you.
-    </div>
-
-  </a>
-</div>
-
-
-<!--CHEF SIGNUP CARD-->
-<div class="box ch">
-  <!--Link for the chef signup card-->
-  <a href="{% url 'chef-signup' %}">
-    
-    <!--Background image container-->
-    <div class="bg_img">
-      <!--Picture for the chef-->
-      <img src="{% static 'users/icons/chef.png' %}" alt="Chef" class="img">
-    </div>
-
-    <!--Title text-->
-    <div class="text">Start as a Chef</div>
-
-    <!--Description text-->
-    <div class="feature">
-      Showcase your talent, reach new customers, and turn
-      your passion into a profitable business.
-    </div>
-
-  </a>
-</div>
-
-</main>
-
-<!--Small text below the cards for existing users-->
-<p style="margin-top: 20px; font-size: 18px; text-align: center;">
-  Already have an account? 
-  <a href="{% url 'login' %}" style="color: var(--orange); font-weight: bold;">
-    Login
-  </a>
-</p>
+  </main>
+  <footer>
+    <h5>Welcome To Chef Roots, Where Culinary Art Meets Community</h5>
+  </footer>
+  <div class="waves-bottom">
+    <svg class="wave-svg" viewBox="0 24 150 28" preserveAspectRatio="none">
+      <defs><path id="wave-path" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" /></defs>
+      <g class="parallax">
+        <use xlink:href="#wave-path" x="48" y="0" fill="rgba(252, 228, 236, 0.8)" />
+        <use xlink:href="#wave-path" x="48" y="3" fill="rgba(246, 160, 121, 0.5)" />
+        <use xlink:href="#wave-path" x="48" y="7" fill="#d88474" />
+      </g>
+    </svg>
+  </div>
 
 </body>
 </html>
