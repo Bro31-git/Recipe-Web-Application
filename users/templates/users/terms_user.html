@@ -1,0 +1,328 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #69d060; 
+            --primary-orange: #ef8b17;
+            --light-orange: #fff4e6;
+            --dark-forest: #1b3022;
+            --text-gray: #5a6772;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.95)), url("https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80");
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--dark-forest);
+            line-height: 1.8;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            border-radius: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            border: 1px solid #f0f0f0;
+        }
+
+        header { text-align: center; margin-bottom: 50px; }
+        
+        h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 3rem; 
+            color: var(--dark-forest);
+            margin-bottom: 10px;
+        }
+
+        .last-updated {
+            color: var(--primary-orange);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        section { margin-bottom: 40px; }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--dark-forest);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h2::before {
+            content: '';
+            width: 6px;
+            height: 24px;
+            background: var(--primary-green);
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        p { color: var(--text-gray); margin-bottom: 15px; text-align: justify; }
+
+        .highlight-box {
+            background: var(--light-orange);
+            padding: 25px;
+            border-radius: 20px;
+            border-left: 5px solid var(--primary-orange);
+            margin: 20px 0;
+        }
+
+        .highlight-box strong { color: var(--deep-orange); }
+
+        ul { list-style: none; padding-left: 5px; margin-bottom: 20px; }
+        ul li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            color: var(--text-gray);
+        }
+        ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #eee;
+        }
+
+        .law {
+            & a {
+            text-decoration: underline;
+            color: #268038d3;
+        }
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--primary-green);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .cta-btn:hover {
+            background: var(--primary-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(239, 139, 23, 0.2);
+        }
+
+        .return-home {
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: block;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 30px; border-radius: 30px; }
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Terms and Conditions of Use</h1>
+            <p class="last-updated">Last Updated: January 2026</p>
+        </header>
+
+        <section>
+            <p>
+                Welcome to <strong>Chef Roots</strong>.
+                Chef Roots is a WebApp designed to help individuals and families discover meals to cook
+                based on their budget, available ingredients, and health considerations.
+            </p>
+            <p>
+                By accessing or using Chef Roots, you confirm that you have read, understood, and agreed
+                to be bound by these Terms and Conditions. If you do not agree, you can not use the App.
+            </p>
+        </section>
+
+        <section>
+            <h2>1. Eligibility & Acceptance</h2>
+            <p>
+                Chef Roots is intended for personal and household use only. By using this App, you confirm
+                that you are legally capable of entering into a binding agreement under the laws of the
+                Republic of Cameroon.
+            </p>
+        </section>
+
+        <section>
+            <h2>2. Description of the Service</h2>
+            <p>Chef Roots provides digital tools that allow users to:</p>
+            <ul>
+                <li>Search for recipes based on available ingredients</li>
+                <li>Discover meals within a defined budget</li>
+                <li>Receive food suggestions adapted to dietary preferences and health conditions</li>
+                <li>Follow step-by-step cooking instructions</li>
+                <li>Plan meals in a healthier and more convenient manner</li>
+            </ul>
+            <p>
+                The App does not guarantee meal outcomes, taste preferences, or ingredient availability.
+            </p>
+        </section>
+
+        <section>
+            <h2>3. Health, Medical & Nutritional Disclaimer</h2>
+            <div class="highlight-box">
+                <strong>IMPORTANT:</strong> Chef Roots does NOT provide medical, clinical, or professional health advice.
+            </div>
+            <p>
+                All nutritional information and health-based recommendations are provided for general
+                informational purposes only. They are based on common dietary data and not on individual
+                medical assessments.
+            </p>
+            <p>
+                Users with medical conditions (including but not limited to diabetes, hypertension,
+                allergies, or chronic illnesses) must consult a qualified healthcare professional before
+                following any recipe or meal plan suggested by the App.
+            </p>
+            <p>
+                Chef Roots shall not be held responsible for adverse health effects, allergic reactions,
+                or dietary complications resulting from the use of recipes provided.
+            </p>
+        </section>
+
+        <section>
+            <h2>4. Budget Estimates & Market Variations</h2>
+            <p>
+                Budget calculations and ingredient prices are estimates only and may vary depending on:
+            </p>
+            <ul>
+                <li>Location within Cameroon</li>
+                <li>Market conditions and inflation</li>
+                <li>Availability of local products</li>
+                <li>Retailer or market pricing differences</li>
+            </ul>
+            <p>
+                Chef Roots is not responsible for price changes, shortages, or discrepancies between
+                estimated and actual costs.
+            </p>
+        </section>
+
+        <section>
+            <h2>5. User Accounts & Responsibilities</h2>
+            <p>
+                When creating an account, you agree to provide accurate and truthful information.
+                You are solely responsible for all activities carried out under your account.
+            </p>
+            <p>
+                You agree not to share your login credentials or use another person’s account.
+                Chef Roots reserves the right to suspend or terminate accounts that violate these Terms.
+            </p>
+        </section>
+
+        <section>
+            <h2>6. Acceptable Use Policy</h2>
+            <p>You agree not to:</p>
+            <ul>
+                <li>Use the App for illegal or fraudulent purposes</li>
+                <li>Attempt to hack, reverse engineer, or disrupt the platform</li>
+                <li>Copy, resell, or commercially exploit any part of the App</li>
+                <li>Upload false, harmful, or misleading data</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>7. Intellectual Property Rights</h2>
+            <p>
+                All content, including recipes, algorithms, text, graphics, logos, and design elements,
+                are the exclusive property of Chef Roots or its licensors and are protected under
+                applicable intellectual property laws in Cameroon.
+            </p>
+            <p>
+                Unauthorized reproduction, modification, or distribution is strictly prohibited.
+            </p>
+        </section>
+
+        <section>
+            <h2>8. Service Availability & Modifications</h2>
+            <p>
+                Chef Roots does not guarantee uninterrupted or error-free service. We reserve the right
+                to modify, suspend, or discontinue any part of the App at any time without prior notice.
+            </p>
+        </section>
+
+        <section>
+            <h2>9. Limitation of Liability</h2>
+            <p>
+                To the maximum extent permitted by law, Chef Roots shall not be liable for any direct,
+                indirect, incidental, or consequential damages arising from:
+            </p>
+            <ul>
+                <li>Use or inability to use the App</li>
+                <li>Cooking accidents or food preparation outcomes</li>
+                <li>Health-related consequences</li>
+                <li>Incorrect, incomplete, or outdated information</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>10. Indemnification</h2>
+            <p>
+                You agree to indemnify and hold harmless Chef Roots, its owners, developers, and partners
+                from any claims, damages, or losses resulting from your use of the App or violation of
+                these Terms.
+            </p>
+        </section>
+
+        <section>
+            <h2>11. Governing Law & Jurisdiction</h2>
+            <p class="law">
+                These Terms shall be governed by and interpreted in accordance with the
+                <a href="https://camgovca.cm/en/regulation-policy/laws-and-regulations"><strong>laws of the Republic of Cameroon</strong></a>. Any disputes shall be subject to the exclusive
+                jurisdiction of Cameroonian courts.
+            </p>
+        </section>
+
+        <section>
+            <h2>12. Changes to These Terms</h2>
+            <p>
+                Chef Roots reserves the right to update these Terms at any time. Continued use of the App
+                after changes are posted constitutes acceptance of the revised Terms.
+            </p>
+        </section>
+
+        <div class="footer-note">
+            <p>Questions or concerns about these Terms?</p>
+            <a href="mailto:nzali.kouebou@ictuniversity.edu.cm" class="cta-btn">Contact Legal Team</a>
+            <br><br>
+            <a href="{% url 'user_signup' %}" class="return-home">
+                Return to form
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>
