@@ -31,12 +31,6 @@
             line-height: 1.7;
             overflow-x: hidden;
         }
-
-        @media (min-width: 901px) {
-            body { 
-                padding-left: var(--sidebar-desktop-width); 
-            }
-        }
         .container {
             max-width: 1100px; 
             margin: 0 auto; 
@@ -298,11 +292,55 @@
             position: relative;
             transition: 0.4s;
             border: 1px solid #eee;
+            padding-bottom: 50px; /* Space for overlay trigger */
         }
         .profile-card:hover { 
-            transform: translateY(-10px); 
             box-shadow: 0 20px 40px rgba(239, 139, 23, 0.1);
             border-color: var(--primary-orange); 
+        }
+        .member-info-overlay {
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            opacity: 0;
+            box-shadow: 0 20px 40px rgba(239, 139, 23, 0.1);
+            border-color: #d8cece92; 
+            visibility: hidden;
+            transform: translateY(100%);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .b1 {
+            background: linear-gradient(180deg, #516187, #0e141c);
+        }
+        .b2 {
+            background: linear-gradient(180deg, rgb(180, 44, 44), rgb(36, 8, 8));
+        }
+        .b3 {
+            background: linear-gradient(180deg, rgb(167, 84, 165), rgb(33, 6, 23));
+        }
+        .b4 {
+            background: linear-gradient(180deg, rgb(89, 177, 182), rgb(5, 26, 26));
+        }
+        .b5 {
+            background: linear-gradient(180deg, rgb(86, 197, 158), rgb(36, 8, 8));
+        }
+        .b6 {
+            background: linear-gradient(180deg, rgb(178, 191, 97), rgb(2, 32, 23));
+        }
+        .about-section { 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
         }
         .avatar { 
             width: 130px; 
@@ -319,12 +357,33 @@
             letter-spacing: 1px; 
             font-weight: 600;
             margin-bottom: 15px; 
+            z-index: 1000;
+        }
+        .profile-description { 
+            color: white; 
+            font-size: 0.8rem;
+            margin-top: 15px; 
+        }
+        .role {
+            color: var(--primary-orange); 
+            text-transform: uppercase; 
+            font-size: 0.8rem; 
+            letter-spacing: 1px; 
+            font-weight: 600;
+            margin-bottom: 5px; 
+            z-index: 1000;
+        }
+        .description {
+            color: white; 
+            font-size: 0.8rem;
+            margin-bottom: 15px; 
         }
         
         .github-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            margin-top: 35px;
             padding: 8px 16px;
             background: #24292e;
             color: white;
@@ -336,43 +395,82 @@
         .github-link:hover { 
             background: #5a6772; 
         }
-        .profile-description { 
-            font-size: 0.9rem; 
-            color: var(--text-gray); 
-            margin-bottom: 20px; 
+        
+        .team-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
         }
 
-        .join-footer {
-            background: var(--dark-forest);
-            border-radius: 30px;
-            padding: 80px 40px;
-            text-align: center;
-            color: white;
-            margin-top: 100px;
+        /* Show Overlay when card has 'is-active' class */
+        .team-card.is-active .member-info-overlay {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
-        .join-footer h2 { 
-            color: white; 
-            font-size: 3rem; 
-            margin-bottom: 20px; 
+
+        .team-card.is-active .member-img {
+            transform: scale(1.1);
+            filter: blur(3px);
         }
-        .join-footer h2::after { 
-            display: none; 
+
+        /* STATIC BOTTOM BAR WITH TRIGGER BUTTON */
+        .static-footer {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+            border-top: 1px solid #eee;
         }
-        .cta-btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 18px 45px;
-            background: var(--primary-green);
-            color: white;
-            border-radius: 50px;
+
+        .info-trigger-btn {
+            margin-top: 8px;
+            padding: 6px 16px;
+            background: var(--primary-red);
+            color: rgb(218, 28, 28);
+            border: none;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 600;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            text-decoration: none;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: ease 0.3s;
         }
-        .cta-btn:hover { 
-            background: var(--primary-orange); 
-            transform: scale(1.05); 
+        strong {
+            font-size: 0.8rem;
+        }
+
+        .contrib {
+            padding: 0 20px;
+            text-align: left;
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: #f9bf82;
+        }
+        .d {
+            margin-top: 25px;
+        }
+
+        .info-trigger-btn:hover {
+            color: #ef8b17;
+            transform: translateY(-2px);
+        }
+
+        /* Close Icon inside Overlay */
+        .close-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        .close-overlay:hover { 
+            opacity: 1; 
         }
         .reveal {
             opacity: 0;
@@ -385,80 +483,148 @@
             transform: translateY(0);
         }
 
-        @media (max-width: 460px) {
-            .hero h1 { 
-                font-size: 2.1rem; 
-            }
-            .hero p { 
-                font-size: 1rem; 
-            }
-            .stats-row { 
-                grid-template-columns: repeat(3, 1fr); 
-                gap: 8px; 
-            }
-            .stat-card { 
-                padding: 15px 5px; 
-            }
-            .stat-number { 
-                font-size: 1rem; 
-            }
-            .stat-label { 
-                font-size: 0.6rem; 
-            }
-            .content-grid { 
-                grid-template-columns: 1fr; 
-                gap: 20px; 
-            }
-            
-            /* Team Grid 2-Column Force */
-            .team-grid { 
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 12px;
-                padding-bottom: 40px;
-            }
-            .profile-card { 
-                padding: 20px 10px; 
-            }
-            .avatar { 
-                width: 70px; 
-                height: 70px; 
-                border-width: 3px; 
-            }
-            .profile-name { 
-                font-size: 0.9rem; 
-            }
-            .profile-role { 
-                font-size: 0.65rem; 
-                letter-spacing: 0; 
-            }
-            .profile-description { 
-                display: none; 
-            } 
-            
-            /* Stagger Effect without overflow */
-            .profile-card:nth-child(even) { 
-                transform: translateY(20px); 
-            }
-            .profile-card:nth-child(even):hover { 
-                transform: translateY(15px); 
-            }
+        /* ================= MOBILE UI REFINEMENT ================= */
+@media (max-width: 900px) {
+    /* 1. Global Spacing Reset */
+    body {
+        padding-left: 0 !important; /* Force remove sidebar space */
+    }
 
-            .join-footer h2 { 
-                font-size: 1.8rem;
-            }
-            .cta-btn { 
-                width: 90%; 
-            }
-        }
+    .container {
+        padding: 40px 16px; /* Optimized edge padding */
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
 
-        @media (max-width: 768px) and (min-width: 461px) {
-            .content-grid { 
-                grid-template-columns: 1fr; 
-            }
-            .team-grid { 
-                grid-template-columns: repeat(2, 1fr); 
-            }
-        }
+    /* 2. Stats Row - Compact Row */
+    .stats-row {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px;
+        margin-bottom: 50px;
+    }
+
+    .stat-card {
+        padding: 12px 5px;
+        border-radius: 15px;
+    }
+
+    .stat-number {
+        font-size: 1.1rem;
+    }
+
+    .stat-label {
+        font-size: 0.6rem;
+        line-height: 1.2;
+    }
+
+    /* 3. Section Content Scaling */
+    .hero {
+        margin-bottom: 40px;
+    }
+
+    .hero h1 {
+        font-size: 1.9rem;
+        line-height: 1.3;
+    }
+    h2 {
+        font-size: 0.8rem;
+    }
+    .content-section {
+        margin-bottom: 50px;
+    }
+
+    .content-grid, 
+    .purpose-grid, 
+    .feature-card-grid {
+        grid-template-columns: 1fr !important; 
+        gap: 20px;
+    }
+
+    .image-placeholder {
+        min-height: 220px;
+        border-radius: 20px;
+    }
+
+    /* 4. Profiles & Overlay Refinement */
+    .team-grid {
+        grid-template-columns: 1fr !important; 
+        padding: 0 10px;
+    }
+
+    .team-card {
+        width: 100%;
+        max-width: 320px; 
+        margin: 0 auto 15px;
+    }
+
+    .profile-card {
+        padding: 30px 20px 70px 20px;
+    }
+
+    .avatar {
+        width: 85px;
+        height: 85px;
+        margin-bottom: 15px;
+    }
+
+    .profile-name {
+        font-size: 1.1rem;
+    }
+
+    .member-info-overlay {
+        padding: 15px;
+    }
+
+    .member-info-overlay h3 {
+        font-size: 1.1rem;
+        margin-top: 10px;
+    }
+
+    .member-info-overlay .description {
+        font-size: 0.75rem;
+        margin: 5px 0;
+        line-height: 1.4;
+    }
+
+    .contrib {
+        margin-top: 8px;
+        padding: 0 10px;
+        font-size: 0.72rem;
+        line-height: 1.3;
+    }
+
+    .contrib li {
+        margin-bottom: 6px;
+    }
+
+    .info-trigger-btn {
+        padding: 8px 20px;
+        font-size: 0.7rem;
+    }
+    
+    .github-link {
+        margin-top: 10px;
+        padding: 5px 12px;
+        font-size: 0.7rem;
+    }
+
+    /* Purpose Item Tweaks */
+    .purpose-container {
+        padding: 40px 20px;
+        border-radius: 25px;
+    }
+
+    .purpose-item {
+        padding: 20px;
+    }
+}
+
+/* Fix for very small screens (iPhone SE etc) */
+@media (max-width: 370px) {
+    .hero h1 { font-size: 1.6rem; }
+    .stat-number { font-size: 0.9rem; }
+    .team-card { max-width: 280px; }
+}
     </style>
 
 {% endblock %}
@@ -565,52 +731,131 @@
         <section class="team-section reveal">
             <h2>The Visionaries</h2>
             <div class="team-grid">
-                <div class="profile-card">
+              <div class="team-card" id="card-1">
+                <div class="profile-card" >
                     <img class="avatar" src="{% static 'users/icons/owengaby.jpg' %}" alt="Team Member">
                     <h3 class="profile-name">Nzali Owen</h3>
                     <p class="profile-role">Scrum Master</p>
-                    <p class="profile-description">Orchestrating precision and agile excellence in every sprint.</p>
-                    <a href="https://github.com/owengaby80-sudo" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub" title="GitHub"> Github</a>
+
+                    <a href="https://github.com/owengaby80-sudo" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub" title="GitHub"> Github</a><br>
+                    <button class="info-trigger-btn" onclick="toggleCard('card-1')">View Details</button>
+                </div>
+                <div class="member-info-overlay b1">
+                    <i class="fas fa-times close-overlay" onclick="toggleCard('card-1')"></i>
+                    <h3>Nzali Owen</h3>
+                    <p class="role">Scrum Master</p>
+                    <p class="description">Orchestrating precision and agile excellence in every sprint. Ensuring the team stays focused on delivering value.</p>
+                     <strong>Contribution</strong>
+                    <ul class="contrib">
+                        <li>Designed immersive and implemented responsive user interfaces for the platform’s frontend</li>
+                        <li>Developed and secured the user authentication backend</li>
+                        <li>Produced core UI/UX design layouts</li>
+                    </ul>
+                     <div style="margin-top: 20px;">
+                        <a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+              </div>
+                <div class="team-card" id="card-2">
+                    <div class="profile-card">
+                        <img class="avatar" src="{% static 'users/icons/randy.jpg' %}" alt="Team Member">
+                        <h3 class="profile-name">Tchinda Randy</h3>
+                        <p class="profile-role">Product Owner</p>
+                        <a href="https://github.com/Bro31-git" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a><br>
+                        <button class="info-trigger-btn" onclick="toggleCard('card-2')">View Details</button>
+                    </div>
+                    <div class="member-info-overlay b2">
+                        <i class="fas fa-times close-overlay" onclick="toggleCard('card-2')"></i>
+                        <h3>Tchinda Randy</h3>
+                        <p class="role">Product Owner</p>
+                        <p class="description">Translating complex health data into simple user experiences.</p>
+                        <strong>Contribution</strong>
+                        <ul class="contrib">
+                            <li>Developed the platform’s core backend architecture</li>
+                            <li>Designed the main user interface (UI)</li>
+                            <li>Coordinated white-box testing activities</li>
+                            <li>Designed the Home and Description pages</li>
+                          </ul>
+                        <div style="margin-top: 20px;">
+                            <a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="profile-card">
-                    <img class="avatar" src="{% static 'users/icons/randy.jpg' %}" alt="Team Member">
-                    <h3 class="profile-name">Tchinda Randy</h3>
-                    <p class="profile-role">Product Owner</p>
-                    <p class="profile-description">Translating complex health data into simple user experiences.</p>
-                    <a href="https://github.com/Bro31-git" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a>
+                <div class="team-card" id="card-3">
+                    <div class="profile-card">
+                        <img class="avatar" src="{% static 'users/icons/2.svg' %}" alt="Team Member">
+                        <h3 class="profile-name">Nanche Leonie</h3>
+                        <p class="profile-role">CFO</p>
+                        <a href="https://github.com/adrianananche-collab" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a><br>
+                        <button class="info-trigger-btn" onclick="toggleCard('card-3')">View Details</button>
+                    </div>
+                    <div class="member-info-overlay b3">
+                        <i class="fas fa-times close-overlay" onclick="toggleCard('card-3')"></i>
+                        <h3>Nanche Leonie</h3>
+                        <p class="role">CFO</p>
+                        <p class="description d">Team accountant.</p>
+                        <div style="margin-top: 20px;">
+                            <a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="profile-card">
-                    <img class="avatar" src="https://ui-avatars.com/api/?name=Elena+Rodriguez&background=1b3022&color=fff" alt="Team Member">
-                    <h3 class="profile-name">Nanche Leonie</h3>
-                    <p class="profile-role">CFO</p>
-                    <p class="profile-description">Team accountant.</p>
-                    <a href="https://github.com/adrianananche-collab" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a>
+                <div class="team-card" id="card-4">
+                    <div class="profile-card">
+                        <img class="avatar" src="{% static 'users/icons/teddy.jpg' %}" alt="Team Member">
+                        <h3 class="profile-name">Ndazana Teddy</h3>
+                        <p class="profile-role">Team Developer</p>
+                        <a href="https://github.com/Teddybear237k" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a><br>
+                        <button class="info-trigger-btn" onclick="toggleCard('card-4')">View Details</button>
+                    </div>
+                    <div class="member-info-overlay b4">
+                        <i class="fas fa-times close-overlay" onclick="toggleCard('card-4')"></i>
+                        <h3>Ndazana Teddy</h3>
+                        <p class="role">Team Developer</p>
+                        <p class="description d">FrontEnd Contributor</p>
+                        <div style="margin-top: 20px;">
+                            <a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="profile-card">
-                    <img class="avatar" src="https://ui-avatars.com/api/?name=James+Wilson&background=ef8b17&color=fff" alt="Team Member">
-                    <h3 class="profile-name">Ndazana Teddy</h3>
-                    <p class="profile-role">Core Engine Developer</p>
-                    <p class="profile-description">Backend architect focusing on high-speed recipe indexing.</p>
-                    <a href="https://github.com/Teddybear237k" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a>
+                <div class="team-card" id="card-5">
+                    <div class="profile-card">
+                        <img class="avatar" src="{% static 'users/icons/yann.jpg' %}" alt="Team Member">
+                        <h3 class="profile-name">Tchounga Yann</h3>
+                        <p class="profile-role">Team Developer</p>
+                        <a href="https://github.com/yVnnCodex" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a><br>
+                        <button class="info-trigger-btn" onclick="toggleCard('card-5')">View Details</button>
+                    </div>
+                    <div class="member-info-overlay b5">
+                        <i class="fas fa-times close-overlay" onclick="toggleCard('card-5')"></i>
+                        <h3>Tchounga Yann</h3>
+                        <p class="role">Team Developer</p>
+                        <p class="description d">FrontEnd Contributor</p>
+                        <div style="margin-top: 20px;">
+                            <a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="profile-card">
-                    <img class="avatar" src="https://ui-avatars.com/api/?name=Amara+Okonkwo&background=ef8b17&color=fff" alt="Team Member">
-                    <h3 class="profile-name">Tchounga Yann</h3>
-                    <p class="profile-role">Frontend Specialist</p>
-                    <p class="profile-description">Crafting immersive and responsive user interfaces.</p>
-                    <a href="https://github.com/yVnnCodex" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a>
-                </div>
-
-                <div class="profile-card">
-                    <img class="avatar" src="https://ui-avatars.com/api/?name=Lucas+Varga&background=ef8b17&color=fff" alt="Team Member">
-                    <h3 class="profile-name">Pamsy Albert</h3>
-                    <p class="profile-role">API Integrations</p>
-                    <p class="profile-description">Expert in connecting grocery data with our kitchen AI.</p>
-                    <a href="https://github.com/ndongopamsy08-hue" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a>
+                <div class="team-card" id="card-6">
+                    <div class="profile-card">
+                        <img class="avatar" src="{% static 'users/icons/2.svg' %}" alt="Team Member">
+                        <h3 class="profile-name">Pamsy Albert</h3>
+                        <p class="profile-role">Team Developer</p>
+                        <a href="https://github.com/ndongopamsy08-hue" class="github-link"><img src="https://api.iconify.design/line-md:github-loop.svg?color=white" width="18" alt="GitHub"> Github</a><br>
+                        <button class="info-trigger-btn" onclick="toggleCard('card-6')">View Details</button>
+                    </div>
+                    <div class="member-info-overlay b6">
+                        <i class="fas fa-times close-overlay" onclick="toggleCard('card-6')"></i>
+                        <h3>Pamsy Albert</h3>
+                        <p class="role">Team Developer</p>
+                        <p class="description d">FrontEnd Contributor</p>
+                        <div style="margin-top: 20px;">
+                            <a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -621,6 +866,27 @@
 {% block extra_js %}
 
      <script>
+      function toggleCard(cardId) {
+        event.stopPropagation(); // Prevents multiple triggers
+        const card = document.getElementById(cardId);
+        
+        // If clicking a new card, close any others first
+        document.querySelectorAll('.team-card').forEach(c => {
+            if (c.id !== cardId) c.classList.remove('is-active');
+        });
+
+        // Toggle the active class to show/hide the hover effect
+        card.classList.toggle('is-active');
+    }
+
+    // Close cards if clicking anywhere else on the screen
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.team-card')) {
+            document.querySelectorAll('.team-card').forEach(c => {
+                c.classList.remove('is-active');
+            });
+        }
+    });
         // --- SCROLL REVEAL LOGIC ---
         const revealElements = document.querySelectorAll('.reveal');
         
