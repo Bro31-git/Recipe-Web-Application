@@ -23,9 +23,9 @@ from authentication import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-     path('', include('users.urls')),
+    path('', include('users.urls')),
      
-     path('', lambda request: redirect('login', permanent=False)),
+    path('', lambda request: redirect('login', permanent=False)),
      
 ]
 

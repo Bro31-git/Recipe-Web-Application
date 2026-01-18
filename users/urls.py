@@ -20,6 +20,7 @@ urlpatterns = [
     path('api/reset-password/', views.reset_password_ajax, name='reset-password'),
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/', RecipeListView.as_view(), name='dashboard'),
+    
     # Add this line to your existing urlpatterns
     path('recipe/<int:pk>/save/', views.toggle_recipe_save, name='toggle-save'),
     path('recommendation/', views.recommendation, name='recommendation'),
@@ -33,4 +34,5 @@ urlpatterns = [
     path('about/', TemplateView.as_view(template_name='users/about.html'), name='about'),
     path('terms_chef/', TemplateView.as_view(template_name='users/terms_chef.html'), name='terms-chef'),
     path('terms_user/', TemplateView.as_view(template_name='users/terms_user.html'), name='terms-user'),
+    path('support/', TemplateView.as_view(template_name='users/support.html'), name='support'),
 ]
