@@ -1,7 +1,19 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Avg
 import re
+
 # Create your models here.
+class User(AbstractUser):
+    #additional fields based on user roles
+    is_chef = models.BooleanField(default=False)
+    is_customer = models.BooleanField(default=False)
+    country = models.CharField(max_length=100, blank=True)
+    saved_recipes = models.ManyToManyField('Recipe', related_name='saved_by', blank=True)
+
+class ChefProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    years_of_experience = models.IntegerField(default=0)
 
 class Recipe(models.Model):
     chef = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -24,6 +36,19 @@ class Recipe(models.Model):
     cooking_time = models.PositiveIntegerField(help_text="Time in minutes", default=30) 
 
     video_url = models.URLField(max_length=200, blank=True, null=True) 
+
+    def get_video_id(self):
+        """Extracts the ID from a YouTube URL to use in the player"""
+        if not self.video_url:
+            return None
+        
+        # This regex handles both 'youtube.com' and 'youtu.be' links
+        regex = r'(?:v=|\/)([0-9A-Za-z_-]{11}).*'
+        match = re.search(regex, self.video_url)
+        
+        if match:
+            return match.group(1)
+        return None
 
     def get_average_rating(self):
         reviews = self.reviews.all() 
