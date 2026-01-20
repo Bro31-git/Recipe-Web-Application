@@ -25,3 +25,4 @@ idna
 beautifulsoup4
 lxml==5.3.0
 
+dj-database-url
