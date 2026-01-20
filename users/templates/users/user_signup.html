@@ -518,7 +518,7 @@
     background-image: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url('pexels-farhad.jpg');
     padding: 12px; 
     align-items: center;
-    overflow: hidden;
+    
     justify-content: center;
   }
 
@@ -735,7 +735,7 @@
       <div class="field">
         <label for="password"><img class="label-icon" src="{% static 'users/icons/locked-computer.png' %}" alt="">Password</label>
         <div class="pw-wrap">
-          <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="new-password" required />
+          <input id="password" name="password1" type="password" placeholder="Enter your password" autocomplete="new-password" required />
           <button type="button" class="pw-toggle" aria-label="Show password">
             <img src="{% static 'users/icons/view.png' %}" class="show-hide" alt="Show"/>
             <span class="visually-hidden">Show password</span>
@@ -748,7 +748,7 @@
       <div class="field">
         <label for="confirm"><img class="label-icon" src="{% static 'users/icons/locked-computer.png' %}" alt="">Confirm password</label>
         <div class="pw-wrap">
-          <input id="confirm" name="confirm" type="password" placeholder="Re-enter your password" autocomplete="new-password" required />
+          <input id="confirm" name="password2" type="password" placeholder="Re-enter your password" autocomplete="new-password" required />
           <button type="button" class="pw-toggle" aria-label="Show confirm password">
             <img src="{% static 'users/icons/view.png' %}" class="show-hide" alt="Show"/>
             <span class="visually-hidden">Show confirm password</span>
@@ -758,7 +758,6 @@
        
       <div class="field"> 
         <label class="margin-top-12"><img class="label-icon" src="{% static 'users/icons/citizenship.png' %}" alt="">Country</label>
-        
         <div class="custom-select" id="customCountry">
           <div class="select-trigger">
             <span>Select country</span>
@@ -979,7 +978,7 @@
       </div>
       <div class="field checkbox-field">
         <input id="agree" name="agree" type="checkbox" />
-        <label for="agree">I agree to the <a href="{% url 'terms_user' %}" target="_blank" class="notice">Terms of Service</a> and <a href="{% url 'terms_user' %}" target="_blank" class="notice">Privacy Police</a></label>
+        <label for="agree">I agree to the <a href="{% url 'terms-user' %}" target="_blank" class="notice">Terms of Service</a> and <a href="{% url 'terms-user' %}" target="_blank" class="notice">Privacy Police</a></label>
       </div>
 
       <button id="createBtn" type="submit" disabled>Create account</button>
@@ -1125,49 +1124,14 @@
     });
     
     // ===== DJANGO AJAX SUBMISSION =====
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
-        if (!checkFormValidity()) return;
-    
-        const formData = new FormData(form);
-        
-        // IMPORTANT: Mapping CamelCase to Django Snake_Case
-        // This ensures your backend code (request.POST.get('first_name')) works.
-        formData.append('first_name', firstName.value.trim());
-        formData.append('last_name', lastName.value.trim());
-    
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    // This pulls the token directly from the cookie if needed
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                }
-            });
-    
-            if (response.ok) {
-                const result = await response.json();
-                alert('Welcome! Account created successfully.');
-                window.location.href = result.redirect_url || "/dashboard/";
-            } else {
-                const errorData = await response.json();
-                // Handle specific Django form errors sent back as JSON
-                let errorMsg = "";
-                if (errorData.errors) {
-                    for (let key in errorData.errors) {
-                        errorMsg += `${key}: ${errorData.errors[key]}\n`;
-                    }
-                }
-                alert('Please check the following:\n' + (errorMsg || 'Submission failed'));
-            }
-        } catch (error) {
-            console.error('Connection Error:', error);
-            alert('Network error. Please check your connection.');
+   form.addEventListener('submit', (event) => {
+      
+        if (!checkFormValidity()) {
+            event.preventDefault();
+            alert("Please complete the form correctly.");
         }
+      
     });
-    
     initPasswordToggles();
     checkFormValidity(); </script>
 </body>

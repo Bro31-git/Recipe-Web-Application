@@ -758,7 +758,7 @@
           </div>
 
         <div class="meta-row">
-          <a href="{% url 'signup_select' %}" class="btn-outline">Create Account</a>
+          <a href="{% url 'signup-select' %}" class="btn-outline">Create Account</a>
         </div>
       </div>
 
@@ -815,6 +815,19 @@
   </div>
 
   <script>
+
+
+
+const password = document.getElementById('password'); 
+
+// helper functions
+  function show(element) {
+      if (element) element.style.display = 'block';
+  }
+
+  function hide(element) {
+      if (element) element.style.display = 'none';
+  }
     const overlay = document.getElementById('resetOverlay');
     const forgotBtn = document.getElementById('forgotTrigger');
     const backBtn = document.getElementById('backToLogin');
@@ -861,12 +874,14 @@
     el.style.borderColor = 'rgba(255,255,255,0.045)';
   }
 
-  password.addEventListener('input', () => {
-    const val = password.value.trim();
-    if (val.length === 0) setNeutral(password);
-    else if (val.length > 6 && val.length < 23) setValid(password);
-    else setInvalid(password);
-  });
+  if (passwordInput) {
+    passwordInput.addEventListener('input', () => {
+      const val = passwordInput.value.trim();
+      if (val.length === 0) setNeutral(passwordInput);
+      else if (val.length > 6 && val.length < 23) setValid(passwordInput);
+      else setInvalid(passwordInput);
+    });
+  }
 
 // Step 1: Checks if account exist
 
