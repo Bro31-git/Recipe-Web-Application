@@ -336,9 +336,6 @@
 {% endblock %}
 
 {% block content %}
-
-  <div class="bg"></div>
-
   <div class="progress-container"><div class="progress-bar" id="myBar"></div></div>
 
   <div id="formSection" class="active">
@@ -530,7 +527,7 @@
       if (form.classList.contains('active')) {
         form.classList.remove('active');
         recom.classList.add('active');
-        recom.scrollTop = 0; // Always start at top
+        recom.scrollTop = 0; 
       } else {
         recom.classList.remove('active');
         form.classList.add('active');
