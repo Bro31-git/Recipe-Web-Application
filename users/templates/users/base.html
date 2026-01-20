@@ -11,7 +11,7 @@
     <style>
         :root {
             --primary-red: #a83232;
-            --header-bg: #ffffff;
+            --header-bg: #69d060;
             --nav-text: #2c3e50;
             --primary-green: #69d060;
             --primary-orange: #ef8b17;
@@ -455,6 +455,27 @@
         .overlay.active { 
             display: block; 
         }
+
+           /*=========== Custom CSS Avatar ===========*/
+    .custom-avatar {
+        width: 40px;               
+        height: 40px;
+        border-radius: 50%;       
+        background: var( --primary-green);   
+        color: var(--text-white);       
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 20px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 16px;             
+        text-transform: uppercase; 
+        user-select: none;          
+        letter-spacing: 0.5px;
+        
+    }
+
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -465,7 +486,7 @@
     <header>
         <div class="header-left">
             <div class="mobile-toggle" onclick="toggleAppSidebar()">
-                <img src="https://api.iconify.design/mynaui:sidebar.svg?color=white" alt="Sidebar">
+                 <img src="{% static 'users/icons/mynaui_sidebar.svg' %}" alt="Sidebar">
             </div>
             <div class="logo-info" style="margin-left: 10px;">
                 
@@ -487,7 +508,7 @@
             </ul>
             
             <div class="mobile-toggle" onclick="toggleNavSidebar()">
-                <img src="https://api.iconify.design/heroicons-outline:menu.svg?color=white" alt="Menu">
+               <img src="{% static 'users/icons/heroicons-outline_menu.svg' %}" alt="Menu">
             </div>
         </nav>
     </header>
@@ -497,12 +518,21 @@
             <div class="sidebar-brand">Chef Roots Panel</div>
 
             <div class="sidebar-item mobile-close-btn" onclick="closeAllSidebars()">
-                <img class="sidebar-icon" src="https://api.iconify.design/heroicons-outline:x.svg?color=white" alt="Close">
+               <img class="sidebar-icon" src="{% static 'users/icons/heroicons-outline_x.svg' %}" alt="Close">
                 <span class="sidebar-text">Close Menu</span>
             </div>
 
             <div class="sidebar-item">
-                <img class="sidebar-icon" src="https://api.iconify.design/mdi:user.svg?color=white" alt="User">
+                 {% if user.first_name and user.last_name %}
+                    <div class="custom-avatar sidebar-icon" title="{{ user.first_name }} {{ user.last_name }}">
+                        {{ user.first_name|first }}{{ user.last_name|first }}
+                    </div>
+
+                {% else %}
+                    <div class="custom-avatar sidebar-icon" title="{{ user.username }}">
+                        {{ user.username|slice:":2" }}
+                    </div>
+                {% endif %}
                 <div style="display:flex; flex-direction:column; line-height:1.2;">
                     <span class="sidebar-text" style="font-weight:600;">
                         {% if user.is_authenticated %}{{ user.username|title }}{% else %}Guest{% endif %}
@@ -575,7 +605,7 @@
             <form action="{% url 'logout' %}" method="post" style="width: 100%;">
             {% csrf_token %}
                 <button type="submit" class="sidebar-item" style="width: 100%; border: none; background: transparent; font-family: inherit; font-size: inherit; text-align: left; cursor: pointer;">
-                    <img class="sidebar-icon" src="https://api.iconify.design/material-symbols:logout-rounded.svg?color=white" alt="Logout">
+                    <img class="sidebar-icon" src="{% static 'users/icons/material-symbols_logout-rounded.svg' %}" alt="Logout">
                     <span class="sidebar-text">Logout</span>
                 </button>
             </form>
@@ -585,7 +615,7 @@
     <nav class="nav-sidebar">
         <div style="display:flex; justify-content:space-between; padding:0 20px 20px 20px; border-bottom:1px solid #eee;">
             <span style="font-size:18px; font-weight:bold; color: var(--primary-green);">Menu</span>
-            <img src="https://api.iconify.design/heroicons-outline:x.svg?color=black" style="width:24px; cursor:pointer;" onclick="closeAllSidebars()">
+            <img src="{% static 'users/icons/outline.svg' %}" style="width:24px; cursor:pointer;" onclick="closeAllSidebars()">
         </div>
         <a href="{% url 'dashboard' %}" class="nav-link">Home</a>
         <a href= "{% url 'recommendation' %}" class="nav-link">Recommendations</a>

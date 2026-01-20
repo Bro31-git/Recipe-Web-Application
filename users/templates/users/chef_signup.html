@@ -638,7 +638,7 @@
       <div class="field">
         <label for="password"><img class="label-icon" src="{% static 'users/icons/locked-computer.png' %}" alt="">Password</label>
         <div class="pw-wrap">
-          <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="new-password" required />
+          <input id="password" name="password1" type="password" placeholder="Enter your password" autocomplete="new-password" required />
           <button type="button" class="pw-toggle" aria-label="Show password">
             <img src="{% static 'users/icons/view.png' %}" class="show-hide" alt="Show"/>
             <span class="visually-hidden">Show password</span>
@@ -651,7 +651,7 @@
       <div class="field">
         <label for="confirm"><img class="label-icon" src="{% static 'users/icons/locked-computer.png' %}" alt="">Confirm password</label>
         <div class="pw-wrap">
-          <input id="confirm" name="confirm" type="password" placeholder="Re-enter your password" autocomplete="new-password" required />
+          <input id="confirm" name="password2" type="password" placeholder="Re-enter your password" autocomplete="new-password" required />
           <button type="button" class="pw-toggle" aria-label="Show confirm password">
             <img src="{% static 'users/icons/view.png' %}" class="show-hide" alt="Show"/>
             <span class="visually-hidden">Show confirm password</span>
@@ -667,7 +667,7 @@
 
       <div class="field checkbox-field">
         <input id="agree" name="agree" type="checkbox" />
-        <label for="agree">I agree to the <a href="{% url 'terms_chef' %}" target="_blank" class="notice">Terms of Service</a> and <a href="{% url 'terms_chef' %}" target="_blank" class="notice">Privacy Police</a></label>
+        <label for="agree">I agree to the <a href="{% url 'terms-chef' %}" target="_blank" class="notice">Terms of Service</a> and <a href="{% url 'terms-chef' %}" target="_blank" class="notice">Privacy Police</a></label>
       </div>
 
       <button id="createBtn" type="submit" disabled>Create account</button>
@@ -797,33 +797,14 @@
     });
     
     // ===== AJAX SUBMISSION (Try/Catch) =====
-    form.addEventListener('submit', async (e) => {
-        // If you want a traditional Django page refresh, delete e.preventDefault()
-        // and this entire block.
-        e.preventDefault(); 
-        if (!checkFormValidity()) return;
-    
-        const formData = new FormData(form);
-        
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-    
-            if (response.ok) {
-                alert('Chef account created!');
-                window.location.href = "{% url 'login' %}"; 
-            } else {
-                alert('Form submission error. Please check your data.');
-            }
-        } catch (error) {
-            console.error('Network Error:', error);
-            alert('Server unreachable.');
+    form.addEventListener('submit', (event) => {
+      
+        if (!checkFormValidity()) {
+            event.preventDefault();
+            alert("Please complete the form correctly.");
         }
+      
     });
-    
     initPasswordToggles();
     checkFormValidity();
   </script>
