@@ -16,8 +16,6 @@ urlpatterns = [
     path('signup/chef/', views.chef_signup, name='chef-signup'),
     path('signup/user/', views.customer_signup, name='user-signup'),
     path('login/', views.login_view, name='login'),
-    path('api/check-account/', views.check_account_ajax, name='check-account'),
-    path('api/reset-password/', views.reset_password_ajax, name='reset-password'),
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/', RecipeListView.as_view(), name='dashboard'),
     

@@ -41,7 +41,7 @@ class ChefSignUpForm(UserCreationForm):
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(required=True)
     # This field stays here as a form input, but we remove it from Meta below
-    years = forms.IntegerField(required=True, min_value=0)
+    years_of_experience = forms.IntegerField(required=True, min_value=0)
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -57,7 +57,7 @@ class ChefSignUpForm(UserCreationForm):
             # 2. Manually create the ChefProfile with the extra data
             ChefProfile.objects.create(
                 user=user,
-                years=self.cleaned_data['years']
+                years_of_experience=self.cleaned_data['years_of_experience']
             )
         return user
 
