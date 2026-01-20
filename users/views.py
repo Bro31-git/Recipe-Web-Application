@@ -99,35 +99,6 @@ def login_view(request):
 
     return render(request, "users/login.html")
 
-def check_account_ajax(request):
-    #"""Checks if account exists via Username or Email"""
-    if request.method == "POST":
-        data = json.loads(request.body)
-        identifier = data.get('identifier', '').strip() # Enter email or username
-        
-        user_exists = User.objects.filter(Q(username__iexact=identifier) | Q(email__iexact=identifier)).exists()
-        
-        if user_exists:
-            # We return the email so the JS can use it as a primary key for the next step
-            user = User.objects.get(Q(username__iexact=identifier) | Q(email__iexact=identifier))
-            return JsonResponse({"exists": True, "email": user.email}, status=200)
-            
-        return JsonResponse({"exists": False, "message": "Account not found."}, status=404)
-
-def reset_password_ajax(request):
-   #"""Final password update"""
-    if request.method == "POST":
-        data = json.loads(request.body)
-        email = data.get('email')
-        new_password = data.get('password')
-        
-        try:
-            user = User.objects.get(email=email)
-            user.set_password(new_password)
-            user.save()
-            return JsonResponse({"message": "Password updated successfully"}, status=200)
-        except User.DoesNotExist:
-            return JsonResponse({"message": "An error occurred"}, status=400)
 
 def logout_view(request):
     logout(request)
@@ -199,7 +170,7 @@ class RecipeListView(LoginRequiredMixin, ListView):
                         final_allergens.append(allergen[:-2])
                 #exclude all ingredients with the allergen
                 for allergen in final_allergens:
-                    queryset = queryset.exclude(ingredients_str__icontains=allergen)
+                    queryset = queryset.exclude(ingredient_str__icontains=allergen)
             
             # 2. Search & Filters (GET request)
         query = self.request.GET.get('q')#search query parameter

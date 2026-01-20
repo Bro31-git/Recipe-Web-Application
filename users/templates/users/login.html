@@ -689,7 +689,8 @@
     </header>
 
     <form class="login" method="POST" action="{% url 'login' %}" id="loginForm" novalidate>
-      {% csrf_token %} {% if form.errors %}
+      {% csrf_token %} 
+      {% if form.errors %}
         <div class="non-field-errors">
             {% for field in form %}
                 {% for error in field.errors %}
@@ -701,55 +702,50 @@
             {% endfor %}
         </div>
       {% endif %}
-        <div>
-            <label class="field">
-              <span class="span">
-                <!-- small icon -->
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" fill="rgba(255,255,255,0.9)"></path>
-                  <path d="M3 20c1.8-4 6.2-6 9-6s7.2 2 9 6" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" fill="none"></path>
-                </svg>
-                <span class="label">Username or Email</span>
-              </span>
-            </label>
+      
+      <div>
+        <label class="field">
+          <span class="span">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" fill="rgba(255,255,255,0.9)"></path>
+              <path d="M3 20c1.8-4 6.2-6 9-6s7.2 2 9 6" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" fill="none"></path>
+            </svg>
+            <span class="label">Username or Email</span>
+          </span>
+        </label>
 
-            <div class="input-wrap">
-              <input type="text" id="username" name="username" placeholder="Enter your " autocomplete="username" required value="{{ form.username.value|default:'' }}">
-            </div>
-            <div class="error" id="usernameError">Required field</div>
-          </div>
+        <div class="input-wrap">
+          <input type="text" id="username" name="username" placeholder="Enter your " autocomplete="username" required value="{{ form.username.value|default:'' }}">
+        </div>
+        <div class="error" id="usernameError">Required field</div>
+      </div>
     
 
-          <div>
-            <label class="field">
-              <span class="span">
-                <!-- small icon -->
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <rect x="4" y="10" width="16" height="10" rx="2" fill="rgba(255,255,255,0.9)"></rect>
-                  <path d="M8 10V8a4 4 0 118 0v2" stroke="rgba(255,255,255,0.14)" stroke-width="1.2" fill="none"></path>
-                </svg>
-                <span class="label">Password</span>
-              </span>
-            </label>
-            
-              <div class="input-wrap">
+      <div>
+        <label class="field">
+          <span class="span">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <rect x="4" y="10" width="16" height="10" rx="2" fill="rgba(255,255,255,0.9)"></rect>
+              <path d="M8 10V8a4 4 0 118 0v2" stroke="rgba(255,255,255,0.14)" stroke-width="1.2" fill="none"></path>
+            </svg>
+            <span class="label">Password</span>
+          </span>
+        </label>
+        
+          <div class="input-wrap">
 
-                <input type="password" id="password" name="password" placeholder="Enter Your password" autocomplete="current-password" required />
-                <button type="button" class="pw-toggle" aria-label="Show confirm password">
-                  <img src="{% static 'users/icons/password-show.png' %}" class="show-hide" alt="Show"/>
-                  <span class="visually-hidden">Show confirm password</span> 
-                </button>
-              </div>
-            
-            <div class="error" id="passwordError">Required field</div>
+            <input type="password" id="password" name="password" placeholder="Enter Your password" autocomplete="current-password" required />
+            <button type="button" class="pw-toggle" aria-label="Show confirm password">
+              <img src="{% static 'users/icons/password-show.png' %}" class="show-hide" alt="Show"/>
+              <span class="visually-hidden">Show confirm password</span> 
+            </button>
           </div>
-      
-      <div class="forgot">
-        <a href="#" id="forgotTrigger">Forgot Password?</a>
+        
+        <div class="error" id="passwordError">Required field</div>
       </div>
-
+      
       <div class="gap">
-          <div>
+          <div style="margin-top: 20px;">
             <button class="btn btn-login" type="submit">Login</button>
           </div>
           
@@ -765,210 +761,49 @@
     </form>
   </main>
 
-  <div class="reset-overlay" id="resetOverlay">
-    <div class="auth-card">
-      
-        <div id="verify-step">
-            <h1>Forgot Password?</h1>
-            <p>Enter the email associated with your account and we'll check our roots.</p>
-            <div class="form-group">
-              <label>Email Address</label>
-              <input type="text" id="resetIdentifier" placeholder="Enter existing email" required>
-            </div>
-            <button class="cta-btn" onclick="checkAccount()">
-              <span class="loader" id="verify-loader"></span> Check Account
-            </button>
-            <div id="verify-msg" class="status-msg"></div>
-          </div>
-        <!-- Reset Password field-->
-     
-        <div id="reset-step">
-            <h1>Create New Password</h1>
-            <p>Account found! Please enter a strong new password for your kitchen.</p>
-            <div class="form-group">
-              <label>New Password</label>
-              <div class="input-wrap">
-                <input type="password" id="new-password" name="password" placeholder="Enter Your password" autocomplete="current-password" required />
-                <button type="button" class="pw-toggle" aria-label="Show confirm password">
-                  <img src="{% static 'users/icons/password-show.png' %}" class="show-hide" alt="Show"/>
-                  <span class="visually-hidden">Show confirm password</span> 
-                </button>
-              </div>            </div>
-            <div class="form-group">
-              <label>Confirm Password</label>
-              <div class="input-wrap">
-                <input type="password" id="confirm-password" name="password" placeholder="Enter Your password" autocomplete="current-password" required />
-                <button type="button" class="pw-toggle" aria-label="Show confirm password">
-                  <img src="{% static 'users/icons/password-show.png' %}" class="show-hide" alt="Show"/>
-                  <span class="visually-hidden">Show confirm password</span> 
-                </button>
-              </div>   
-            </div>
-            <button class="cta-btn" onclick="resetPassword()">
-              <span class="loader" id="reset-loader"></span> Update Password
-            </button>
-            <div id="reset-msg" class="status-msg"></div>
-          </div>
-
-      <a href="#" class="back-link" id="backToLogin">← Back to Login</a>
-    </div>
-  </div>
-
   <script>
-
-
-
-const password = document.getElementById('password'); 
-
-// helper functions
-  function show(element) {
-      if (element) element.style.display = 'block';
-  }
-
-  function hide(element) {
-      if (element) element.style.display = 'none';
-  }
-    const overlay = document.getElementById('resetOverlay');
-    const forgotBtn = document.getElementById('forgotTrigger');
-    const backBtn = document.getElementById('backToLogin');
+    // 1. Define the password element
+    const password = document.getElementById('password'); 
 
     const getCSRF = () => document.querySelector('[name=csrfmiddlewaretoken]').value;
     
-
     // --- PASSWORD TOGGLE ---
-  document.querySelectorAll('.pw-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const input = btn.parentElement.querySelector('input');
-      if (!input) return;
+    document.querySelectorAll('.pw-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = btn.parentElement.querySelector('input');
+        if (!input) return;
 
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.querySelector('img').src = "{% static 'users/icons/password-protection.png' %}";
-        btn.setAttribute('aria-label', 'Hide password');
-      } else {
-        input.type = 'password';
-        btn.querySelector('img').src = "{% static 'users/icons/password-show.png' %}";
-        btn.setAttribute('aria-label', 'Show password');
-      }
-    });
-  });
-
-    // Toggle Overlay
-    forgotBtn.onclick = (e) => { 
-      e.preventDefault(); 
-      overlay.style.display = 'flex'; 
-    };
-    backBtn.onclick = (e) => { 
-      e.preventDefault(); 
-      overlay.style.display = 'none'; 
-    };
-
-    // --- PASSWORD VALIDATION ---
-  function setValid(el) {
-    el.style.borderColor = '#2fa751bf';
-  }
-  function setInvalid(el) {
-    el.style.borderColor = '#f58080';
-  }
-  function setNeutral(el) {
-    el.style.borderColor = 'rgba(255,255,255,0.045)';
-  }
-
-  if (passwordInput) {
-    passwordInput.addEventListener('input', () => {
-      const val = passwordInput.value.trim();
-      if (val.length === 0) setNeutral(passwordInput);
-      else if (val.length > 6 && val.length < 23) setValid(passwordInput);
-      else setInvalid(passwordInput);
-    });
-  }
-
-// Step 1: Checks if account exist
-
-  async function checkAccount() {
-  const identifier = document.getElementById('resetIdentifier').value;
-  const loader = document.getElementById('verify-loader');
-  const msg = document.getElementById('verify-msg');
-
-    if (!identifier) return;
-    show(loader);
-    hide(msg);
-
-    try {
-      const response = await fetch("{% url 'check-account' %}", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-CSRFToken": getCSRF() },
-        body: JSON.stringify({ identifier })
+        if (input.type === 'password') {
+          input.type = 'text';
+          btn.querySelector('img').src = "{% static 'users/icons/password-protection.png' %}";
+          btn.setAttribute('aria-label', 'Hide password');
+        } else {
+          input.type = 'password';
+          btn.querySelector('img').src = "{% static 'users/icons/password-show.png' %}";
+          btn.setAttribute('aria-label', 'Show password');
+        }
       });
+    });
 
-      const data = await response.json();
-      hide(loader);
-
-      if (response.ok) {
-        hide(document.getElementById('verify-step'));
-        show(document.getElementById('reset-step'));
-        window.targetEmail = data.email; // Store for Step 2
-      } else {
-        msg.innerText = data.message || "Account not found.";
-        msg.className = "status-msg error-msg";
-        show(msg);
-      }
-    } catch (err) {
-      hide(loader);
-      alert("Network error.");
+    // --- PASSWORD VALIDATION (Visual feedback only) ---
+    function setValid(el) {
+      el.style.borderColor = '#2fa751bf';
     }
-  }
-
-  // STEP 2: RESET PASSWORD
-  async function resetPassword() {
-    const p1 = document.getElementById('new-password').value;
-    const p2 = document.getElementById('confirm-password').value;
-    const msg = document.getElementById('reset-msg');
-
-    if (p1 !== p2 || p1.length < 6) {
-      msg.innerText = "Passwords must match and be at least 6 characters.";
-      msg.className = "status-msg error-msg";
-      show(msg);
-      return;
+    function setInvalid(el) {
+      el.style.borderColor = '#f58080';
+    }
+    function setNeutral(el) {
+      el.style.borderColor = 'rgba(255,255,255,0.045)';
     }
 
-    try {
-      const response = await fetch("{% url 'reset-password' %}", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-CSRFToken": getCSRF() },
-        body: JSON.stringify({ email: window.targetEmail, password: p1 })
-      });
+    password.addEventListener('input', () => {
+      const val = password.value.trim();
+      if (val.length === 0) setNeutral(password);
+      else if (val.length > 6 && val.length < 23) setValid(password);
+      else setInvalid(password);
+    });
 
-      if (response.ok) {
-        msg.innerText = "Success! Redirecting...";
-        msg.className = "status-msg success-msg";
-        show(msg);
-        setTimeout(() => location.reload(), 2000);
-      }
-    } catch (err) { alert("Error updating password."); }
-  }
-
-  // --- LOGIN SUBMISSION ---
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    try {
-      const res = await fetch(e.target.action, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-CSRFToken": getCSRF() },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        window.location.href = data.redirect_url;
-      } else {
-        alert(data.message || "Invalid credentials");
-      }
-    } catch (err) { console.error("Login failed", err); }
-  });
+   
   </script>
 </body>
 </html>

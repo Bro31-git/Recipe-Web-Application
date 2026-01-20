@@ -422,29 +422,28 @@
   
   body {
     background-image: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url('pexels-farhad.jpg');
-    padding: 12px; /* reduce padding */
+    padding: 12px; 
     align-items: center;
-    overflow: hidden;
     justify-content: center;
   }
 
   /* Resize container */
   .container { 
-    max-width: 880px;/* smaller width */
-    min-height: 450px; /* reduce height */
+    max-width: 880px;
+    min-height: 450px; 
   }
 
   /* Greeting section */
   .section-greeting-img {
     padding: 15px;
     font-size: 0.9rem;
-    flex: 1; /* adjust height proportion */
+    flex: 1; 
   }
 
   /* Card section */
   .section-card {
     padding: 18px 25px;
-    flex: 1; /* adjust height proportion */
+    flex: 1; 
     border-radius: 12px;
   }
 
@@ -661,7 +660,7 @@
       
        <div class="field">
         <label for="years"><img class="label-icon" src="{% static 'users/icons/calendar.svg' %}" alt="">Years of experience</label>
-        <input id="years" name="years" type="number" required min="0" step="1" placeholder="This field is optional." />
+        <input id="years" name="years_of_experience" type="number" required  min="0" step="1" placeholder="Required for chef profiles." />
         {{ form.years_of_experience.errors }}
       </div>
 
@@ -680,133 +679,123 @@
     </form>
     </div>
   </main>
-
-  <script>// ===== DOM ELEMENTS =====
-    const form = document.getElementById('signupForm');
-    const firstName = document.getElementById('firstName');
-    const lastName = document.getElementById('lastName');
-    const username = document.getElementById('username'); 
-    const email = document.getElementById('email');
-    const years = document.getElementById('years');
-    const password = document.getElementById('password');
-    const confirm = document.getElementById('confirm');
-    const agree = document.getElementById('agree');
-    const createBtn = document.getElementById('createBtn');
-    
-    // ===== PASSWORD VISIBILITY TOGGLES =====
-    function initPasswordToggles() {
-        const toggles = document.querySelectorAll('.pw-toggle');
-        const viewSrc = "{% static 'users/icons/view.png' %}";
-        const hideSrc = "{% static 'users/icons/hide.png' %}";
-    
-        toggles.forEach(btn => {
-            const input = btn.parentElement.querySelector('input');
-            const img = btn.querySelector('img');
-    
-            btn.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevents "Eye" click from submitting form
-                const isPassword = input.type === 'password';
-                input.type = isPassword ? 'text' : 'password';
-                img.src = isPassword ? hideSrc : viewSrc;
-            });
-        });
-    }
-    
-    // ===== VALIDATION HELPERS =====
-    const setValid = (el) => { el.classList.add('input-valid'); el.classList.remove('input-invalid'); };
-    const setInvalid = (el) => { el.classList.add('input-invalid'); el.classList.remove('input-valid'); };
-    const setNeutral = (el) => { el.classList.remove('input-invalid', 'input-valid'); };
-    
-    function validateEmail() {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const ok = regex.test(email.value);
-        if (email.value.length === 0) { setNeutral(email); return false; }
-        ok ? setValid(email) : setInvalid(email);
-        return ok;
-    }
-    
-    function validatePasswordLength() {
-        const ok = password.value.length > 6 && password.value.length < 23;
-        if (password.value.length === 0) { setNeutral(password); return false; }
-        ok ? setValid(password) : setInvalid(password);
-        return ok;
-    }
-    
-    function validateConfirmMatch() {
-        const ok = confirm.value === password.value && confirm.value.length > 0;
-        if (confirm.value.length === 0) { setNeutral(confirm); return false; }
-        ok ? setValid(confirm) : setInvalid(confirm);
-        return ok;
-    }
-    
-    /**
-     * OPTIONAL FIELD LOGIC
-     * Returns true if empty (allowed) OR if the number is valid.
-     */
-    function validateYears() {
-        const val = years.value.trim();
-        if (val === "") {
-            setNeutral(years);
-            return true; // Valid because it is optional
-        }
-        const num = Number(val);
-        const ok = num >= 0 && num < 100;
-        ok ? setValid(years) : setInvalid(years);
-        return ok;
-    }
-    
-    // ===== CORE FORM VALIDITY CHECK =====
-    function checkFormValidity() {
-        const isFirstName = firstName.value.trim().length > 0;
-        const isLastName = lastName.value.trim().length > 0;
-        const isUsername = username.value.trim().length > 0;
-        const isEmail = validateEmail();
-        const isPass = validatePasswordLength();
-        const isMatch = validateConfirmMatch();
-        const isYearsOk = validateYears(); // Now handles optional state
-        const isAgreed = agree.checked;
-    
-        const allValid = isFirstName && isLastName && isUsername && isEmail && isPass && isMatch && isYearsOk && isAgreed;
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      // ===== DOM ELEMENTS =====
+      const form = document.getElementById('signupForm');
+      const firstName = document.getElementById('firstName');
+      const lastName = document.getElementById('lastName');
+      const username = document.getElementById('username'); 
+      const email = document.getElementById('email');
+      const years = document.getElementById('years'); 
+      
+      const passwordInput = document.getElementById('password');
+      const confirmInput = document.getElementById('confirm');
+      const agree = document.getElementById('agree');
+      const createBtn = document.getElementById('createBtn');
+      
+      // ===== VALIDATION LOGIC =====
+      const setValid = (el) => { el.classList.add('input-valid'); el.classList.remove('input-invalid'); };
+      const setInvalid = (el) => { el.classList.add('input-invalid'); el.classList.remove('input-valid'); };
+      const setNeutral = (el) => { el.classList.remove('input-invalid', 'input-valid'); };
+  
+      function validateEmail() {
+          const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!email) return false;
+          const ok = regex.test(email.value);
+          if (email.value.length === 0) { setNeutral(email); return false; }
+          ok ? setValid(email) : setInvalid(email);
+          return ok;
+      }
+  
+      function validatePasswordLength() {
+          if (!passwordInput) return false;
+          const val = passwordInput.value;
+          const ok = val.length > 6 && val.length < 23;
+          if (val.length === 0) { setNeutral(passwordInput); return false; }
+          ok ? setValid(passwordInput) : setInvalid(passwordInput);
+          return ok;
+      }
+  
+      function validateConfirmMatch() {
+          if (!confirmInput || !passwordInput) return false;
+          const val = confirmInput.value;
+          const passVal = passwordInput.value;
+          const ok = val === passVal && val.length > 0;
+          if (val.length === 0) { setNeutral(confirmInput); return false; }
+          ok ? setValid(confirmInput) : setInvalid(confirmInput);
+          return ok;
+      }
+  
+      function validateYears() {
+          if (!years) return false; 
+          
+          const val = years.value.trim();
+          
+       
+          if (val === "") {
+              setNeutral(years); 
+              return false; 
+          }
+          
+          const num = Number(val);
+          const ok = num >= 0 && num < 100;
+          ok ? setValid(years) : setInvalid(years);
+          return ok;
+      }
+  
+      function checkFormValidity() {
+          // Safety checks (?.) allow script to run even if a field is temporarily missing
+          const isFirstName = firstName?.value.trim().length > 0;
+          const isLastName = lastName?.value.trim().length > 0;
+          const isUsername = username?.value.trim().length > 0;
+          const isEmail = validateEmail();
+          const isPass = validatePasswordLength();
+          const isMatch = validateConfirmMatch();
+          const isYearsOk = validateYears(); 
+          const isAgreed = agree?.checked;
+  
+          // All must be true to enable button
+          const allValid = isFirstName && isLastName && isUsername && isEmail && isPass && isMatch && isYearsOk && isAgreed;
+          
+          if (createBtn) createBtn.disabled = !allValid;
+          return allValid;
+      }
+  
+      // ===== EVENT LISTENERS =====
+      const allFields = [firstName, lastName, username, email, passwordInput, confirmInput, years, agree].filter(el => el !== null);
+  
+      allFields.forEach(el => {
         
-        createBtn.disabled = !allValid;
-        return allValid;
-    }
-    
-    // ===== EVENT LISTENERS =====
-    
-    [firstName, lastName, username, email, years, password, confirm, agree].forEach(el => {
-        el.addEventListener('input', () => {
-            if ([firstName, lastName, username].includes(el)) {
-                el.value.trim().length > 0 ? setValid(el) : setNeutral(el);
-            }
-            checkFormValidity();
-        });
-    });
-    
-    // Navigation (Enter Key)
-    const inputs = [firstName, lastName, username, email, years, password, confirm];
-    inputs.forEach((input, index) => {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const next = inputs[index + 1];
-                if (next) next.focus();
-                else agree.focus();
-            }
-        });
-    });
-    
-    // ===== AJAX SUBMISSION (Try/Catch) =====
-    form.addEventListener('submit', (event) => {
+          const eventType = el.type === 'checkbox' ? 'change' : 'input';
+          
+          el.addEventListener(eventType, () => {
+              if (el !== agree && el !== years) {
+                  if ([firstName, lastName, username].includes(el)) {
+                      el.value.trim().length > 0 ? setValid(el) : setNeutral(el);
+                  }
+              }
+              checkFormValidity();
+          });
+      });
+  
+      // ===== PASSWORD TOGGLES =====
+      document.querySelectorAll('.pw-toggle').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+              e.preventDefault();
+              const input = btn.parentElement.querySelector('input');
+              const img = btn.querySelector('img');
+              if (input && img) {
+                  const isPass = input.type === 'password';
+                  input.type = isPass ? 'text' : 'password';
+                  img.src = isPass ? "{% static 'users/icons/hide.png' %}" : "{% static 'users/icons/view.png' %}";
+              }
+          });
+      });
       
-        if (!checkFormValidity()) {
-            event.preventDefault();
-            alert("Please complete the form correctly.");
-        }
-      
-    });
-    initPasswordToggles();
-    checkFormValidity();
-  </script>
+      // Initialize
+      checkFormValidity();
+  });
+</script>
 </body>
 </html>

@@ -146,7 +146,7 @@
             background: var(--primary-red); 
             transition: 0.3s;
         }
-        .avatar { 
+        .avata { 
             width: 45px; 
             height: 45px; 
             border-radius: 50%; 
@@ -466,10 +466,10 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 4px 20px;
+        padding: 2px 10px;
         font-family: "Poppins", sans-serif;
-        font-weight: 600;
-        font-size: 16px;             
+        font-weight: 400;
+        font-size: 14px;             
         text-transform: uppercase; 
         user-select: none;          
         letter-spacing: 0.5px;
@@ -501,7 +501,7 @@
                 <li><a href="{% url 'support' %}">Help & Support</a></li>
                 <li><a href="{% url 'about' %}">About us</a></li>
                 {% if user.is_authenticated and user.is_chef %}
-                <img class="avatar" src="{% static 'users/icons/2.svg' %}" alt="chef-Badge">
+                <img class="avata" src="{% static 'users/icons/2.svg' %}" alt="chef-Badge">
                 {% else %}
                  <span></span>
                 {% endif %} 

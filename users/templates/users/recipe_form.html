@@ -720,13 +720,12 @@
             <select name="meal_type" id="mealType">
                 <option value="Family" {% if form.meal_type.value == 'Family' %}selected{% endif %}>Family</option>
                 <option value="Individual" {% if form.meal_type.value == 'Individual' %}selected{% endif %}>Individual</option>
-                <option value="Kid" {% if form.meal_type.value == 'Kid' %}selected{% endif %}>Kid</option>
+                
             </select>
 
             <label class="margin-top-12" for="mealTime">Meal Time</label>
             <select name="meal_time" id="mealTime">
                 <option value="Breakfast" {% if form.meal_time.value == 'Breakfast' %}selected{% endif %}>Breakfast</option>
-                <option value="Brunch" {% if form.meal_time.value == 'Brunch' %}selected{% endif %}>Brunch</option>
                 <option value="Lunch" {% if form.meal_time.value == 'Lunch' %}selected{% endif %}>Lunch</option>
                 <option value="Dinner" {% if form.meal_time.value == 'Dinner' %}selected{% endif %}>Dinner</option>
             </select>

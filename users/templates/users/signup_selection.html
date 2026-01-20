@@ -255,9 +255,7 @@
       color: var(--orange); 
     }
     @media (min-width: 1025px) {
-      body {
-        overflow: hidden;
-      }
+      
       .us:hover { 
         background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "users/icons/dish.jpg" %}') center/cover no-repeat; 
       }
@@ -461,7 +459,7 @@
         </div>
         <div class="feature-reveal">
             <img src="{% static 'users/icons/chef.png' %}" class="mobile-img" alt="Chef">
-            <p>Showcase your talent and turn passion into profit.</p>
+            <p>Showcase your talent and and help peaple know more about your recipe.</p>
             <div class="btn-container">
               <a href="{% url 'chef-signup' %}" class="action-btn">Join Us</a>
               <a href="{% url 'login' %}" class="action-btn">Login</a>
