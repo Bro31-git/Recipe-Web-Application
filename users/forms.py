@@ -5,6 +5,8 @@ from .models import User, ChefProfile
 from .models import Recipe
 from .models import Review
 import json
+from django_countries.fields import CountryField
+
 
 DIET_CHOICES = [
     ('', 'Select Preference'),
@@ -66,7 +68,7 @@ class UserSignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
     email = forms.EmailField()
-    country = forms.CharField(required=False)
+    country = CountryField().formfield()
     # Meta class to specify model and fields
     class Meta(UserCreationForm.Meta):
         model = User
