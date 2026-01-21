@@ -710,12 +710,12 @@
               <path d="M12 12a4 4 0 100-8 4 4 0 000 8z" fill="rgba(255,255,255,0.9)"></path>
               <path d="M3 20c1.8-4 6.2-6 9-6s7.2 2 9 6" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" fill="none"></path>
             </svg>
-            <span class="label">Username or Email</span>
+            <span class="label">Username </span>
           </span>
         </label>
 
         <div class="input-wrap">
-          <input type="text" id="username" name="username" placeholder="Enter your " autocomplete="username" required value="{{ form.username.value|default:'' }}">
+          <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required value="{{ form.username.value|default:'' }}">
         </div>
         <div class="error" id="usernameError">Required field</div>
       </div>

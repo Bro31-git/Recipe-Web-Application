@@ -63,42 +63,21 @@ def customer_signup(request):
         form = UserSignUpForm()
     return render(request, 'users/user_signup.html', {'form': form})
 
-def login_view(request):
+
+def login_view(request):   
     if request.user.is_authenticated:
-        return redirect('dashboard')
-
-    if request.method == "POST":
-        # Check if the request is AJAX (JSON body)
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-            login_val = data.get('username') # This could be username or email
-            password = data.get('password')
-            
-            # Step 1: Find the user by username OR email
-            user_obj = User.objects.filter(Q(username=login_val) | Q(email=login_val)).first()
-            
-            if user_obj:
-                user = authenticate(request, username=user_obj.username, password=password)
-                if user is not None:
-                    login(request, user)
-                    return JsonResponse({"message": "Success", "redirect_url": "/dashboard/"}, status=200)
-            
-            return JsonResponse({"message": "Invalid username/email or password"}, status=401)
-
+        return redirect('dashboard')  # Redirect authenticated users to home or dashboard
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+           user = form.get_user()
+           login(request, user)
+           return redirect('dashboard')  # Redirect to  home page after login
         else:
-            # Standard Django Form Fallback
-             # Ensure you have this in forms.py
-            form = LoginForm(request, data=request.POST)
-            if form.is_valid():
-                user = form.get_user()
-                login(request, user)
-                return redirect('dashboard')
-            else:
-                messages.error(request, "Invalid credentials.")
-                return render(request, "users/login.html", {'form': form})
-
-    return render(request, "users/login.html")
-
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = LoginForm()
+    return render(request, 'user/login.html', {'form': form})
 
 def logout_view(request):
     logout(request)
