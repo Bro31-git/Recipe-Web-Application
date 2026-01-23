@@ -11,7 +11,7 @@
     <style>
         :root {
             --primary-red: #a83232;
-            --header-bg-mb: #7ae071e7;
+            --header-bg-mb: #7ae071ec;
             --header-bg: #ffffff;
             --nav-text: #2c3e50;
             --primary-green: #7ae071;
@@ -147,7 +147,7 @@
             background: var(--primary-red); 
             transition: 0.3s;
         }
-        .avatar { 
+        .avata { 
             background: var(--text-white);
             width: 45px; 
             height: 45px; 
@@ -429,7 +429,7 @@
                 margin-left: -20px; 
                 height: 80px;
             }
-            .avatar {
+            .avata {
                 display: none;
             }
             .app-sidebar {
@@ -519,7 +519,7 @@
                 <li><a href="{% url 'support' %}">Help & Support</a></li>
                 <li><a href="{% url 'about' %}">About us</a></li>
                 {% if user.is_authenticated and user.is_chef %}
-                <img class="avatar" src="{% static 'users/icons/2.svg' %}" alt="chef-Badge">
+                <img class="avata" src="{% static 'users/icons/2.svg' %}" alt="chef-Badge">
                 {% else %}
                  <span></span>
                 {% endif %} 
