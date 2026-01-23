@@ -11,10 +11,11 @@
     <style>
         :root {
             --primary-red: #a83232;
-            --header-bg: #7ae071e7;
+            --header-bg-mb: #7ae071e7;
+            --header-bg: #ffffff;
             --nav-text: #2c3e50;
             --primary-green: #7ae071;
-            --primary-orange: #ef8a17c4;
+            --primary-orange: #ef8a17df;
             --light-orange: #fff4e6;
             --header: #d8cece92;
             --header-height: 70px;
@@ -247,8 +248,7 @@
             }
         }
 
-        .sidebar-item {
-            background: #ffdb9957;
+        .sidebar-item, .account {
             display: flex; 
             align-items: center; 
             padding: 12px 25px;
@@ -256,6 +256,9 @@
             color: white; 
             white-space: nowrap; 
             transition: 0.2s;
+        }
+        .account {
+            background: #ffdb9957;
         }
         .sidebar-item:hover { 
             background-color: rgba(255, 255, 255, 0.15); 
@@ -410,6 +413,7 @@
                 padding-left: 0!important;
             }
             header { 
+                background: var(--header-bg-mb);
                 padding-left: 20px !important; 
             }
             .header-nav-list { 
@@ -536,7 +540,7 @@
                 <span class="sidebar-text">Close Menu</span>
             </div>
 
-            <div class="sidebar-item">
+            <div class="account">
                  {% if user.first_name and user.last_name %}
                     <div class="custom-avatar sidebar-icon" title="{{ user.first_name }} {{ user.last_name }}">
                         {{ user.first_name|first }}{{ user.last_name|first }}
