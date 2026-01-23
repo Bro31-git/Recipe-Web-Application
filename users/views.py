@@ -13,14 +13,13 @@ from .models import Recipe
 from django.contrib.auth.models import User
 from .forms import ChefSignUpForm, UserSignUpForm, LoginForm, RecipeForm, ReviewForm
 
-# Create your views here.
+
 def toggle_recipe_save(request, pk):
-    #checks if the user is authenticated and  logged in
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'Login required'}, status=401)
 
-    recipe = get_object_or_404(Recipe, pk=pk)# get recipe object or return a 404 eror message
-    user = request.user# get the current login user
+    recipe = get_object_or_404(Recipe, pk=pk)
+    user = request.user
     if user.saved_recipes.filter(pk=pk).exists():# check the status of the saved recipe button
         user.saved_recipes.remove(recipe)
         saved = False
@@ -66,7 +65,7 @@ def customer_signup(request):
 
 def login_view(request):   
     if request.user.is_authenticated:
-        return redirect('dashboard')  # Redirect authenticated users to home or dashboard
+        return redirect('dashboard')  
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
@@ -88,9 +87,8 @@ def recommendation(request):
     if request.method == 'POST':
         #getting the corresponding form data
         h_cond = request.POST.get('health_condition') 
-        diet = request.POST.get('dietary')      # Fixed: Matches name="dietary"
-        allergies = request.POST.get('allergies') # Matches name="allergies"
-
+        diet = request.POST.get('dietary')      
+        allergies = request.POST.get('allergies') 
         #
         request.session['temp_filters'] = {
             'health_condition': h_cond,
@@ -108,7 +106,7 @@ def reset_filters(request):
     return redirect('dashboard')
 
 class RecipeListView(LoginRequiredMixin, ListView):
-    model = Recipe# model or database wo be use in this view
+    model = Recipe
     template_name = 'users/dashboard.html'# template name to redirect info to
     context_object_name = 'recipes'# custom object name you will use
     ordering = ['-created_at']# display element as from the recent to the oldest

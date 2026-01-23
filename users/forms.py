@@ -42,7 +42,6 @@ class ChefSignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(required=True)
-    # This field stays here as a form input, but we remove it from Meta below
     years_of_experience = forms.IntegerField(required=True, min_value=0)
 
     class Meta(UserCreationForm.Meta):
@@ -50,20 +49,17 @@ class ChefSignUpForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email']
 
     def save(self, commit=True):
-        # 1. Save the User
         user = super().save(commit=False)
         user.is_chef = True
         
         if commit:
             user.save()
-            # 2. Manually create the ChefProfile with the extra data
             ChefProfile.objects.create(
                 user=user,
                 years_of_experience=self.cleaned_data['years_of_experience']
             )
         return user
 
-#class to handle user signup form inheriting from UserCreationForm 
 class UserSignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
@@ -72,23 +68,20 @@ class UserSignUpForm(UserCreationForm):
     # Meta class to specify model and fields
     class Meta(UserCreationForm.Meta):
         model = User
-        #fields to be included in the form for user signup
+       
         fields = ['username', 'first_name', 'last_name', 'email', 'country']
     #override save method to set is_customer to True
     def save(self, commit=True):
         #call the parent save method to create User instance
         user = super().save(commit=False)
-        #set is_customer attribute to True
         user.is_customer = True
-        #save the user instance to the database
         if commit:
             user.save()
         return user
 
-# Form for user login    
+   
 class LoginForm(AuthenticationForm):
-    # This class inherits everything needed for username/password login
-    # You can add custom styling here if needed
+   
     username = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'input-wrap',
         'placeholder': 'Username or Email'
@@ -102,26 +95,24 @@ class RecipeForm(forms.ModelForm):
    
     dietary = forms.ChoiceField(
         choices=DIET_CHOICES, 
-        required=False  # This prevent the app from crashing on an empty selection
+        required=False  
     )
     health_condition = forms.ChoiceField(
         choices=HEALTH_CHOICES, 
-        required=False # This prevent the app from crashing on an empty selection
+        required=False 
     )
-    # function use to convert the pyton list data(ingredients and instruction) to a json file for editing before displaying it to the user
+   
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-         # Check if we are editing an existing recipe
+         
         if self.instance and self.instance.pk:
-            #converting the python list ingredient gotten from the db to a json file to be display for editing
+           
             if isinstance(self.instance.ingredients, list):
-                # using dumps() to add a double quotes to the list 
                 self.fields['ingredients'].initial = json.dumps(self.instance.ingredients)
 
-            #converting the python list instruction gotten from the db to a json file to be display for editing
-            if isinstance(self.instance.instructions, list):
-                # using dumps() to add a double quotes to the list 
+            
+            if isinstance(self.instance.instructions, list): 
                 self.fields['instructions'].initial = json.dumps(self.instance.instructions)
             
 
