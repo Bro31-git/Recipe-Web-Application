@@ -19,6 +19,15 @@
       --bg-soft: #e0e5ec;
       --transition-main: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
+    
+    @keyframes life {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
 
     * { 
       margin: 0; 
@@ -40,6 +49,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      animation: life 1.5s linear 1;
     }
 
     /* ===== BACKGROUND DECORATIONS ===== */
@@ -107,8 +117,8 @@
       display: none;
       color: #4b4848;
       font-weight: 500;
-      font-size: 0.5rem;
-      margin-top: 8px;
+      font-size: 0.6rem;
+      margin-top: 10px;
       z-index: 10;
     }
 
@@ -260,7 +270,7 @@
         background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "users/icons/dish.jpg" %}') center/cover no-repeat; 
       }
       .ch:hover { 
-        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "users/icons/pexels-farhad.jpg" %}') center/cover no-repeat; 
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "users/icons/pexels-kamp.jpg" %}') center/cover no-repeat; 
       }
       .box:hover .inner-content { 
         opacity: 0; 
@@ -363,6 +373,7 @@
       }
       h6 {
         display: contents;
+        
       }
     }
 
@@ -459,7 +470,7 @@
         </div>
         <div class="feature-reveal">
             <img src="{% static 'users/icons/chef.png' %}" class="mobile-img" alt="Chef">
-            <p>Showcase your talent and and help peaple know more about your recipe.</p>
+            <p>Showcase your talent and help peaple know more about your recipes.</p>
             <div class="btn-container">
               <a href="{% url 'chef-signup' %}" class="action-btn">Join Us</a>
               <a href="{% url 'login' %}" class="action-btn">Login</a>

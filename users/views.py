@@ -45,8 +45,8 @@ def chef_signup(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Chef Account created for {username}! Please Login.')
-            return redirect('login')
+            messages.success(request, f'Chef Account created for {username}!')
+            return redirect('dashboard')
     else:
         form = ChefSignUpForm()
     return render(request, 'users/chef_signup.html', {'form': form})
@@ -58,7 +58,7 @@ def customer_signup(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
-            return redirect('login')
+            return redirect('dashboard')
     else:
         form = UserSignUpForm()
     return render(request, 'users/user_signup.html', {'form': form})

@@ -62,9 +62,12 @@
     }
 
     .flex-option {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0 15px 0;
     }
 
     /* --- RECOM SECTION --- */
@@ -140,7 +143,7 @@
         font-size: 25px;
     }
 
-    p {
+    p, .p {
         color: #444;
         font-size: 15px;
         line-height: 1.6;
@@ -175,7 +178,7 @@
         padding: 12px;
         border-radius: 8px;
         border: none;
-        background: linear-gradient(180deg, var(--btn-login), #c9655a);
+        background: linear-gradient(180deg, var(--btn-login), #d1857d);
         color: white;
         font-weight: bold;
         cursor: pointer;
@@ -243,8 +246,8 @@
     /* --- FLOATING BUTTON --- */
     .fab-wrapper {
         position: fixed;
-        bottom: 30px;
-        right: 30px;
+        bottom: 40px;
+        right: 45px;
         display: flex;
         align-items: center;
         z-index: 1000;
@@ -275,26 +278,47 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+        animation: pulse-orange 2s infinite;
     }
 
     .floating-btn img {
         width: 28px;
         filter: invert(1);
     }
+    @keyframes pulse-orange {
+      0% { 
+        box-shadow: 0 0 0 0 rgba(246, 160, 121, 0.7); 
+      }
+      70% { 
+        box-shadow: 0 0 0 15px rgba(246, 160, 121, 0); 
+      }
+      100% { 
+        box-shadow: 0 0 0 0 rgba(246, 160, 121, 0); 
+      }
+    }
+
 
     /* --- TAGS & TEXT --- */
-    .source-tag,
-    .source-str,
+    .source-str {
+      border-radius: 20px 2px 2px 20px; 
+    }
+    .source-tag {
+      border-radius: 3px;
+    }
     .source-end {
-        display: inline-block;
-        background: var(--orange);
-        color: white;
-        padding: 4px 8px;
-        font-size: 10px;
-        margin: 2px;
-        border-radius: 4px;
-        font-weight: bold;
+      border-radius: 2px 20px 20px 2px;
+    }
+    .source-tag,  .source-str,  .source-end { 
+      font-family: 'Poppins', sans-serif; 
+      font-weight: 800; 
+      line-height: 1.2;
+      display: inline-block; 
+      background: var(--orange); 
+      color: var(--light);
+      padding: 4px 10px;  
+      font-size: 11px; 
+      margin: 4px; 
     }
 
     .header-section {
@@ -317,20 +341,49 @@
         .flex-option {
             grid-template-columns: 1fr;
         }
+        #formSection {
+            max-width: unset;
+            margin: 10px 0;
+            padding: 7px;
+        }
+        .custom-select-trigger {
+            padding: 7px 14px;
+        }
 
         .card {
             padding: 20px;
+            max-width: none;
+        }
+        .fab-wrapper {
+          bottom: 30px;
+          right: 30px;
+        }
+        .p {
+          text-align: unset;
         }
 
         #recomSection {
             height: 80vh;
             padding-bottom: 80px;
         }
+        label {
+            font-weight: 600;
+            margin: -2px 0 6px;
+        }
 
         .fab-wrapper {
             bottom: 20px;
             right: 20px;
         }
+        .submit-btn {
+          padding: 11px;
+          font-weight: 600;
+          margin-top: 0;
+      }
+        .source-str, .source-tag, .source-end {
+        font-size: 9px; 
+        border-radius: 3px;
+      }
     }
 </style>
 {% endblock %}
@@ -341,49 +394,47 @@
   <div id="formSection" class="active">
     <div class="card">
       <h2>Health & Dietary Profile</h2>
-      <p>Fill in the form below to unlock a one time public health recommendations.</p>
+      <p class="p">Fill in the form below to unlock a one time public health recommendations.</p>
       
       <form id="profileForm" method="POST" action="{% url 'recommendation' %}">
             {% csrf_token %}
 
         <label>List Allergic Ingredients</label>
         <textarea name="allergies" id="allergies" placeholder="Peanuts, Shellfish, etc." ></textarea>
-
-        <label for="healthCondition">Health Condition</label>
-        <select name="health_condition" id="healthCondition"  aria-label="Health Condition">
-          <option value="">None / Select Condition</option>
-
-          <option value="Diabetes">Diabetes (Low Sugar/Carb)</option>
-          <option value="Hypertension">Hypertension (Low Sodium)</option>
-          <option value="Heart Disease">Heart Disease (Low Cholesterol)</option>
-          <option value="Obesity">Obesity / Weight Loss</option>
-          
-          <option value="Celiac">Celiac Disease (Gluten-Free)</option>
-          <option value="GERD">GERD / Acid Reflux</option>
-          <option value="IBS">IBS (Low FODMAP)</option>
-
-          <option value="Kidney Disease">Kidney Disease</option>
-          <option value="Gout">Gout (Low Purine)</option>
-          <option value="Anemia">Anemia (High Iron)</option>
-      </select>
-
-        <label for="dietary">Dietary Preference</label>
-          <select name="dietary" id="dietary" aria-label="Dietary Preference">
-            <option value="">None / Select Preference</option>
-            
-            <option value="Vegetarian">Vegetarian (No Meat)</option>
-            <option value="Vegan">Vegan (No Animal Products)</option>
-            <option value="Pescatarian">Pescatarian (Fish Allowed)</option>
-            <option value="Keto">Keto / Low Carb</option>
-
-            <option value="Halal">Halal</option>
-            <option value="Kosher">Kosher</option>
-
-            <option value="Gluten-Free">Gluten-Free</option>
-            <option value="Dairy-Free">Dairy-Free / Lactose-Free</option>
-            <option value="Nut-Free">Nut-Free</option>
-            <option value="Shellfish-Free">Shellfish-Free</option>
-          </select>
+        <div class="flex-option">
+          <div>
+            <label for="healthCondition">Health Condition</label>
+            <select name="health_condition" id="healthCondition"  aria-label="Health Condition">
+              <option value="">Select Condition</option>
+              <option value="Diabetes">Diabetes (Low Sugar/Carb)</option>
+              <option value="Hypertension">Hypertension (Low Sodium)</option>
+              <option value="Heart Disease">Heart Disease (Low Cholesterol)</option>
+              <option value="Obesity">Obesity / Weight Loss</option>
+              <option value="Celiac">Celiac Disease (Gluten-Free)</option>
+              <option value="GERD">GERD / Acid Reflux</option>
+              <option value="IBS">IBS (Low FODMAP)</option>
+              <option value="Kidney Disease">Kidney Disease</option>
+              <option value="Gout">Gout (Low Purine)</option>
+              <option value="Anemia">Anemia (High Iron)</option>
+           </select>
+          </div>
+          <div>
+            <label for="dietary">Dietary Preference</label>
+            <select name="dietary" id="dietary" aria-label="Dietary Preference">
+              <option value="">Select Preference</option>
+              <option value="Vegetarian">Vegetarian (No Meat)</option>
+              <option value="Vegan">Vegan (No Animal Products)</option>
+              <option value="Pescatarian">Pescatarian (Fish Allowed)</option>
+              <option value="Keto">Keto / Low Carb</option>
+              <option value="Halal">Halal</option>
+              <option value="Kosher">Kosher</option>
+              <option value="Gluten-Free">Gluten-Free</option>
+              <option value="Dairy-Free">Dairy-Free / Lactose-Free</option>
+              <option value="Nut-Free">Nut-Free</option>
+              <option value="Shellfish-Free">Shellfish-Free</option>
+            </select>
+          </div>
+        </div>
 
         <div class="form-button-wrapper">
           <button type="submit" class="submit-btn">Unlock My Health Guide</button>

@@ -66,7 +66,7 @@
 
     body {
       font-family: "Poppins", sans-serif;
-      background-image: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.6)), url("{% static 'users/icons/dish.jpg' %}");
+      background-image: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.6)), url("{% static 'users/icons/pexels-farhad.jpg' %}");
       background-size: cover;
       background-position: center;
       display: flex;
@@ -439,7 +439,7 @@
 
     @media (max-width: 460px) {
       body {
-        padding: 15px;
+        padding: 15px 10px;
         overflow-y: auto; 
         align-items: flex; 
         padding-top: 40px;
@@ -472,14 +472,14 @@
       input[type="text"], 
       input[type="password"],
       input[type="email"] {
-        padding: 14px 16px 14px 42px !important;
+        padding: 12px 16px 12px 42px !important;
         font-size: 16px; 
       }
 
       .btn, .btn-login, .cta-btn {
-        padding: 16px;
+        padding: 14px;
         font-size: 16px;
-        border-radius: 14px;
+        border-radius: 10px;
       }
 
       .divider {
@@ -522,17 +522,6 @@
       .reset-overlay {
         padding: 15px;
         align-items: center; /* Keeps the white card centered */
-      }
-
-      /* Fix spacing for the "Forgot Password" link position */
-      .forgot {
-        margin-bottom: 25px;
-      }
-
-      .forgot a {
-        float: none;
-        display: block;
-        text-align: right;
       }
     } 
        /* ======

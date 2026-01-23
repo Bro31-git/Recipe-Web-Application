@@ -334,10 +334,21 @@
     }
 
     @media (max-width: 720px) {
-      .desc-row { flex-direction: column; }
-      .grid-row { grid-template-columns: 1fr; }
-      .ingredient-row { display: grid; grid-template-columns: 1fr 0.3fr auto; }
-      .form-card { padding: 14px; }
+      .form-container {
+        max-width: none;
+      }  
+      .desc-row { 
+        flex-direction: column; 
+    }
+      .grid-row { 
+        grid-template-columns: 1fr; 
+    }
+      .ingredient-row { 
+        display: grid; grid-template-columns: 1fr 0.3fr auto; 
+    }
+      .form-card { 
+        padding: 14px; 
+    }
     }
 
     /* VIDEO URL INPUT WITH ICON */

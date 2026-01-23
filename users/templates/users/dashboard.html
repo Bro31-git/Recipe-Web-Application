@@ -430,7 +430,7 @@
                     <input type="hidden" name="q" value="{{ request.GET.q }}">
 
                     <div class="filter-section">
-                        <h4>Budget (XAF)</h4>
+                        <h4>Budget</h4>
                         <div class="price-row">
                             <input type="number" name="min_price" placeholder="Min" class="price-input" value="{{ request.GET.min_price }}">
                             <span class="price-separator">-</span>
@@ -519,7 +519,7 @@
             {% empty %}
                 <div class="reset-notice">
 
-                    <img src="C:{% static 'users/icons/btn_retry.png' %}" class="issue-img" alt="">
+                    <img src="{% static 'users/icons/btn_retry.png' %}" class="issue-img" alt="">
                     <h3 class="h3">No recipes match your criteria.</h3>
                     <p class="no-match">Try adjusting your filters or clear them to see everything.</p>
                     <br>
