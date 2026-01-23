@@ -173,10 +173,11 @@
       color: #494646;
     }
 
-    .error-notice p {
+    .error-notice p, .error-notice {
       color: var(--danger); 
       font-size: 13px;
     }
+    
     
     /* ===== Form Fields ===== */
     .field {
@@ -440,133 +441,133 @@
       box-shadow: 0 0 0 7px rgba(217, 83, 79, 0.1) !important;
     }
 
-.custom-select {
-  position: relative;
-  width: 100%;
-  animation: fadeInDown 2s ease-out 0.2s backwards;
-}
-
-.select-trigger {
-  padding: 8px 10px;
-  background: var(--light);
-  border: 2px solid var(--light);
-  border-radius: 3px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  animation: fadeInDown 2s ease-out 0.2s backwards;
-  transition: all 0.3s ease;
-}
-.select-trigger:hover,
-.select-trigger:hover {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
-    }
-/* THE POPUP: position absolute means it won't move the page */
-.options-popup {
-  position: absolute;
-  top: 100%; /* Appears right below the trigger */
-  left: 0;
-  right: 0;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
-  z-index: 1000; 
-  max-height: 200px;
-  overflow-y: auto;
-  
-  /* Hidden by default */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-5px);
-  transition: all 0.2s ease-in-out;
-}
-
-.custom-select.open .options-popup {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(2px);
-}
-
-.option {
-  padding: 10px 15px;
-  font-size: 13px;
-  cursor: pointer;
-  border-bottom: 1px solid #f1f1f1;
-  color: #333;
-}
-
-.option:hover {
-  background: rgba(246, 160, 121, 0.1);
-  color: var(--dark-orange);
-}
-
-/* Valid styling for custom select */
-.custom-select.input-valid .select-trigger {
-  border-color: var(--orange) !important;
-}    
-
-  @media (max-height: 900px) {
-  html, 
-  body {
-    min-height: 100vh;
-    height: auto;
-  }
-  
-  body {
-    background-image: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url('pexels-farhad.jpg');
-    padding: 12px; 
-    align-items: center;
-    
-    justify-content: center;
-  }
-
-  /* Resize container */
-  .container { 
-    max-width: 880px;
-    min-height: 450px; 
-  }
-
-  /* Greeting section */
-  .section-greeting-img {
-    padding: 15px;
-    font-size: 0.9rem;
-    flex: 1; 
-  }
-  a {
-      text-decoration: none;
-      text-align: center;
-      align-self: center;
-      justify-self: center;
+    .custom-select {
+      position: relative;
+      width: 100%;
+      animation: fadeInDown 2s ease-out 0.2s backwards;
     }
 
-  /* Card section */
-  .section-card {
-    padding: 18px 25px;
-    flex: 1; 
-    border-radius: 12px;
-  }
+    .select-trigger {
+      padding: 8px 10px;
+      background: var(--light);
+      border: 2px solid var(--light);
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      animation: fadeInDown 2s ease-out 0.2s backwards;
+      transition: all 0.3s ease;
+    }
+    .select-trigger:hover,
+    .select-trigger:hover {
+          border-color: var(--orange);
+          box-shadow: 0 0 0 5px rgba(246, 160, 121, 0.2);
+        }
+    /* THE POPUP: position absolute means it won't move the page */
+    .options-popup {
+      position: absolute;
+      top: 100%; /* Appears right below the trigger */
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
+      z-index: 1000; 
+      max-height: 200px;
+      overflow-y: auto;
+      
+      /* Hidden by default */
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-5px);
+      transition: all 0.2s ease-in-out;
+    }
 
-  /* Inputs resize */
-  .field input[type="text"],
-  .field input[type="email"],
-  .field input[type="password"],
-  .field input[type="number"] {
-    padding: 10px 12px;
-    font-size: 12px;
-  }
+    .custom-select.open .options-popup {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(2px);
+    }
 
-  select {
-    padding: 8px 10px;
-    font-size: 12px;
-  }
-  .label-icon {
-    width: 14px;
-    height: 14px;
-  }
-}
+    .option {
+      padding: 10px 15px;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f1f1;
+      color: #333;
+    }
+
+    .option:hover {
+      background: rgba(246, 160, 121, 0.1);
+      color: var(--dark-orange);
+    }
+
+    /* Valid styling for custom select */
+    .custom-select.input-valid .select-trigger {
+      border-color: var(--orange) !important;
+    }    
+
+      @media (max-height: 900px) {
+      html, 
+      body {
+        min-height: 100vh;
+        height: auto;
+      }
+      
+      body {
+        background-image: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url('pexels-farhad.jpg');
+        padding: 12px; 
+        align-items: center;
+        
+        justify-content: center;
+      }
+
+      /* Resize container */
+      .container { 
+        max-width: 880px;
+        min-height: 450px; 
+      }
+
+      /* Greeting section */
+      .section-greeting-img {
+        padding: 15px;
+        font-size: 0.9rem;
+        flex: 1; 
+      }
+      a {
+          text-decoration: none;
+          text-align: center;
+          align-self: center;
+          justify-self: center;
+        }
+
+      /* Card section */
+      .section-card {
+        padding: 18px 25px;
+        flex: 1; 
+        border-radius: 12px;
+      }
+
+      /* Inputs resize */
+      .field input[type="text"],
+      .field input[type="email"],
+      .field input[type="password"],
+      .field input[type="number"] {
+        padding: 10px 12px;
+        font-size: 12px;
+      }
+
+      select {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+      .label-icon {
+        width: 14px;
+        height: 14px;
+      }
+    }
 
     @media (max-width: 900px) {
     html,
