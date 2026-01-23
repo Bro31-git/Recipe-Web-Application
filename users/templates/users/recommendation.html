@@ -366,9 +366,12 @@
             height: 80vh;
             padding-bottom: 80px;
         }
+        .text-lb {
+          margin-top: 3px;
+        }
         label {
             font-weight: 600;
-            margin: -2px 0 6px;
+            margin: -2px 0 6px 0;
         }
 
         .fab-wrapper {
@@ -399,7 +402,7 @@
       <form id="profileForm" method="POST" action="{% url 'recommendation' %}">
             {% csrf_token %}
 
-        <label>List Allergic Ingredients</label>
+        <label class="text-lb">List Allergic Ingredients</label>
         <textarea name="allergies" id="allergies" placeholder="Peanuts, Shellfish, etc." ></textarea>
         <div class="flex-option">
           <div>

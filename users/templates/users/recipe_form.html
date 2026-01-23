@@ -336,7 +336,10 @@
     @media (max-width: 720px) {
       .form-container {
         max-width: none;
-      }  
+      } 
+      .recipe-page-wrapper {
+        padding: 25px 5px;
+      } 
       .desc-row { 
         flex-direction: column; 
     }
@@ -755,7 +758,7 @@
             <div class="amount-container">
                 <input type="number" name="budget" id="amount" class="amount-input" placeholder="Enter budget" value="{{ form.budget.value|default:'' }}">
                 <div class="currency-select-wrapper">
-                    <select name="currency" id="currency">
+                    <select name="currency" id="currency" title="Select currency">
                             <option title="Central African CFA franc" value="XAF" {% if form.currency.value == 'XAF' %}selected{% endif %}>XAF (FCFA)</option>
                             <option value="XOF" {% if form.currency.value == 'XOF' %}selected{% endif %}>XOF (CFA)</option>
                             <option value="NGN" {% if form.currency.value == 'NGN' %}selected{% endif %}>NGN (₦)</option>
