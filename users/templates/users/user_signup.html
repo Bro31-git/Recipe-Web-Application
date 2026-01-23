@@ -708,20 +708,20 @@
             <input id="firstName" name="first_name" type="text" placeholder="First name" required autocomplete="given-name" value="{{ form.first_name.value|default:'' }}"/>
             <input id="lastName" name="last_name" type="text" placeholder="Last name" required autocomplete="family-name" value="{{ form.last_name.value|default:'' }}"/>
           </div>
-          {{ form.first_name.errors }}
+          <p class="error-notice">{{ form.first_name.errors }}</p>
         </div>
       </div>
 
       <div class="field">
         <label for="username"><img class="label-icon" src="{% static 'users/icons/user.svg' %}" alt="">Username</label>
         <input id="username" name="username" type="text" placeholder="Choose a unique username" required autocomplete="username" value="{{ form.username.value|default:'' }}"/>
-        {{ form.username.errors }}
+        <p class="error-notice">{{ form.username.errors }}</p>
       </div>
 
       <div class="field">
         <label for="email"><img class="label-icon" src="{% static 'users/icons/mail.png' %}" alt="">Email</label>
         <input id="email" name="email" type="email" placeholder="Enter a valid email" required autocomplete="email" value="{{ form.email.value|default:'' }}"/>
-        {{ form.email.errors }}
+        <p class="error-notice">{{ form.email.errors }}</p>
       </div>
 
       <div class="field">
@@ -734,7 +734,7 @@
           </button>
         </div>
         <small class="hint pw">Password length must be &gt; 6 and &lt; 23 characters.</small>
-        {{ form.password1.errors }}
+        <p class="error-notice">{{ form.password1.errors }}</p>
       </div>
 
       <div class="field">
